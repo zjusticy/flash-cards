@@ -6,23 +6,24 @@
   // height: 6.5rem;
   overflow: hidden;
   outline: none;
+  min-height: 7rem;
   & h2 {
     color: rgba(0, 0, 0, 0.5);
     margin-bottom: 4px;
     font-size: 1.125rem;
-    max-height: 2.75rem;
+    max-height: 3rem;
     overflow: hidden;
   }
 }
 
 .texts {
-   & p {
+  & p {
     color: rgba(0, 0, 0, 0.3);
     font-size: 0.8rem;
     max-height: 3.25rem;
     text-overflow: clip;
     overflow: hidden;
-  } 
+  }
   padding-bottom: 0.5rem;
 }
 
