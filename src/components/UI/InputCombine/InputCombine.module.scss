@@ -1,0 +1,33 @@
+.newNameWrap {
+	max-width: 480px;
+	position: relative;
+	border: 2px solid #dddddd;
+	height: 4rem;
+	box-sizing: border-box;
+
+	& > label {
+		display: block;
+		position: absolute;
+		margin-top: -1rem;
+		margin-left: 1rem;
+		background: #ffffff;
+		height: 1rem;
+		padding: 0.25rem;
+		color: #b9b9b9;
+		font-size: 16px;
+		font-family: "Press Start 2P", sans-serif;
+	}
+
+	& > input {
+		display: block;
+		padding: 0.5rem 1.25rem;
+		box-sizing: border-box;
+		width: 100%;
+		outline: none;
+		border: none;
+		// height: 2rem;
+		height: 100%;
+		font-size: 1.5rem;
+		color: rgba(0, 0, 0, 0.5);
+	}
+}

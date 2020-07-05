@@ -1,0 +1,88 @@
+.search_section {
+	flex: 0 0 220px;
+	/*	border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+	border-right: 1px solid rgba(0, 0, 0, 0.3)*/
+	height: 56px;
+}
+
+.search_wrap {
+	margin-top: 10px;
+	margin-left: 12px;
+}
+
+.search_group {
+	/*	margin-top: 10px;
+	margin-left: 12px;*/
+	width: 220px;
+	display: flex;
+	border-left: 2px solid rgba(0, 0, 0, 0.1);
+	border-right: 2px solid rgba(0, 0, 0, 0.1);
+	z-index: 3;
+}
+
+.search_input {
+	width: 100%;
+	/*height: 35px;*/
+	height: 24px;
+	box-sizing: border-box;
+	padding-left: 12px;
+	border: none;
+	line-height: 24px;
+	outline: none;
+	font-size: 16px;
+	color: rgba(0, 0, 0, 0.5);
+}
+
+.search_input::-webkit-input-placeholder {
+	color: rgba(0, 0, 0, 0.5);
+	font-size: 16px;
+}
+
+.inner_button {
+	border: none;
+	height: 24px;
+	width: 36px;
+	padding-right: 12px;
+	background-color: white;
+}
+
+.search_after {
+	margin: auto;
+	height: 16px;
+	width: 16px;
+}
+
+.img_span_wrap {
+	display: inline-block;
+	height: 16px;
+	width: 16px;
+	line-height: 16px;
+}
+
+.search_after svg {
+	fill: #9fa9ba;
+	fill-rule: evenodd;
+}
+
+.filledSpanR2,
+.filledSpanR3 {
+	height: 2px;
+	border-left: 2px solid rgba(0, 0, 0, 0.1);
+	border-right: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.filledSpanR1 {
+	height: 2px;
+	margin: 0 6px;
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+.filledSpanR2 {
+	margin: 0 4px;
+	background-color: white;
+}
+
+.filledSpanR3 {
+	margin: 0 2px;
+	background-color: white;
+}

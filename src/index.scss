@@ -1,0 +1,25 @@
+@import './parameter.scss';
+
+body,div,p,h2,h3,button,textarea,ul,input {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+	  /*font-family: sans-serif;*/
+  font-family: $font-stack;
+}
+
+button {
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+h2 {
+	font-size: 18px;
+}
+
+body, html, #root {
+	height: 100%;
+}

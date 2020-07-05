@@ -1,0 +1,15 @@
+@mixin flex-styles() {
+	display: flex;
+	height: 100%;
+}
+
+.content {
+	/*margin-top: 72px;*/
+	@include flex-styles();
+	flex: auto;
+	flex-direction: column;
+}
+
+.app {
+	@include flex-styles();
+}

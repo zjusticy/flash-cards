@@ -1,0 +1,27 @@
+.cardWrapper {
+	background-color: rgb(236, 245, 240);
+	width: 900px;
+	height: 530px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.cardWrapperSingle {
+	background-color: rgb(236, 245, 240);
+	// width: 900px;
+	height: 530px;
+}
+
+.cardInputWrapper {
+	background-color: rgb(236, 245, 240);
+	width: 900px;
+	height: 530px;
+	& form {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	label {
+		display: none;
+	}
+}

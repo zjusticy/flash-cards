@@ -1,0 +1,136 @@
+@import "../../parameter.scss";
+
+@import "../../markdown.scss";
+
+@mixin pad-styles() {
+	height: 500px;
+	color: rgba(0, 0, 0, 0.7);
+	font-size: 1.25rem;
+	box-shadow: 0.75rem 0.75rem 0 rgba(0, 0, 0, 0.1);
+}
+
+@mixin pad-styles-single() {
+	@include pad-styles();
+	width: 682px;
+}
+
+@mixin pad-styles-double() {
+	@include pad-styles();
+	width: 400px;
+}
+
+@mixin cardShow {
+	background-color: white;
+	margin: 0.75rem;
+	margin-right: 1.5rem;
+	padding: 0.75rem;
+	box-sizing: border-box;
+	overflow: scroll;
+	& > p {
+		padding: 12px;
+	}
+}
+
+.cardShowDouble {
+	@include pad-styles-double();
+
+	@include cardShow;
+}
+
+.cardShowSingle {
+	@include pad-styles-single();
+
+	@include cardShow;
+}
+
+.btnWrapper {
+	display: flex;
+	justify-content: flex-end;
+
+	margin-right: 0.5rem;
+	& button {
+		margin: 1rem;
+		width: 6rem;
+		// 	display: inline-block;
+		// 	width: 120px;
+		// 	outline: none;
+		// 	height: 42px;
+		// 	color: $button-color;
+		// 	border: 2px solid $button-color;
+		// 	/*font-size: 18px;*/
+
+		// 	&:hover {
+		// 		background-color: $button-color;
+		// 		color: rgb(236, 245, 240);
+		// 	}
+	}
+}
+
+.memShowWrapper {
+	/*margin: 0 auto;*/
+	margin-top: 4rem;
+	align-items: center;
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.imgWrapperL,
+.imgWrapperR {
+	margin-bottom: 10%;
+	&:hover {
+		background-color: rgba(0, 0, 0, 0.1);
+		cursor: pointer;
+	}
+	padding: 1.5rem;
+}
+
+// .imgWrapperL {
+// 	margin-right: 1.25rem;
+// }
+
+// .imgWrapperR {
+// 	margin-left: 1.25rem;
+// }
+
+.doneText {
+	font-size: 42px;
+	font-weight: 700;
+	text-align: right;
+}
+
+.cardWrapper {
+	background-color: rgb(236, 245, 240);
+	width: 900px;
+	height: 530px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.cardWrapperSingle {
+	background-color: rgb(236, 245, 240);
+	// width: 900px;
+	height: 530px;
+}
+
+.padShowWrapper {
+	display: flex;
+	flex-direction: column;
+
+	form {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	label {
+		display: none;
+	}
+
+	& textarea {
+		@include pad-styles-double();
+		margin-right: 0.75rem;
+	}
+}
+
+.locked {
+	background-image: url("../../assets/images/lock_100.png");
+}
