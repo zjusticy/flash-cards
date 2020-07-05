@@ -98,7 +98,7 @@ const reducer = (state = initialState, action) => {
     case "UPDATE_CARD": {
       // update the card
       const newCards = {
-        ...state.newCardsCache[action.listName],
+        ...state.cardsCache[action.listName],
         [action.card.id]: action.card,
       };
       const newCardsCache = {

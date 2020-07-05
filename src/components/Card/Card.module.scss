@@ -1,24 +1,31 @@
 .card {
-    padding: 6px 12px 6px 14px;
-    margin: 0 auto;
-    border-bottom: 1px solid #eee;
-    box-sizing: border-box;
-    height: 6.5rem;
+  padding: 6px 12px 6px 14px;
+  margin: 0 auto;
+  border-bottom: 1px solid #eee;
+  box-sizing: border-box;
+  // height: 6.5rem;
+  overflow: hidden;
+  outline: none;
+  & h2 {
+    color: rgba(0, 0, 0, 0.5);
+    margin-bottom: 4px;
+    font-size: 1.125rem;
+    max-height: 2.75rem;
     overflow: hidden;
-    outline: none;
-    & p {
-        color: rgba(0, 0, 0, 0.3);
-        font-size: 0.8rem;
-        max-height: 3.25rem;
-        text-overflow: clip;
-        overflow: hidden;
-    }
-    & h2 {
-        color: rgba(0, 0, 0, 0.5);
-        padding-bottom: 4px;
-    }
+  }
+}
+
+.texts {
+   & p {
+    color: rgba(0, 0, 0, 0.3);
+    font-size: 0.8rem;
+    max-height: 3.25rem;
+    text-overflow: clip;
+    overflow: hidden;
+  } 
+  padding-bottom: 0.5rem;
 }
 
 .active {
-    background-color: rgb(251, 224, 145);
+  background-color: rgb(251, 224, 145);
 }

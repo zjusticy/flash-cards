@@ -17,7 +17,9 @@ const card = (props) => {
       tabIndex={props.index}
     >
       <h2>{props.title}</h2>
-      <p>{props.front}</p>
+      <div className={styles.texts}>
+        <p>{props.front}</p>
+      </div>
     </div>
   );
 };
