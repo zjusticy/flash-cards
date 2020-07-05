@@ -1,13 +1,15 @@
 .search_section {
-	flex: 0 0 220px;
+	// flex: 0 0 220px;
 	/*	border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 	border-right: 1px solid rgba(0, 0, 0, 0.3)*/
-	height: 56px;
+	// height: 56px;
+	height: 100%;
 }
 
 .search_wrap {
-	margin-top: 10px;
-	margin-left: 12px;
+	padding-top: 10px;
+	padding-left: 24px;
+	padding-right: 24px;
 }
 
 .search_group {
@@ -33,10 +35,10 @@
 	color: rgba(0, 0, 0, 0.5);
 }
 
-.search_input::-webkit-input-placeholder {
-	color: rgba(0, 0, 0, 0.5);
-	font-size: 16px;
-}
+// .search_input::-webkit-input-placeholder {
+// 	color: rgba(0, 0, 0, 0.5);
+// 	font-size: 16px;
+// }
 
 .inner_button {
 	border: none;
