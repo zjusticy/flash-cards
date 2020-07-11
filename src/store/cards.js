@@ -224,7 +224,7 @@ export const onAddList = (name, id) => {
 
     database
       .ref(`userData/${userId}/lists`)
-      .set({ [name]: id })
+      .update({ [name]: id })
       .catch(() => {
         // console.log(err.message);
       });
@@ -234,19 +234,6 @@ export const onAddList = (name, id) => {
 export const deleteList = (name, lists) => {
   return (dispatch) => {
     const userId = auth.currentUser.uid;
-
-    // database
-    //   .ref(`userData/${userId}/lists/${name}`)
-    //   .set(null)
-    //   .catch(() => {
-    //     // console.log(err.message);
-    //   });
-    // database
-    //   .ref(`userData/${userId}/${name}`)
-    //   .set(null)
-    //   .catch(() => {
-    //     // console.log(err.message);
-    //   });
 
     const updates = {};
     updates[`userData/${userId}/lists/${name}`] = null;
@@ -265,7 +252,7 @@ export const onAddCard = (listName, card) => {
     const userId = auth.currentUser.uid;
     database
       .ref(`userData/${userId}/${listName}/`)
-      .set({ [card.id]: card })
+      .update({ [card.id]: card })
       .catch(function () {
         // console.error("Error adding document: ", error);
       });

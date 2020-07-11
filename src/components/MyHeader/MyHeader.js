@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -22,6 +22,28 @@ const MyHeader = (props) => {
   const [inputClasses, changeClasses] = useState([styles.menu]);
 
   const [toggleShow, toggle] = useState(false);
+
+  const node = useRef();
+
+  // Handle the click outside the dropdown button and menu
+  const handleOtherClick = (e) => {
+    if (node.current.contains(e.target)) {
+      // inside click
+      return;
+    }
+    // outside click
+    changeClasses([styles.menu]);
+    toggle(false);
+  };
+
+  useEffect(() => {
+    // add when mounted
+    document.addEventListener("mousedown", handleOtherClick);
+    // return function to be called when unmounted
+    return () => {
+      document.removeEventListener("mousedown", handleOtherClick);
+    };
+  }, []);
 
   const toggleClikedhandler = () => {
     if (!toggleShow) {
@@ -69,7 +91,7 @@ const MyHeader = (props) => {
               <LogOutLogo alt="Home Page" />
             </button>
           </div>
-          <div className={styles.buttonHeaderSecond}>
+          <div className={styles.buttonHeaderSecond} ref={node}>
             <button type="button" onClick={toggleClikedhandler}>
               <MoreLogo alt="navDrawer" />
             </button>

@@ -9,7 +9,7 @@ import styles from "./CardUpdate.module.scss";
 import Input from "../../components/UI/Input/Input";
 import {
   updateCard,
-  addCard,
+  onAddCard,
   initExist,
   padDeactive,
   deleteCard,
@@ -503,7 +503,7 @@ const mapDispatchToProps = (dispatch) => {
     },
     // Add cards
     onAddCard: (listName, card) => {
-      dispatch(addCard(listName, card));
+      dispatch(onAddCard(listName, card));
     },
     onDeleted: (listName, cardId) => {
       dispatch(deleteCard(listName, cardId));

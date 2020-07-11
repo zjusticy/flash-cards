@@ -3,6 +3,7 @@
     "browser": true,
     "jest": true
   },
+  "plugins": ["react-hooks"],
   "parser": "babel-eslint",
   "extends": ["airbnb", "plugin:prettier/recommended"],
   "rules": {

@@ -28,7 +28,6 @@ class App extends Component {
       <Switch>
         <Route path="/memoryBoard/:name" component={MemoryBoard} />
         <Route path="/cardCreator/:name" component={CardUpdate} />
-        {/* <Route path="/cardUpdate/:name/:id" component={CardUpdate} /> */}
         <Route path="/intro" exact component={Intro} />
         <Redirect to="/intro" />
       </Switch>

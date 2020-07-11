@@ -324,7 +324,7 @@ class MemoryBoard extends Component {
               this.props.initCards({}, myBoard.listName, [], null);
             }
           } catch (error) {
-            console.error("Error adding document: ", error);
+            // console.error("Error adding document: ", error);
           }
         }
 
@@ -365,7 +365,7 @@ class MemoryBoard extends Component {
             this.props.initCards({}, this.props.match.params.name, [], null);
           }
         } catch (error) {
-          console.error("Error adding document: ", error);
+          // console.error("Error adding document: ", error);
         }
       } else {
         this._setCards(
