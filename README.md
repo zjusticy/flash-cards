@@ -1,6 +1,8 @@
+[**DEMO**](https://toms-cards.vercel.app)
+
 ## Description
 
-This is a flashcard web app that helps you memorize anything for free. It is built with React, Redux and firebase. You can create your own card collections.
+This is a flashcard web app that helps you memorize anything for free. It is built with React, Redux and localStorage. You can create your own card collections.
 
 ![](https://github.com/zjusticy/imgs_lib/blob/master/memoryCardMemBoard.png)
 
@@ -52,6 +54,9 @@ After all the cards are added to the list, and you want to start memorize the co
 
 ![](https://github.com/zjusticy/imgs_lib/blob/master/memCard.png)
 
+
+[More Info](https://github.com/zjusticy/flashCards/blob/master/doc/userManual.md)
+
 ## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+You can learn more in the [blog](https://zjusticy.github.io/blog/a-flash-cards-project).
