@@ -1,4 +1,4 @@
-[**DEMO**](https://toms-cards.vercel.app)
+[**DEMO without Firebase**](https://toms-cards.vercel.app)
 
 ## Description
 
