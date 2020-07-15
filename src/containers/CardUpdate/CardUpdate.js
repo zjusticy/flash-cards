@@ -12,7 +12,7 @@ import {
   onAddCard,
   initExist,
   padDeactive,
-  deleteCard,
+  onDeleteCard,
   // initCards,
   loadCards,
 } from "../../store/cards";
@@ -223,6 +223,7 @@ class CardUpdate extends Component {
       return {
         orderForm: updatedOrderForm,
         formIsValid: true,
+        preview: false,
       };
     });
   };
@@ -310,6 +311,7 @@ class CardUpdate extends Component {
         orderForm: updatedOrderForm,
         addNew: !prevState.addNew,
         formIsValid: true,
+        preview: false,
       };
     });
   };
@@ -506,7 +508,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(onAddCard(listName, card));
     },
     onDeleted: (listName, cardId) => {
-      dispatch(deleteCard(listName, cardId));
+      dispatch(onDeleteCard(listName, cardId));
     },
     onLoadCards: (listName) => {
       dispatch(loadCards(listName));
