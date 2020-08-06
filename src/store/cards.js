@@ -245,8 +245,9 @@ export const deleteList = (name, lists) => {
   };
 };
 
-export const onAddCard = (listName, card) => {
-  return (dispatch) => {
+export const onAddCard = (card) => {
+  return (dispatch, getState) => {
+    const listName = getState().cards.activeListName;
     dispatch(addCard(listName, card));
 
     const userId = auth.currentUser.uid;
@@ -259,8 +260,9 @@ export const onAddCard = (listName, card) => {
   };
 };
 
-export const onUpdateCard = (listName, card) => {
-  return (dispatch) => {
+export const onUpdateCard = (card) => {
+  return (dispatch, getState) => {
+    const listName = getState().cards.activeListName;
     dispatch(updateCard(listName, card));
     const userId = auth.currentUser.uid;
 
@@ -273,8 +275,9 @@ export const onUpdateCard = (listName, card) => {
   };
 };
 
-export const onDeleteCard = (listName, cardId) => {
-  return (dispatch) => {
+export const onDeleteCard = (cardId) => {
+  return (dispatch, getState) => {
+    const listName = getState().cards.activeListName;
     dispatch(deleteCard(listName, cardId));
     const userId = auth.currentUser.uid;
     database

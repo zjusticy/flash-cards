@@ -8,7 +8,7 @@ import styles from "./CardUpdate.module.scss";
 // import CardsWrapper from '../../hoc/CardsWrapper/CardsWrapper';
 import Input from "../../components/UI/Input/Input";
 import {
-  updateCard,
+  onUpdateCard,
   onAddCard,
   initExist,
   padDeactive,
@@ -239,7 +239,7 @@ class CardUpdate extends Component {
 
     // Use reducer's function
     this.props.onUpdate &&
-      this.props.onUpdate(this.props.activeListName, newCard);
+      this.props.onUpdate(newCard);
   };
 
   /**
@@ -250,7 +250,7 @@ class CardUpdate extends Component {
   _cardRemoveHandler = (cardId) => {
     // Use reducer's function
     this.props.onDeleted &&
-      this.props.onDeleted(this.props.activeListName, cardId);
+      this.props.onDeleted(cardId);
   };
 
   // Load card when initial generate page
@@ -504,17 +504,17 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(initExist(listName, ids, id));
     },
     // Add cards
-    onAddCard: (listName, card) => {
-      dispatch(onAddCard(listName, card));
+    onAddCard: (card) => {
+      dispatch(onAddCard(card));
     },
-    onDeleted: (listName, cardId) => {
-      dispatch(onDeleteCard(listName, cardId));
+    onDeleted: (cardId) => {
+      dispatch(onDeleteCard(cardId));
     },
     onLoadCards: (listName) => {
       dispatch(loadCards(listName));
     },
-    onUpdate: (listName, card) => {
-      dispatch(updateCard(listName, card));
+    onUpdate: (card) => {
+      dispatch(onUpdateCard(card));
     },
     // Deacive card
     onCancelled: () => {
