@@ -1,161 +1,140 @@
-import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
-
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from "react";
+import { Link, useHistory } from "react-router-dom";
 
 import styles from "./Intro.module.scss";
 import Button from "../../components/UI/Button/Button";
 import FileHolder from "../../components/FileIndexHolder/FileIndexHolder";
 import InputCombine from "../../components/UI/InputCombine/InputCombine";
-import { deleteList, getLists, onAddList } from "../../store/cards";
-// import Input from '../../components/UI/Input/Input';
+import Modal from "../../components/UI/Modal/Modal";
 import Layout from "../../hoc/Layout/Layout";
+import useCards from "../../hooks/useCards";
 
-class Intro extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      listName: "",
-    };
-  }
+const Intro = () => {
+  const [listName, setName] = useState("");
 
-  componentDidMount() {
-    this._loadLists();
-  }
+  const [modalShow, flipModal] = useState(false);
 
-  _loadLists = () => {
-    this.props.onGetLists && this.props.onGetLists();
+  const [selectedName, setSelectedName] = useState("");
+
+  const { onDelList, onGetLists, onAddList, listNames } = useCards();
+
+  const history = useHistory();
+
+  const _loadLists = () => {
+    onGetLists && onGetLists();
   };
 
-  _onClickedHandler = (listName) => {
-    this.props.history.push(`/memoryBoard/${listName}`);
+  useEffect(() => {
+    _loadLists();
+  }, []);
+
+  const _onClickedHandler = (_listName) => {
+    history.push(`/memoryBoard/${_listName}`);
   };
 
-  _onEditHandler = (listName) => {
-    this.props.history.push(`/cardCreator/${listName}`);
+  const _onEditHandler = (_listName) => {
+    history.push(`/cardCreator/${_listName}`);
   };
 
-  _onDeleteHandler = (listName) => {
-    const newLists = this.props.listNames.filter((list) => list !== listName);
-    // this.setState({listName:  newLists });
+  const _onDeleteHandler = (_listName) => {
+    const newLists = listNames.filter((list) => list !== _listName);
     localStorage.setItem("lists", JSON.stringify(newLists));
-    // localStorage.removeItem(listName);
-    localStorage.removeItem(`memoryBoard${listName}`);
-    this.props.onDelList && this.props.onDelList(listName, newLists);
+    localStorage.removeItem(`memoryBoard${_listName}`);
+    onDelList && onDelList(_listName, newLists);
   };
 
-  _onAddHandler = () => {
-    if (this.props.listNames.indexOf(this.state.listName) !== -1) {
+  const _onAddHandler = () => {
+    if (listNames.indexOf(listName) !== -1) {
       // console.log("Exist");
       return;
     }
-    if (this.state.listName.trim() === "") {
+    if (listName.trim() === "") {
       // console.log("Can't be empty");
       return;
     }
-    localStorage.setItem(
-      "lists",
-      JSON.stringify([this.state.listName, ...this.props.listNames])
-    );
+    localStorage.setItem("lists", JSON.stringify([listName, ...listNames]));
 
-    this.props.onAddList &&
-      this.props.onAddList(this.state.listName, +new Date());
+    onAddList && onAddList(listName, +new Date());
   };
 
-  _onLinkClicked = (event) => {
-    if (
-      this.state.listName.trim() === "" ||
-      this.props.listNames.indexOf(this.state.listName) !== -1
-    ) {
+  const _onLinkClicked = (event) => {
+    if (listName.trim() === "" || listNames.indexOf(listName) !== -1) {
       event.preventDefault();
     }
   };
 
-  _inputChangedHandler = (event) => {
-    this.setState({
-      listName: event.target.value,
-    });
+  const _inputChangedHandler = (event) => {
+    setName(event.target.value);
   };
 
-  render() {
-    return (
-      <Layout home>
-        <div className={styles.intro}>
-          <div className={styles.introWrap}>
-            <div className={styles.createNewWrap}>
-              <InputCombine
-                name="name"
-                tag="Name"
-                listName={this.state.listName}
-                inputChangedHandler={this._inputChangedHandler}
+  return (
+    <Layout home>
+      <Modal show={modalShow} modalClosed={() => flipModal(false)}>
+        <div className={styles.removeButtonWrapper}>
+          <Button
+            btnType="Success"
+            size="Big"
+            clicked={() => {
+              _onDeleteHandler(selectedName);
+              flipModal(false);
+            }}
+            elementType="normal"
+          >
+            DELETE
+          </Button>
+          <Button
+            btnType="Success"
+            size="Big"
+            clicked={() => flipModal(false)}
+            elementType="normal"
+          >
+            CANCEL
+          </Button>
+        </div>
+      </Modal>
+      <div className={styles.intro}>
+        <div className={styles.introWrap}>
+          <div className={styles.createNewWrap}>
+            <InputCombine
+              name="name"
+              tag="Name"
+              listName={listName}
+              inputChangedHandler={_inputChangedHandler}
+            />
+
+            <Button
+              btnType="Success"
+              size="Big"
+              clicked={_onAddHandler}
+              elementType="normal"
+            >
+              <Link to={`/cardCreator/${listName}`} onClick={_onLinkClicked}>
+                ADD LIST
+              </Link>
+            </Button>
+          </div>
+
+          <div className={styles.listsWrap}>
+            <h2>Lists</h2>
+
+            {listNames.map((list, index) => (
+              <FileHolder
+                key={list}
+                index={index}
+                listName={list}
+                clicked={() => _onClickedHandler(list)}
+                edit={() => _onEditHandler(list)}
+                onDelete={() => {
+                  flipModal((prev) => !prev);
+                  setSelectedName(list);
+                }}
               />
-
-              <Button
-                btnType="Success"
-                size="Big"
-                clicked={this._onAddHandler}
-                elementType="normal"
-              >
-                <Link
-                  to={`/cardCreator/${this.state.listName}`}
-                  onClick={this._onLinkClicked}
-                >
-                  ADD LIST
-                </Link>
-              </Button>
-            </div>
-
-            <div className={styles.listsWrap}>
-              <h2>Lists</h2>
-
-              {this.props.listNames.map((list, index) => (
-                <FileHolder
-                  key={list}
-                  index={index}
-                  listName={list}
-                  clicked={() => this._onClickedHandler(list)}
-                  edit={() => this._onEditHandler(list)}
-                  onDelete={() => this._onDeleteHandler(list)}
-                />
-              ))}
-            </div>
+            ))}
           </div>
         </div>
-      </Layout>
-    );
-  }
-}
-
-const mapStateToProps = (state) => {
-  return {
-    listNames: state.cards.listNames,
-  };
+      </div>
+    </Layout>
+  );
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    // Add cards
-    // onInitCards: (cards, listName, id) => {
-    //   dispatch(initCards(cards, listName, id));
-    // },
-    onAddList: (listName, id) => {
-      dispatch(onAddList(listName, id));
-    },
-    onGetLists: () => {
-      dispatch(getLists());
-    },
-    onDelList: (listName, lists) => {
-      dispatch(deleteList(listName, lists));
-    },
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Intro));
-
-Intro.propTypes = {
-  onAddList: PropTypes.func.isRequired,
-  onGetLists: PropTypes.func.isRequired,
-  onDelList: PropTypes.func.isRequired,
-  listNames: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
+export default Intro;

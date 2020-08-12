@@ -7,8 +7,7 @@ const CardsWrapper = (props) => {
     props.memBoard || props.preview
       ? styles.cardWrapper
       : styles.cardInputWrapper;
-  const classSelect =
-    props.mode && props.memBoard ? styles.cardWrapperSingle : classT;
+  const classSelect = props.mode ? styles.cardWrapperSingle : classT;
 
   return <div className={classSelect}>{props.children}</div>;
 };

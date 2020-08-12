@@ -15,3 +15,7 @@
 ## Memorizing card page
 
 ![](https://github.com/zjusticy/imgs_lib/blob/master/cardManual/memPadManual.png)
+
+## Single column and double column settings
+
+![](https://github.com/zjusticy/imgs_lib/blob/master/cardManual/singleDoubleColumn.png)

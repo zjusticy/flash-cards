@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
 // import { Redirect } from 'react-router-dom';
 
 // import Input from '../../components/UI/Input/Input';
@@ -7,17 +6,19 @@ import Button from "../../components/UI/Button/Button";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import InputCombine from "../../components/UI/InputCombine/InputCombine";
 
-import * as actions from "../../store/auth";
+import useAuth from "../../hooks/useAuth";
 
 import styles from "./Auth.module.scss";
 
-const Auth = (props) => {
-  const initState = {
-    email: "",
-    password: "",
-  };
+const initState = {
+  email: "",
+  password: "",
+};
 
+const Auth = () => {
   const [inputState, changeState] = useState(initState);
+
+  const { loading, error, onAuth } = useAuth();
 
   /**
    * Connect input and data
@@ -36,16 +37,8 @@ const Auth = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onAuth(inputState.email, inputState.password);
+    onAuth(inputState.email, inputState.password);
   };
-
-  // const formElementsArray = [];
-  // for ( let key in inputState.controls ) {
-  //     formElementsArray.push( {
-  //         id: key,
-  //         config: inputState.controls[key]
-  //     } );
-  // }
 
   let form = (
     <>
@@ -67,14 +60,14 @@ const Auth = (props) => {
     </>
   );
 
-  if (props.loading) {
+  if (loading) {
     form = <Spinner />;
   }
 
   let errorMessage = null;
 
-  if (props.error) {
-    errorMessage = <p>{props.error}</p>;
+  if (error) {
+    errorMessage = <p>{error}</p>;
   }
 
   // let authRedirect = null;
@@ -98,18 +91,4 @@ const Auth = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    loading: state.auth.loading,
-    error: state.auth.error,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onAuth: (email, password) => dispatch(actions.signIn(email, password)),
-    // onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/'))
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default Auth;

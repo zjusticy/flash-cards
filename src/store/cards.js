@@ -14,6 +14,8 @@ const initialState = {
   activeId: null,
   // true: single column, false: double columns
   modeS: true,
+  // true: single column, false: double columns
+  modeE: false,
   // waiting state before the data fetching finish
   // loading: false,
 };
@@ -126,6 +128,11 @@ const reducer = (state = initialState, action) => {
       return updateObject(state, {
         modeS: !state.modeS,
       });
+    case "EDIT_MODE_SET":
+      //
+      return updateObject(state, {
+        modeE: !state.modeE,
+      });
     default:
       return state;
   }
@@ -134,7 +141,7 @@ const reducer = (state = initialState, action) => {
 export default reducer;
 
 // action creators
-export const initCards = (cards, listName, ids, id = null) => {
+export const initCards = (cards, listName, ids, id) => {
   return {
     type: "INIT_CARDS",
     cards,
@@ -144,7 +151,7 @@ export const initCards = (cards, listName, ids, id = null) => {
   };
 };
 
-export const initExist = (listName, ids, id = null) => {
+export const initExist = (listName, ids, id) => {
   return { type: "INIT_EXIST_LIST", listName, ids, id };
 };
 
@@ -186,6 +193,10 @@ export const padDeactive = () => {
 
 export const modeFlip = () => {
   return { type: "MODE_SET" };
+};
+
+export const editModeFlip = () => {
+  return { type: "EDIT_MODE_SET" };
 };
 
 export const getLists = () => {

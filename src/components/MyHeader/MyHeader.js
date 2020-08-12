@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import cardsLogo from "../../assets/images/title_pic_2.png";
 import homeLogo from "../../assets/images/home_pic.png";
@@ -12,16 +11,20 @@ import NavigationItems from "../Navigation/NavigationItems/NavigationItems";
 
 import styles from "./MyHeader.module.scss";
 
-import { modeFlip } from "../../store/cards";
-import { signOut } from "../../store/auth";
+import useAuth from "../../hooks/useAuth";
+import useCards from "../../hooks/useCards";
 import MoreLogo from "../../assets/images/menu";
 
 const MyHeader = (props) => {
-  const { onModeFlip, onLogout, modeS } = props;
-
   const [inputClasses, changeClasses] = useState([styles.menu]);
 
   const [toggleShow, toggle] = useState(false);
+
+  const { onLogout } = useAuth();
+
+  const history = useHistory();
+
+  const { modeE, modeS, onModeFlip, onEditModeFlip } = useCards();
 
   const node = useRef();
 
@@ -60,12 +63,17 @@ const MyHeader = (props) => {
     toggleClikedhandler();
   };
 
+  const doubleEditSwich = () => {
+    onEditModeFlip();
+    toggleClikedhandler();
+  };
+
   const goHome = () => {
-    props.history.push("/");
+    history.push("/");
   };
 
   const goBack = () => {
-    props.history.goBack();
+    history.goBack();
   };
 
   const headStyle = props.home
@@ -98,7 +106,9 @@ const MyHeader = (props) => {
             <div className={inputClasses.join(" ")}>
               <NavigationItems
                 onDoubleSwitch={doubleSwich}
-                mode={modeS}
+                onDoubleEditSwitch={doubleEditSwich}
+                modeS={modeS}
+                modeE={modeE}
                 todo={toggleClikedhandler}
               />
             </div>
@@ -112,23 +122,5 @@ const MyHeader = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    modeS: state.cards.modeS,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onModeFlip: () => {
-      dispatch(modeFlip());
-    },
-    onLogout: () => dispatch(signOut()),
-  };
-};
-
 // export default withRouter(MyHeader);
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(MyHeader));
+export default MyHeader;

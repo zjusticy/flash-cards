@@ -100,3 +100,12 @@
 		margin-right: 0.75rem;
 	}
 }
+
+.padShowWrapperSingle {
+	display: flex;
+	flex-direction: column;
+	textarea {
+		@include pad-styles-single();
+		margin-right: 0.75rem;
+	}
+}

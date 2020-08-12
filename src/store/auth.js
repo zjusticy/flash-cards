@@ -6,7 +6,7 @@ const initialState = {
   isAuth: false,
   error: null,
   loading: false,
-  waiting: false,
+  // waiting: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -30,7 +30,7 @@ const reducer = (state = initialState, action) => {
         isAuth: true,
         error: null,
         loading: false,
-        waiting: false,
+        // waiting: false,
       });
 
     case "AUTH_FAIL":
@@ -42,7 +42,7 @@ const reducer = (state = initialState, action) => {
 
     case "AUTH_LOGOUT":
       //
-      return updateObject(state, { isAuth: false, waiting: false });
+      return updateObject(state, { isAuth: false });
     default:
       return state;
   }

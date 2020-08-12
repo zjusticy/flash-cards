@@ -14,7 +14,16 @@ const NavigationItems = (props) => {
           clicked={props.onDoubleSwitch}
           elementType="normal"
         >
-          {props.mode ? "Double" : "Single"}
+          {props.modeS ? "Double" : "Single"}
+        </Button>
+      </li>
+      <li>
+        <Button
+          type="button"
+          clicked={props.onDoubleEditSwitch}
+          elementType="normal"
+        >
+          {props.modeE ? "DEdit" : "SEdit"}
         </Button>
       </li>
       <li>
@@ -30,6 +39,6 @@ export default NavigationItems;
 
 NavigationItems.propTypes = {
   onDoubleSwitch: PropTypes.func.isRequired,
-  mode: PropTypes.bool.isRequired,
+  modeS: PropTypes.bool.isRequired,
   todo: PropTypes.func.isRequired,
 };
