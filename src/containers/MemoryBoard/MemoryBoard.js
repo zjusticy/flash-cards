@@ -58,116 +58,121 @@ const MemoryBoard = () => {
 
   const history = useHistory();
 
-  /**
-   * Use to set the cards parameters for init
-   * @param {object[]} idLists
-   * @param {string} name
-   */
-  const _setCards = (idLists, name) => {
-    if (idLists.length > 0) {
-      const cardIds = _shuffle(idLists);
+  useEffect(() => {
+    /**
+     * Use to set the cards parameters for init
+     * @param {object[]} idLists
+     * @param {string} name
+     */
+    const _setCards = (idLists, name) => {
+      if (idLists.length > 0) {
+        const cardIds = _shuffle(idLists);
 
-      const updateBoard = {
-        listName: name,
-        listA: cardIds,
-        listB: [],
-        // activeId: cards[0].id};
-        activeId: cardIds[0],
-      };
-
-      localStorage.setItem(`memoryBoard${name}`, JSON.stringify(updateBoard));
-
-      changeMemState((prevState) => {
-        return {
-          ...prevState,
-          memName: name,
-          memIndex: 0,
-          memId: cardIds[0],
-          activeList: cardIds,
+        const updateBoard = {
+          listName: name,
+          listA: cardIds,
+          listB: [],
+          // activeId: cards[0].id};
+          activeId: cardIds[0],
         };
-      });
-    } else {
-      changeMemState((prevState) => {
-        return {
-          ...prevState,
-          memIndex: null,
-        };
-      });
-    }
-  };
 
-  // Load cards when init
-  const _loadCards = async () => {
-    // let cards = null;
-    // Get the name from URL
-    if (match.params && match.params.name) {
-      // Load the last record of memory board
-      let myBoard = localStorage.getItem(`memoryBoard${match.params.name}`);
-      // If myBoard exist
-      if (myBoard) {
-        myBoard = JSON.parse(myBoard);
-        // cards not exist in cache
-        if (!Object.keys(cardsCache).includes(myBoard.listName)) {
-          try {
-            const userId = auth.currentUser.uid;
-            const snapshot = await database
-              .ref(`userData/${userId}/${myBoard.listName}`)
-              .once("value");
-            if (snapshot.val()) {
-              // const cardIds = Object.keys(snapshot.val());
-              onInitCards(snapshot.val(), myBoard.listName, [], null);
-            } else {
-              onInitCards({}, myBoard.listName, [], null);
-            }
-          } catch (error) {
-            // console.error("Error adding document: ", error);
-          }
-        }
-
-        const activeIndex = myBoard.listA.indexOf(myBoard.activeId);
+        localStorage.setItem(`memoryBoard${name}`, JSON.stringify(updateBoard));
 
         changeMemState((prevState) => {
           return {
             ...prevState,
-            memName: myBoard.listName,
-            memIndex: activeIndex,
-            memId: myBoard.activeId,
-            activeList: myBoard.listA,
-            backUpList: myBoard.listB,
+            memName: name,
+            memIndex: 0,
+            memId: cardIds[0],
+            activeList: cardIds,
+          };
+        });
+      } else {
+        changeMemState((prevState) => {
+          return {
+            ...prevState,
+            memIndex: null,
           };
         });
       }
-      // myBoard not exist, initialize it
+    };
 
-      // If cards is not in cache, fetch them
-      else if (!Object.keys(cardsCache).includes(match.params.name)) {
-        try {
-          const userId = auth.currentUser.uid;
-          const snapshot = await database
-            .ref(`userData/${userId}/${match.params.name}`)
-            .once("value");
-          if (snapshot.val()) {
-            const cardIds = Object.keys(snapshot.val());
-            onInitCards(snapshot.val(), match.params.name, [], null);
-            _setCards(cardIds, match.params.name);
-          } else {
-            onInitCards({}, match.params.name, [], null);
+    // Load cards when init
+    const _loadCards = async () => {
+      // let cards = null;
+      // Get the name from URL
+      if (match.params && match.params.name) {
+        // Load the last record of memory board
+        let myBoard = localStorage.getItem(`memoryBoard${match.params.name}`);
+        // If myBoard exist
+        if (myBoard) {
+          myBoard = JSON.parse(myBoard);
+          // cards not exist in cache
+          if (!Object.keys(cardsCache).includes(myBoard.listName)) {
+            try {
+              const userId = auth.currentUser.uid;
+              const snapshot = await database
+                .ref(`userData/${userId}/${myBoard.listName}`)
+                .once("value");
+              if (snapshot.val()) {
+                // const cardIds = Object.keys(snapshot.val());
+                onInitCards(snapshot.val(), myBoard.listName, [], null);
+              } else {
+                onInitCards({}, myBoard.listName, [], null);
+              }
+            } catch (error) {
+              // console.error("Error adding document: ", error);
+            }
           }
-        } catch (error) {
-          // console.error("Error adding document: ", error);
-        }
-      } else {
-        _setCards(
-          Object.keys(cardsCache[match.params.name]),
-          match.params.name
-        );
-      }
-    }
-  };
 
-  useEffect(() => {
+          const activeIndex = myBoard.listA.indexOf(myBoard.activeId);
+
+          changeMemState((prevState) => {
+            return {
+              ...prevState,
+              memName: myBoard.listName,
+              memIndex: activeIndex,
+              memId: myBoard.activeId,
+              activeList: myBoard.listA,
+              backUpList: myBoard.listB,
+            };
+          });
+        }
+        // myBoard not exist, initialize it
+
+        // If cards is not in cache, fetch them
+        else if (!Object.keys(cardsCache).includes(match.params.name)) {
+          try {
+            const userId = auth.currentUser.uid;
+            const snapshot = await database
+              .ref(`userData/${userId}/${match.params.name}`)
+              .once("value");
+            if (snapshot.val()) {
+              const cardIds = Object.keys(snapshot.val());
+              onInitCards(snapshot.val(), match.params.name, [], null);
+              _setCards(cardIds, match.params.name);
+            } else {
+              onInitCards({}, match.params.name, [], null);
+            }
+          } catch (error) {
+            // console.error("Error adding document: ", error);
+          }
+        } else {
+          _setCards(
+            Object.keys(cardsCache[match.params.name]),
+            match.params.name
+          );
+        }
+      }
+    };
     _loadCards();
-  }, []);
+  }, [
+    match.params,
+    match.params.name,
+    cardsCache,
+    onInitCards,
+    changeMemState,
+  ]);
 
   // Show or hide flash card's answer
   const _showToggled = () => {

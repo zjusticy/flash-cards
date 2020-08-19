@@ -18,7 +18,7 @@ const App = () => {
 
   useEffect(() => {
     onAuthCheck();
-  }, []);
+  }, [onAuthCheck]);
 
   // let routes = this.props.isWaiting || this.props.isAuthenticated ? (
   const routes = isAuth ? (

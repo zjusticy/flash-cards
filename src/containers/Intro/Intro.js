@@ -20,13 +20,9 @@ const Intro = () => {
 
   const history = useHistory();
 
-  const _loadLists = () => {
-    onGetLists && onGetLists();
-  };
-
   useEffect(() => {
-    _loadLists();
-  }, []);
+    onGetLists && onGetLists();
+  }, [onGetLists]);
 
   const _onClickedHandler = (_listName) => {
     history.push(`/memoryBoard/${_listName}`);
@@ -92,8 +88,8 @@ const Intro = () => {
           </Button>
         </div>
       </Modal>
-      <div className={styles.intro}>
-        <div className={styles.introWrap}>
+      <div className={styles.introWrap}>
+        <div className={styles.intro}>
           <div className={styles.createNewWrap}>
             <InputCombine
               name="name"

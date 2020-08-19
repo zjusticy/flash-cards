@@ -263,28 +263,35 @@ const CardUpdate = () => {
     onDeleteCard && onDeleteCard(cardId);
   };
 
-  // Load card when initial generate page
-  const _loadCards = async () => {
-    // Get the name from URL
-    if (match.params && match.params.name) {
-      if (match.params.name !== activeListName) {
-        if (Object.keys(cardsCache).includes(match.params.name)) {
-          const cardIds = Object.keys(cardsCache[match.params.name]).sort(
-            (a, b) => {
-              return b - a;
-            }
-          );
-          onInitExist && onInitExist(match.params.name, cardIds, null);
-        } else {
-          onLoadCards && onLoadCards(match.params.name);
+  useEffect(() => {
+    // Load card when initial generate page
+    const _loadCards = async () => {
+      // Get the name from URL
+      if (match.params && match.params.name) {
+        if (match.params.name !== activeListName) {
+          if (Object.keys(cardsCache).includes(match.params.name)) {
+            const cardIds = Object.keys(cardsCache[match.params.name]).sort(
+              (a, b) => {
+                return b - a;
+              }
+            );
+            onInitExist && onInitExist(match.params.name, cardIds, null);
+          } else {
+            onLoadCards && onLoadCards(match.params.name);
+          }
         }
       }
-    }
-  };
+    };
 
-  useEffect(() => {
     _loadCards();
-  }, []);
+  }, [
+    match.params,
+    match.params.name,
+    activeListName,
+    onInitExist,
+    onLoadCards,
+    cardsCache,
+  ]);
 
   // Preview or raw string the markdown preview
   const _preToggled = () => {

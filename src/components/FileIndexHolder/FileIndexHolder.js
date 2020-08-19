@@ -19,7 +19,7 @@ const FileIndexHolder = (props) => {
       <div className={styles.nameHolder}>
         <img src={fileLogo} alt="file" />
         <div role="button" tabIndex={index} onClick={clicked}>
-          <p>{listName}</p>
+          <span>{listName}</span>
         </div>
       </div>
       <div className={styles.buttonHolder}>

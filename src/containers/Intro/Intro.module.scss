@@ -1,10 +1,11 @@
-.intro {
-	flex: auto;
+.introWrap {
+	display: flex;
 	width: 100%;
+	flex:auto;
 	/*position: relative;*/
 }
 
-.introWrap {
+.intro {
 	/*position: absolute;*/
 	height: 500px;
 	width: 700px;
@@ -15,6 +16,7 @@
 	margin-top: 60px;
 	display: flex;
 	flex-direction: column;
+	position: relative;
 	/*margin-top: 84px;*/
 }
 
@@ -22,6 +24,7 @@
 	display: flex;
 	justify-content: space-between;
 	margin-bottom: 36px;
+	flex: 0 0 4rem;
 	& > div {
 		flex-grow: 1;
 	}
@@ -65,6 +68,8 @@
 	border: 2px solid #dddddd;
 	min-height: 5rem;
 	overflow: scroll;
+	// height: 100%;
+	flex-grow: 1;
 
 	& h2 + div {
 		margin-top: 1rem;
