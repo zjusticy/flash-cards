@@ -29,3 +29,8 @@ export type CardsCollectionType = {
 export type CardsCacheType = {
   [key: string]: CardsCollectionType;
 };
+
+export type Settings = {
+  modeSingleBoard: boolean;
+  modeSingleUpdate: boolean;
+};

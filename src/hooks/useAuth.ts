@@ -19,7 +19,7 @@ export default function useAuth() {
   return {
     isAuth: auth.isAuth,
     error: auth.error,
-    loading: auth.loading,
+    isLoading: auth.isLoading,
     onAuth,
     onLogout,
     onAuthCheck,

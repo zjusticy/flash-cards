@@ -28,3 +28,10 @@
 		display: none;
 	}
 }
+
+/* destop display */
+@media screen and (min-width: 1800px) {
+	.cardWrapperSingle {
+		height: 680px;
+	}
+}

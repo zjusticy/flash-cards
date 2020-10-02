@@ -22,11 +22,10 @@ const Auth = () => {
     password: string;
   }>(initState);
 
-  const { loading, error, onAuth } = useAuth();
+  const { isLoading, error, onAuth } = useAuth();
 
   /**
    * Connect input and data
-   * @param {object} input
    */
   const inputChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -65,7 +64,7 @@ const Auth = () => {
     </>
   );
 
-  if (loading) {
+  if (isLoading) {
     form = <Spinner />;
   }
 

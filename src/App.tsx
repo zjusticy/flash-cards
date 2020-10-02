@@ -9,17 +9,31 @@ import Intro from "./containers/Intro/Intro";
 import CardUpdate from "./containers/CardUpdate/CardUpdate";
 import MemoryBoard from "./containers/MemoryBoard/MemoryBoard";
 import useAuth from "./hooks/useAuth";
+import useCards from "./hooks/useCards";
 import Auth from "./containers/Auth/Auth";
+import Spinner from "./components/UI/Spinner/Spinner";
+import { Settings } from "./types";
 
 const App = () => {
   // componentWillMount() {
   //   localStorage.setItem('myName', 'Tom');
   // }
-  const { isAuth, onAuthCheck } = useAuth();
+  const { isAuth, onAuthCheck, isLoading } = useAuth();
+
+  const { onModeInit } = useCards();
 
   useEffect(() => {
     onAuthCheck();
   }, [onAuthCheck]);
+
+  useEffect(() => {
+    const stickyValue = window.localStorage.getItem("Settings");
+    if (stickyValue !== null) {
+      const localSettings: Settings = JSON.parse(stickyValue);
+
+      onModeInit(localSettings.modeSingleUpdate, localSettings.modeSingleBoard);
+    }
+  }, [onModeInit]);
 
   // let routes = this.props.isWaiting || this.props.isAuthenticated ? (
   const routes = isAuth ? (
@@ -36,7 +50,9 @@ const App = () => {
     </Switch>
   );
 
-  return routes;
+  const mainPage = isLoading ? <Spinner /> : routes;
+
+  return mainPage;
 };
 
 export default App;

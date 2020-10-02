@@ -15,6 +15,7 @@ import styles from "./MyHeader.module.scss";
 import useAuth from "../../hooks/useAuth";
 import useCards from "../../hooks/useCards";
 import MoreLogo from "../../assets/images/menu";
+import { Settings } from "../../types";
 
 type Props = {
   home: boolean;
@@ -52,6 +53,11 @@ const MyHeader = ({ home }: Props) => {
       document.removeEventListener("mousedown", handleOtherClick);
     };
   }, []);
+
+  useEffect(() => {
+    const value: Settings = { modeSingleBoard: modeS, modeSingleUpdate: modeE };
+    window.localStorage.setItem("Settings", JSON.stringify(value));
+  }, [modeS, modeE]);
 
   const toggleClikedhandler = () => {
     if (!toggleShow) {

@@ -6,14 +6,14 @@ import type { AppThunk } from "../index";
 export type AuthState = {
   isAuth: boolean;
   error: string | null;
-  loading: boolean;
+  isLoading: boolean;
 };
 
 const initialState: AuthState = {
   // token: null,
   isAuth: false,
   error: null,
-  loading: false,
+  isLoading: false,
   // waiting: false,
 };
 
@@ -23,21 +23,25 @@ const authSlice = createSlice({
   reducers: {
     authStart: (state) => {
       state.error = null;
-      state.loading = true;
+      state.isLoading = true;
+    },
+    checkStart: (state) => {
+      state.error = null;
+      state.isLoading = true;
     },
     authSuccess: (state) => {
       state.isAuth = true;
       state.error = null;
-      state.loading = false;
+      state.isLoading = false;
     },
     checkSuccess: (state) => {
       state.isAuth = true;
       state.error = null;
-      state.loading = false;
+      state.isLoading = false;
     },
     authFail: (state, { payload }: PayloadAction<string>) => {
       state.error = payload;
-      state.loading = false;
+      state.isLoading = false;
     },
     authLogout: (state) => {
       state.isAuth = false;
@@ -47,6 +51,7 @@ const authSlice = createSlice({
 
 export const {
   authStart,
+  checkStart,
   authSuccess,
   checkSuccess,
   authFail,
@@ -80,6 +85,7 @@ export const signOut = (): AppThunk => {
 
 export const authCheckState = (): AppThunk => {
   return (dispatch) => {
+    dispatch(checkStart());
     auth.onAuthStateChanged((user) => {
       if (user) {
         dispatch(checkSuccess());

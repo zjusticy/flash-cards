@@ -474,27 +474,29 @@ const MemoryBoard = () => {
 
   return (
     <Layout home>
-      <div className={styles.memShowWrapper}>
-        <Button
-          className={styles.imgWrapperL}
-          clicked={showPrev}
-          elementType="normal"
-        >
-          <img src={goPre} alt="Go Previous" />
-        </Button>
-        <div className={styles.padShowWrapper}>
-          <CardsWrapper memBoard mode={modeS} preview={false}>
-            {donePage}
-          </CardsWrapper>
-          <div className={styles.btnWrapper}>{buttons}</div>
+      <div className={styles.memBoard}>
+        <div className={styles.memShowWrapper}>
+          <Button
+            className={styles.imgWrapperL}
+            clicked={showPrev}
+            elementType="normal"
+          >
+            <img src={goPre} alt="Go Previous" />
+          </Button>
+          <div className={styles.padShowWrapper}>
+            <CardsWrapper memBoard mode={modeS} preview={false}>
+              {donePage}
+            </CardsWrapper>
+            <div className={styles.btnWrapper}>{buttons}</div>
+          </div>
+          <Button
+            className={styles.imgWrapperR}
+            clicked={() => showNext(false, true)}
+            elementType="normal"
+          >
+            <img src={goNext} alt="Go Next" />
+          </Button>
         </div>
-        <Button
-          className={styles.imgWrapperR}
-          clicked={() => showNext(false, true)}
-          elementType="normal"
-        >
-          <img src={goNext} alt="Go Next" />
-        </Button>
       </div>
     </Layout>
   );

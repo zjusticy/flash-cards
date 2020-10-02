@@ -410,6 +410,18 @@ const CardUpdate = () => {
   if (!addNew) {
     buttons = (
       <>
+        <Button
+          btnType="Success"
+          size="Medium"
+          elementType="normal"
+          clicked={() => {
+            onCancelled();
+            // history.goBack();
+            addToggled();
+          }}
+        >
+          NEW
+        </Button>
         {modeE && sideToggleButton}
         {previewButton}
         <Button
@@ -424,18 +436,6 @@ const CardUpdate = () => {
           }}
         >
           DELETE
-        </Button>
-        <Button
-          btnType="Success"
-          size="Medium"
-          elementType="normal"
-          clicked={() => {
-            onCancelled();
-            // history.goBack();
-            addToggled();
-          }}
-        >
-          CANCEL
         </Button>
         <Button
           btnType="Success"

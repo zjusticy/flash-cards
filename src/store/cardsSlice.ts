@@ -90,11 +90,6 @@ const cardsSlice = createSlice({
           ) &&
           payload.card.id
         ) {
-          // const newCards = {
-          //   ...state.cardsCache[payload.listName],
-          //   [payload.card.id]: payload.card,
-          // };
-          // localStorage.setItem(payload.listName, JSON.stringify(newCards));
           state.cardsCache[payload.listName][payload.card.id] = payload.card;
           state.sortedIds.unshift(payload.card.id);
         }
@@ -156,6 +151,24 @@ const cardsSlice = createSlice({
       state.activeId = null;
     },
 
+    initModeSet: {
+      reducer: (
+        state,
+        {
+          payload,
+        }: PayloadAction<{
+          modeSingleBoard: boolean;
+          modeSingleUpdate: boolean;
+        }>
+      ) => {
+        state.modeS = payload.modeSingleUpdate;
+        state.modeE = payload.modeSingleBoard;
+      },
+      prepare: (modeSingleBoard: boolean, modeSingleUpdate: boolean) => {
+        return { payload: { modeSingleBoard, modeSingleUpdate } };
+      },
+    },
+
     layoutModeSet: (state) => {
       state.modeS = !state.modeS;
     },
@@ -178,6 +191,7 @@ export const {
   updateCard,
   padClicked,
   padCancel,
+  initModeSet,
   layoutModeSet,
   editModeSet,
 } = cardsSlice.actions;

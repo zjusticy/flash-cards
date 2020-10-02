@@ -2,22 +2,31 @@
 	display: flex;
 	width: 100%;
 	flex:auto;
+	align-items: center;
+	justify-content: center;
 	/*position: relative;*/
 }
 
 .intro {
 	/*position: absolute;*/
-	height: 500px;
+	height: 550px;
 	width: 700px;
 	/*background-color: rgb(236, 245, 240);*/
 	/*	left: 50%;
 	top: 50%;*/
-	margin: 0 auto;
-	margin-top: 60px;
+	// margin: 0 auto;
+	// margin-top: 60px;
 	display: flex;
 	flex-direction: column;
 	position: relative;
 	/*margin-top: 84px;*/
+}
+
+/* destop display */
+@media screen and (min-width: 1800px) {
+    .intro {
+        height: 650px;
+    }
 }
 
 .createNewWrap {

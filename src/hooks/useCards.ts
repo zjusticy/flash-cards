@@ -11,6 +11,7 @@ import {
   setInitalExist,
   padClicked,
   padCancel,
+  initModeSet,
   layoutModeSet,
   editModeSet,
   asyncAddList,
@@ -45,6 +46,12 @@ export default function useCards() {
   const onInitExist = useCallback(
     (listName: string, ids: string[], id: string | null = null) =>
       dispatch(setInitalExist(listName, ids, id)),
+    [dispatch]
+  );
+
+  const onModeInit = useCallback(
+    (modeSingleBoard: boolean, modeSingleUpdate: boolean) =>
+      dispatch(initModeSet(modeSingleBoard, modeSingleUpdate)),
     [dispatch]
   );
 
@@ -102,6 +109,7 @@ export default function useCards() {
     modeE: cardsState.modeE,
     onInitCards,
     onInitExist,
+    onModeInit,
     onModeFlip,
     onEditModeFlip,
     onGetLists,
