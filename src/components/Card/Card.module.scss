@@ -7,6 +7,7 @@
   overflow: hidden;
   outline: none;
   min-height: 7rem;
+  width:270px;
   & h3 {
     color: rgba(0, 0, 0, 0.5);
     font-size: 1.125rem;
@@ -24,7 +25,6 @@
     line-height: 1.25;
   }
 }
-
 
 .active {
   background-color: rgb(251, 224, 145);
