@@ -1,4 +1,5 @@
 import * as React from "react";
+import { FunctionComponent } from "react";
 
 import styles from "./Input.module.scss";
 
@@ -12,10 +13,11 @@ type Props = {
   focused: (event: React.FocusEvent<HTMLTextAreaElement>) => void;
   blured: (event: React.FocusEvent<HTMLTextAreaElement>) => void;
   label?: string;
+  ref?: any;
   elementConfig?: { options: { value: string; displayValue: string }[] };
 };
 
-const input = ({
+const Input: FunctionComponent<Props> = ({
   elementType,
   value,
   id,
@@ -24,9 +26,10 @@ const input = ({
   sChanged,
   focused,
   blured,
-  label,
+  label = "",
   elementConfig,
-}: Props) => {
+  ref,
+}) => {
   let inputElement = null;
   const inputClasses = [styles.InputElement];
 
@@ -50,6 +53,7 @@ const input = ({
           onChange={tChanged}
           onFocus={focused}
           onBlur={blured}
+          ref={ref}
         />
       );
       break;
@@ -91,4 +95,4 @@ const input = ({
   );
 };
 
-export default input;
+export default Input;

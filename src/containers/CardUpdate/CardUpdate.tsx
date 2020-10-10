@@ -1,12 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import * as React from "react";
 import { useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { useImmer } from "use-immer";
 import styles from "./CardUpdate.module.scss";
-
-// import CardsWrapper from '../../hoc/CardsWrapper/CardsWrapper';
-import Input from "../../components/UI/Input/Input";
 
 import CardsWrapper from "../../hoc/CardsWrapper/CardsWrapper";
 import Layout from "../../hoc/Layout/Layout";
@@ -16,6 +13,7 @@ import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
 
 import useCards from "../../hooks/useCards";
 import CodeBlock from "../../components/CodeBlock/codeBlock";
+import Editor from "../../components/Editor/Editor";
 
 const myPlaceHolderF =
   'This is the front side \n\nUse "#" and a blank space at the beginning before the actual title';
@@ -123,69 +121,104 @@ const CardUpdate = () => {
    * Clear the hint info when focusing
    */
 
-  const focusedHandler = (
-    event: React.FocusEvent<HTMLTextAreaElement>,
-    iniValue: string,
-    inputIdentifier: "front" | "back"
-  ) => {
-    if (event.target.value === iniValue) {
-      changeForm((draft) => {
-        draft.card[inputIdentifier] = {
-          value: "",
-          valid: false,
-        };
-        draft.formIsValid = false;
-      });
-    }
-  };
+  const focusedHandler = useCallback(
+    (
+      // event: React.FocusEvent<HTMLTextAreaElement>,
+      value: string,
+      iniValue: string,
+      inputIdentifier: "front" | "back"
+    ) => {
+      if (value === iniValue) {
+        changeForm((draft) => {
+          draft.card[inputIdentifier] = {
+            value: "",
+            valid: false,
+          };
+          draft.formIsValid = false;
+        });
+      }
+    },
+    [changeForm]
+  );
 
   /**
    * Back to initial when empty and blured
    */
 
-  const bluredHandler = (
-    event: React.FocusEvent<HTMLTextAreaElement>,
-    iniValue: string,
-    inputIdentifier: "front" | "back"
-  ) => {
-    if (event.target.value === "") {
-      changeForm((draft) => {
-        draft.card[inputIdentifier] = {
-          value: iniValue,
-          valid: true,
-        };
-        draft.formIsValid =
-          inputIdentifier === "front"
-            ? draft.card.back.valid
-            : draft.card.front.valid;
-      });
-    }
-  };
+  const bluredHandler = useCallback(
+    (
+      // event: React.FocusEvent<HTMLTextAreaElement>,
+      value: string,
+      iniValue: string,
+      inputIdentifier: "front" | "back"
+    ) => {
+      if (value === "") {
+        changeForm((draft) => {
+          draft.card[inputIdentifier] = {
+            value: iniValue,
+            valid: true,
+          };
+          draft.formIsValid =
+            inputIdentifier === "front"
+              ? draft.card.back.valid
+              : draft.card.front.valid;
+        });
+      }
+    },
+    [changeForm]
+  );
 
   /**
-   * Bind the input data and container state
+   * Common input data update
    */
+  const valueUpdater = useCallback(
+    (
+      // event: React.ChangeEvent<HTMLTextAreaElement>,
+      value: string,
+      inputIdentifier: "front" | "back"
+    ) => {
+      // const { value } = event.target;
 
-  const inputChangedHandler = (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-    inputIdentifier: "front" | "back"
-  ) => {
-    const { value } = event.target;
+      const inputValid = checkValidity(value);
 
-    const inputValid = checkValidity(value);
+      changeForm((draft) => {
+        draft.card[inputIdentifier] = {
+          value,
+          valid: inputValid,
+        };
 
-    changeForm((draft) => {
-      draft.card[inputIdentifier] = {
-        value,
-        valid: inputValid,
-      };
+        draft.formIsValid =
+          inputIdentifier === "front"
+            ? inputValid && draft.card.back.valid
+            : inputValid && draft.card.front.valid;
+      });
+    },
+    [changeForm]
+  );
 
-      draft.formIsValid =
-        inputIdentifier === "front"
-          ? inputValid && draft.card.back.valid
-          : inputValid && draft.card.front.valid;
-    });
-  };
+  /**
+   * Common Change handler
+   */
+  // const inputChangedHandlerFromEvents = useCallback(
+  //   (
+  //     event: React.ChangeEvent<HTMLTextAreaElement>,
+  //     inputIdentifier: "front" | "back"
+  //   ) => {
+  //     const { value } = event.target;
+
+  //     valueUpdater(value, inputIdentifier);
+  //   },
+  //   [valueUpdater]
+  // );
+
+  const inputChangedHandlerFromValue = useCallback(
+    (value: string, inputIdentifier: "front" | "back") => {
+      // const { value } = event.target;
+
+      valueUpdater(value, inputIdentifier);
+    },
+    [valueUpdater]
+  );
 
   // Function when add button clicked
   const cardAddedHandler = () => {
@@ -286,37 +319,75 @@ const CardUpdate = () => {
   };
 
   const frontForm = (
-    <Input
-      elementType="textarea"
-      id="frontInput"
-      value={cardForm.card.front.value}
-      tChanged={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
-        inputChangedHandler(event, "front")
-      }
-      focused={(event: React.FocusEvent<HTMLTextAreaElement>) =>
-        focusedHandler(event, myPlaceHolderF, "front")
-      }
-      blured={(event: React.FocusEvent<HTMLTextAreaElement>) =>
-        bluredHandler(event, myPlaceHolderF, "front")
-      }
+    <Editor
+      textValue={cardForm.card.front.value}
+      side="front"
+      inputChangedHandler={inputChangedHandlerFromValue}
+      // inputChangedHandler={inputChangedHandlerFromEvents}
+      // id="frontInput"
+      focusedHandler={focusedHandler}
+      bluredHandler={bluredHandler}
+      myPlaceHolder={myPlaceHolderF}
+      className={styles.Editor}
     />
+
+    // <CodeMirror
+    //   value={cardForm.card.front.value}
+    //   options={DEFAULT_MARKDOWN_OPTIONS}
+    //   onBeforeChange={(editor, data, value) => {
+    //     inputChangedHandler(value, "front");
+    //   }}
+    // />
+
+    // <Input
+    //   elementType="textarea"
+    //   id="frontInput"
+    //   value={cardForm.card.front.value}
+    //   tChanged={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
+    //     inputChangedHandler(event, "front")
+    //   }
+    //   focused={(event: React.FocusEvent<HTMLTextAreaElement>) =>
+    //     focusedHandler(event, myPlaceHolderF, "front")
+    //   }
+    //   blured={(event: React.FocusEvent<HTMLTextAreaElement>) =>
+    //     bluredHandler(event, myPlaceHolderF, "front")
+    //   }
+    // />
   );
 
   const backForm = (
-    <Input
-      elementType="textarea"
-      id="backInput"
-      value={cardForm.card.back.value}
-      tChanged={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
-        inputChangedHandler(event, "back")
-      }
-      focused={(event: React.FocusEvent<HTMLTextAreaElement>) =>
-        focusedHandler(event, myPlaceHolderB, "back")
-      }
-      blured={(event: React.FocusEvent<HTMLTextAreaElement>) =>
-        bluredHandler(event, myPlaceHolderB, "back")
-      }
+    <Editor
+      textValue={cardForm.card.back.value}
+      side="back"
+      inputChangedHandler={inputChangedHandlerFromValue}
+      // inputChangedHandler={inputChangedHandlerFromEvents}
+      // id="backInput"
+      focusedHandler={focusedHandler}
+      bluredHandler={bluredHandler}
+      myPlaceHolder={myPlaceHolderB}
+      className={styles.Editor}
     />
+    // <CodeMirror
+    //   value={cardForm.card.back.value}
+    //   options={DEFAULT_MARKDOWN_OPTIONS}
+    //   onBeforeChange={(editor, data, value) => {
+    //     inputChangedHandler(value, "back");
+    //   }}
+    // />
+    // <Input
+    //   elementType="textarea"
+    //   id="backInput"
+    //   value={cardForm.card.back.value}
+    //   tChanged={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
+    //     inputChangedHandler(event, "back")
+    //   }
+    //   focused={(event: React.FocusEvent<HTMLTextAreaElement>) =>
+    //     focusedHandler(event, myPlaceHolderB, "back")
+    //   }
+    //   blured={(event: React.FocusEvent<HTMLTextAreaElement>) =>
+    //     bluredHandler(event, myPlaceHolderB, "back")
+    //   }
+    // />
   );
 
   const frontPrev = (

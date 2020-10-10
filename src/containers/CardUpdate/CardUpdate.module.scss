@@ -97,7 +97,7 @@
 .padShowWrapper {
   display: flex;
   flex-direction: column;
-  textarea {
+  & .Editor {
     @include pad-styles-double();
     margin-right: 0.75rem;
   }
@@ -106,7 +106,7 @@
 .padShowWrapperSingle {
   display: flex;
   flex-direction: column;
-  textarea {
+  & .Editor {
     @include pad-styles-single();
     margin-right: 0.75rem;
   }
@@ -115,7 +115,7 @@
 /* destop display */
 @media screen and (min-width: 1800px) {
   .padShowWrapperSingle {
-    textarea {
+    & .Editor {
       height: 650px;
     }
   }

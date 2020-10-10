@@ -1,8 +1,8 @@
-@import './parameter.scss';
+@import "./parameter.scss";
 
 /*! normalize-scss | MIT/GPLv2 License | bit.ly/normalize-scss */
 
-@import './vertical-rhythm.scss';
+@import "./vertical-rhythm.scss";
 
 // body,div,p,h2,h3,button,textarea,ul,input {
 //   margin: 0;
@@ -10,14 +10,14 @@
 // }
 
 body {
-	  /*font-family: sans-serif;*/
+  /*font-family: sans-serif;*/
   font-family: $font-stack;
 }
 
 button {
-    background: none;
-    border: 0;
-    cursor: pointer;
+  background: none;
+  border: 0;
+  cursor: pointer;
 }
 
 // h2 {
@@ -27,19 +27,32 @@ button {
 body,
 html,
 #root {
-	height: 100%;
+  height: 100%;
 }
 
-
 // If we've customized any font variables, we'll need extra properties.
-@if $base-line-height != 24px
-  or $base-unit != 'em'
-  or $h2-font-size != 1.5  * $base-font-size
-  or $h3-font-size != 1.17 * $base-font-size
-  or $h4-font-size != 1    * $base-font-size
-  or $h5-font-size != 0.83 * $base-font-size
-  or $h6-font-size != 0.67 * $base-font-size
-  or $indent-amount != 40px {
+@if $base-line-height !=
+  24px or
+  $base-unit !=
+  "em" or
+  $h2-font-size !=
+  1.5 *
+  $base-font-size or
+  $h3-font-size !=
+  1.17 *
+  $base-font-size or
+  $h4-font-size !=
+  1 *
+  $base-font-size or
+  $h5-font-size !=
+  0.83 *
+  $base-font-size or
+  $h6-font-size !=
+  0.67 *
+  $base-font-size or
+  $indent-amount !=
+  40px
+{
   $normalize-vertical-rhythm: true !global;
 }
 
@@ -66,8 +79,7 @@ html {
     // Establish a vertical rhythm unit using $base-font-size and
     // $base-line-height variables.
     line-height: ($base-line-height / $base-font-size) * 1em; /* 1 */
-  }
-  @else {
+  } @else {
     line-height: 1.15; /* 1 */
   }
   -ms-text-size-adjust: 100%; /* 2 */
@@ -112,8 +124,7 @@ h1 {
   @if $normalize-vertical-rhythm {
     /* Set 1 unit of vertical rhythm on the top and bottom margins. */
     @include normalize-margin(1 0, $h1-font-size);
-  }
-  @else {
+  } @else {
     margin: 0.67em 0;
   }
 }
@@ -206,8 +217,7 @@ figure {
 figure {
   @if $normalize-vertical-rhythm {
     @include normalize-margin(1 $indent-amount);
-  }
-  @else {
+  } @else {
     margin: 1em $indent-amount;
   }
 }
@@ -434,8 +444,7 @@ select,
 textarea {
   @if $normalize-vertical-rhythm {
     @include normalize-line-height($base-font-size); /* 1 */
-  }
-  @else {
+  } @else {
     line-height: 1.15; /* 1 */
   }
   font-family: if($base-font-family, $base-font-family, sans-serif); /* 1 */
@@ -457,7 +466,8 @@ button {
  */
 
 button,
-select { /* 1 */
+select {
+  /* 1 */
   text-transform: none;
 }
 
@@ -478,7 +488,6 @@ button,
 [type="button"],
 [type="reset"],
 [type="submit"] {
-
   /**
    * Remove the inner border and padding in Firefox.
    */
@@ -615,7 +624,6 @@ summary {
   display: list-item;
 }
 
-
 /*
  * Add the correct display in IE 9-.
  */
@@ -672,4 +680,8 @@ template {
 
 [hidden] {
   display: none;
+}
+
+.CodeMirror {
+  font-size: 1.25rem;
 }
