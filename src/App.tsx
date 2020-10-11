@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import * as React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 
-// import Layout from "./hoc/Layout/Layout";
+import styles from "./App.module.scss";
 
 import Intro from "./containers/Intro/Intro";
 // import AddCard from "./containers/AddCard/AddCard";
@@ -50,7 +50,13 @@ const App = () => {
     </Switch>
   );
 
-  const mainPage = isLoading ? <Spinner /> : routes;
+  const mainPage = isLoading ? (
+    <div className={styles.marginTop}>
+      <Spinner />
+    </div>
+  ) : (
+    routes
+  );
 
   return mainPage;
 };

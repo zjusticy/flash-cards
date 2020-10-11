@@ -43,6 +43,9 @@ const authSlice = createSlice({
       state.error = payload;
       state.isLoading = false;
     },
+    checkFail: (state) => {
+      state.isLoading = false;
+    },
     authLogout: (state) => {
       state.isAuth = false;
     },
@@ -54,6 +57,7 @@ export const {
   checkStart,
   authSuccess,
   checkSuccess,
+  checkFail,
   authFail,
   authLogout,
 } = authSlice.actions;
@@ -89,7 +93,7 @@ export const authCheckState = (): AppThunk => {
     auth.onAuthStateChanged((user) => {
       if (user) {
         dispatch(checkSuccess());
-      }
+      } else dispatch(checkFail());
     });
   };
 };
