@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import * as React from "react";
 import { useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
@@ -121,80 +121,71 @@ const CardUpdate = () => {
    * Clear the hint info when focusing
    */
 
-  const focusedHandler = useCallback(
-    (
-      // event: React.FocusEvent<HTMLTextAreaElement>,
-      value: string,
-      iniValue: string,
-      inputIdentifier: "front" | "back"
-    ) => {
-      if (value === iniValue) {
-        changeForm((draft) => {
-          draft.card[inputIdentifier] = {
-            value: "",
-            valid: false,
-          };
-          draft.formIsValid = false;
-        });
-      }
-    },
-    [changeForm]
-  );
+  const focusedHandler = (
+    // event: React.FocusEvent<HTMLTextAreaElement>,
+    value: string,
+    iniValue: string,
+    inputIdentifier: "front" | "back"
+  ) => {
+    if (value === iniValue) {
+      changeForm((draft) => {
+        draft.card[inputIdentifier] = {
+          value: "",
+          valid: false,
+        };
+        draft.formIsValid = false;
+      });
+    }
+  };
 
   /**
    * Back to initial when empty and blured
    */
 
-  const bluredHandler = useCallback(
-    (
-      // event: React.FocusEvent<HTMLTextAreaElement>,
-      value: string,
-      iniValue: string,
-      inputIdentifier: "front" | "back"
-    ) => {
-      if (value === "") {
-        changeForm((draft) => {
-          draft.card[inputIdentifier] = {
-            value: iniValue,
-            valid: true,
-          };
-          draft.formIsValid =
-            inputIdentifier === "front"
-              ? draft.card.back.valid
-              : draft.card.front.valid;
-        });
-      }
-    },
-    [changeForm]
-  );
+  const bluredHandler = (
+    // event: React.FocusEvent<HTMLTextAreaElement>,
+    value: string,
+    iniValue: string,
+    inputIdentifier: "front" | "back"
+  ) => {
+    if (value === "") {
+      changeForm((draft) => {
+        draft.card[inputIdentifier] = {
+          value: iniValue,
+          valid: true,
+        };
+        draft.formIsValid =
+          inputIdentifier === "front"
+            ? draft.card.back.valid
+            : draft.card.front.valid;
+      });
+    }
+  };
 
   /**
    * Common input data update
    */
-  const valueUpdater = useCallback(
-    (
-      // event: React.ChangeEvent<HTMLTextAreaElement>,
-      value: string,
-      inputIdentifier: "front" | "back"
-    ) => {
-      // const { value } = event.target;
+  const inputChangedHandlerFromValue = (
+    // event: React.ChangeEvent<HTMLTextAreaElement>,
+    value: string,
+    inputIdentifier: "front" | "back"
+  ) => {
+    // const { value } = event.target;
 
-      const inputValid = checkValidity(value);
+    const inputValid = checkValidity(value);
 
-      changeForm((draft) => {
-        draft.card[inputIdentifier] = {
-          value,
-          valid: inputValid,
-        };
+    changeForm((draft) => {
+      draft.card[inputIdentifier] = {
+        value,
+        valid: inputValid,
+      };
 
-        draft.formIsValid =
-          inputIdentifier === "front"
-            ? inputValid && draft.card.back.valid
-            : inputValid && draft.card.front.valid;
-      });
-    },
-    [changeForm]
-  );
+      draft.formIsValid =
+        inputIdentifier === "front"
+          ? inputValid && draft.card.back.valid
+          : inputValid && draft.card.front.valid;
+    });
+  };
 
   /**
    * Common Change handler
@@ -211,14 +202,14 @@ const CardUpdate = () => {
   //   [valueUpdater]
   // );
 
-  const inputChangedHandlerFromValue = useCallback(
-    (value: string, inputIdentifier: "front" | "back") => {
-      // const { value } = event.target;
+  // const inputChangedHandlerFromValue = (
+  //   value: string,
+  //   inputIdentifier: "front" | "back"
+  // ) => {
+  //   // const { value } = event.target;
 
-      valueUpdater(value, inputIdentifier);
-    },
-    [valueUpdater]
-  );
+  //   valueUpdater(value, inputIdentifier);
+  // };
 
   // Function when add button clicked
   const cardAddedHandler = () => {
@@ -320,6 +311,7 @@ const CardUpdate = () => {
 
   const frontForm = (
     <Editor
+      key="front"
       textValue={cardForm.card.front.value}
       side="front"
       inputChangedHandler={inputChangedHandlerFromValue}
@@ -357,6 +349,7 @@ const CardUpdate = () => {
 
   const backForm = (
     <Editor
+      key="back"
       textValue={cardForm.card.back.value}
       side="back"
       inputChangedHandler={inputChangedHandlerFromValue}
