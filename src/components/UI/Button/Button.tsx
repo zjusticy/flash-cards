@@ -1,5 +1,7 @@
 import * as React from "react";
 import { FunctionComponent } from "react";
+// import _ from "lodash";
+import { useDebouncedCallback } from "use-debounce";
 
 import styles from "./Button.module.scss";
 
@@ -10,18 +12,27 @@ type Props = {
   size?: "Big" | "Medium" | "Small";
   clicked?: () => void;
   className?: string;
+  debounced?: boolean;
 };
 
-const button: FunctionComponent<Props> = ({
+const Button: FunctionComponent<Props> = ({
   btnType,
   elementType,
   disabled,
   size,
-  clicked,
+  clicked = () => {},
   className,
   children,
+  debounced = false,
 }) => {
   let buttonElement = null;
+
+  const debClick = useDebouncedCallback(clicked, 200, {
+    leading: true,
+    trailing: false,
+  });
+
+  const clickFunc = debounced ? debClick.callback : clicked;
 
   switch (elementType) {
     case "normal":
@@ -31,7 +42,7 @@ const button: FunctionComponent<Props> = ({
           className={`${styles.Button} ${(btnType && styles[btnType]) || ""} ${
             (size && styles[size]) || ""
           } ${className || ""}`}
-          onClick={clicked || (() => {})}
+          onClick={clickFunc}
           type="button"
         >
           {children}
@@ -46,7 +57,7 @@ const button: FunctionComponent<Props> = ({
           className={`${styles.Button} ${(btnType && styles[btnType]) || ""} ${
             (size && styles[size]) || ""
           } ${className || ""}`}
-          onClick={clicked || (() => {})}
+          onClick={clickFunc}
         >
           {children}
         </button>
@@ -59,7 +70,7 @@ const button: FunctionComponent<Props> = ({
           className={`${styles.Button} ${(btnType && styles[btnType]) || ""} ${
             (size && styles[size]) || ""
           } ${className || ""}`}
-          onClick={clicked || (() => {})}
+          onClick={clickFunc}
           type="button"
         >
           {children}
@@ -70,4 +81,4 @@ const button: FunctionComponent<Props> = ({
   return buttonElement;
 };
 
-export default button;
+export default Button;

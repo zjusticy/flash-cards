@@ -86,7 +86,12 @@ const Auth = () => {
       <form onSubmit={submitHandler} className={styles.form}>
         {form}
         <div className={styles.btnWrapper}>
-          <Button btnType="Success" size="Medium" elementType="submit">
+          <Button
+            debounced
+            btnType="Success"
+            size="Medium"
+            elementType="submit"
+          >
             SUBMIT
           </Button>
         </div>

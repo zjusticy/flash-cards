@@ -463,6 +463,7 @@ const CardUpdate = () => {
         btnType="Success"
         disabled={!cardForm.formIsValid}
         size="Medium"
+        debounced
         clicked={cardAddedHandler}
         elementType="normal"
       >
@@ -492,6 +493,7 @@ const CardUpdate = () => {
           btnType="Success"
           size="Medium"
           elementType="normal"
+          debounced
           clicked={() => {
             cardRemoveHandler(activeId);
             onCancelled();
@@ -506,6 +508,7 @@ const CardUpdate = () => {
           size="Medium"
           elementType="normal"
           disabled={!cardForm.formIsValid}
+          debounced
           clicked={() => {
             onCancelled();
             cardUpdatedHandler();

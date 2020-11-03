@@ -71,6 +71,7 @@ const Intro = () => {
           <Button
             btnType="Success"
             size="Big"
+            debounced
             clicked={() => {
               onDeleteHandler(selectedName);
               flipModal(false);
@@ -104,6 +105,7 @@ const Intro = () => {
               size="Big"
               clicked={onAddHandler}
               elementType="normal"
+              debounced
             >
               <Link to={`/cardCreator/${listName}`} onClick={onLinkClicked}>
                 ADD LIST
