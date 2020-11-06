@@ -75,25 +75,22 @@ const Editor: FunctionComponent<Props> = ({
             linkReferenceStyle: "full",
           });
           turndownService.escape = (str) => str; // Disable escaping
+          let data = event.clipboardData.getData("text/plain");
           const html = event.clipboardData.getData("text/html");
           if (html) {
             const sanitizedHtml = sanitizeHtml(html);
             if (sanitizedHtml) {
-              const cursor = editor.getDoc().getCursor();
-              const line = editor.getLine(cursor.line); // get the line contents
-              const pos = {
-                // create a new object to avoid mutation of the original selection
-                line: cursor.line,
-                ch: line.length - 1, // set the character position to the end of the line
-              };
-              // replace(selectionMgr.selectionStart, selectionMgr.selectionEnd, turndownService.turndown(sanitizedHtml));
-              editor.replaceRange(turndownService.turndown(sanitizedHtml), pos);
+              data = turndownService.turndown(sanitizedHtml);
             }
           }
-
-          // editor.setValue(
-          //   turndownService.turndown(event.clipboardData.getData("text/plain"))
-          // );
+          const cursor = editor.getDoc().getCursor();
+          const line = editor.getLine(cursor.line); // get the line contents
+          const pos = {
+            // create a new object to avoid mutation of the original selection
+            line: cursor.line,
+            ch: line.length - 1, // set the character position to the end of the line
+          };
+          editor.replaceRange(data, pos);
         }}
         onBlur={(editor, event) => {
           const val = editor.getValue();
