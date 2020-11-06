@@ -3,6 +3,9 @@ import * as React from "react";
 // import CodeMirror from "codemirror";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import "codemirror/mode/markdown/markdown";
+import TurndownService from "turndown";
+// import htmlSanitizer from "../../util/htmlSanitizer";
+import sanitizeHtml from "sanitize-html";
 // import "codemirror/keymap/sublime";
 import styles from "./Editor.module.scss";
 
@@ -41,29 +44,6 @@ const Editor: FunctionComponent<Props> = ({
   myPlaceHolder,
   className,
 }) => {
-  //   const editorRef = useRef<HTMLTextAreaElement>(null);
-  //   useEffect(() => {
-  //     // Initalize
-  //     const editor = CodeMirror.fromTextArea(editorRef.current as any, {
-  //       mode: "markdown",
-  //       theme: "default",
-  //     });
-  //     // listener
-  //     editor.on("change", (evt: any) => {
-  //       const val = evt.getValue();
-  //       onChange(val, side);
-  //     });
-  //     editor.on("focus", (evt: any) => {
-  //       const val = evt.getValue();
-  //       if (val === myPlaceHolder) editor.getDoc().setValue("");
-  //       focusedHandler(val, myPlaceHolder, side);
-  //     });
-  //     editor.on("blur", (evt: any) => {
-  //       const val = evt.getValue();
-  //       if (val === "") editor.getDoc().setValue(myPlaceHolder);
-  //       bluredHandler(val, myPlaceHolder, side);
-  //     });
-  //   }, [onChange, side, focusedHandler, bluredHandler, myPlaceHolder]);
   return (
     <div className={styles.Input}>
       <CodeMirror
@@ -79,6 +59,41 @@ const Editor: FunctionComponent<Props> = ({
         // onBeforeChange={(editor, data, value) => {}}
         onBeforeChange={(editor, data, value) => {
           inputChangedHandler(value, side);
+        }}
+        onPaste={(editor, event) => {
+          event.preventDefault();
+          // const turndownService = new TurndownService({});
+          const turndownService = new TurndownService({
+            headingStyle: "atx",
+            hr: "----------",
+            bulletListMarker: "-",
+            codeBlockStyle: "fenced",
+            fence: "```",
+            emDelimiter: "_",
+            strongDelimiter: "**",
+            linkStyle: "inlined",
+            linkReferenceStyle: "full",
+          });
+          turndownService.escape = (str) => str; // Disable escaping
+          const html = event.clipboardData.getData("text/html");
+          if (html) {
+            const sanitizedHtml = sanitizeHtml(html);
+            if (sanitizedHtml) {
+              const cursor = editor.getDoc().getCursor();
+              const line = editor.getLine(cursor.line); // get the line contents
+              const pos = {
+                // create a new object to avoid mutation of the original selection
+                line: cursor.line,
+                ch: line.length - 1, // set the character position to the end of the line
+              };
+              // replace(selectionMgr.selectionStart, selectionMgr.selectionEnd, turndownService.turndown(sanitizedHtml));
+              editor.replaceRange(turndownService.turndown(sanitizedHtml), pos);
+            }
+          }
+
+          // editor.setValue(
+          //   turndownService.turndown(event.clipboardData.getData("text/plain"))
+          // );
         }}
         onBlur={(editor, event) => {
           const val = editor.getValue();
