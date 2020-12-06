@@ -84,13 +84,15 @@ const Editor: FunctionComponent<Props> = ({
             }
           }
           const cursor = editor.getDoc().getCursor();
-          const line = editor.getLine(cursor.line); // get the line contents
+          // const line = editor.getLine(cursor.line); // get the line contents
           const pos = {
             // create a new object to avoid mutation of the original selection
             line: cursor.line,
-            ch: line.length - 1, // set the character position to the end of the line
+            // ch: line.length - 1, // set the character position to the end of the line
+            ch: cursor.ch,
           };
-          editor.replaceRange(data, pos);
+          if (editor.somethingSelected()) editor.replaceSelection(data);
+          else editor.replaceRange(data, pos);
         }}
         onBlur={(editor, event) => {
           const val = editor.getValue();
