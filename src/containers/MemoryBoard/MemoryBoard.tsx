@@ -5,6 +5,8 @@ import { useImmer } from "use-immer";
 
 import { useParams, useHistory } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import Tex from "@matejmazur/react-katex";
+import math from "remark-math";
 import styles from "./MemoryBoard.module.scss";
 
 import Button from "../../components/UI/Button/Button";
@@ -57,6 +59,14 @@ const shuffle = (input: any[]) => {
   }
   return input;
 };
+
+/* eslint-disable*/
+const renderers = {
+  code: CodeBlock,
+  inlineMath: ({ value }: { value: any }) => <Tex math={value} />,
+  math: ({ value }: { value: any }) => <Tex block math={value} />,
+};
+/* eslint-enable */
 
 const MemoryBoard = () => {
   const [memState, changeMemState] = useImmer<MemStateType>(memInit);
@@ -405,7 +415,11 @@ const MemoryBoard = () => {
   ) : (
     <>
       <div className={`${styles.cardShowDouble} ${styles.markdownStyle}`}>
-        <ReactMarkdown source={frontPad} renderers={{ code: CodeBlock }} />
+        <ReactMarkdown
+          source={frontPad}
+          plugins={[math]}
+          renderers={renderers}
+        />
       </div>
       <div
         className={
@@ -415,7 +429,11 @@ const MemoryBoard = () => {
         }
       >
         {side ? null : (
-          <ReactMarkdown source={backPad} renderers={{ code: CodeBlock }} />
+          <ReactMarkdown
+            source={backPad}
+            plugins={[math]}
+            renderers={renderers}
+          />
         )}
       </div>
     </>
@@ -432,7 +450,8 @@ const MemoryBoard = () => {
       <div className={`${styles.cardShowSingle} ${styles.markdownStyle}`}>
         <ReactMarkdown
           source={side ? frontPad : backPad}
-          renderers={{ code: CodeBlock }}
+          plugins={[math]}
+          renderers={renderers}
         />
       </div>
     );

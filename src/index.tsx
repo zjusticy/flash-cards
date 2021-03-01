@@ -13,6 +13,8 @@ import registerServiceWorker from "./registerServiceWorker";
 import cardsReducer from "./store/cardsSlice";
 import authReducer from "./store/authSlice";
 
+import "katex/dist/katex.min.css";
+
 // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 // const rootReducer = combineReducers({

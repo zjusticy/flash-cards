@@ -3,6 +3,8 @@ import * as React from "react";
 import { useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { useImmer } from "use-immer";
+import Tex from "@matejmazur/react-katex";
+import math from "remark-math";
 import styles from "./CardUpdate.module.scss";
 
 import CardsWrapper from "../../hoc/CardsWrapper/CardsWrapper";
@@ -72,6 +74,14 @@ const initForm = {
   },
   formIsValid: true,
 };
+
+/* eslint-disable*/
+const renderers = {
+  code: CodeBlock,
+  inlineMath: ({ value }: { value: any }) => <Tex math={value} />,
+  math: ({ value }: { value: any }) => <Tex block math={value} />,
+};
+/* eslint-enable */
 
 const CardUpdate = () => {
   const [cardForm, changeForm] = useImmer<UpdateInitState>(initForm);
@@ -322,29 +332,6 @@ const CardUpdate = () => {
       myPlaceHolder={myPlaceHolderF}
       className={styles.Editor}
     />
-
-    // <CodeMirror
-    //   value={cardForm.card.front.value}
-    //   options={DEFAULT_MARKDOWN_OPTIONS}
-    //   onBeforeChange={(editor, data, value) => {
-    //     inputChangedHandler(value, "front");
-    //   }}
-    // />
-
-    // <Input
-    //   elementType="textarea"
-    //   id="frontInput"
-    //   value={cardForm.card.front.value}
-    //   tChanged={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
-    //     inputChangedHandler(event, "front")
-    //   }
-    //   focused={(event: React.FocusEvent<HTMLTextAreaElement>) =>
-    //     focusedHandler(event, myPlaceHolderF, "front")
-    //   }
-    //   blured={(event: React.FocusEvent<HTMLTextAreaElement>) =>
-    //     bluredHandler(event, myPlaceHolderF, "front")
-    //   }
-    // />
   );
 
   const backForm = (
@@ -383,31 +370,32 @@ const CardUpdate = () => {
     // />
   );
 
-  const frontPrev = (
+  const prevValue = (side: "front" | "back") => (
     <div
       className={`${modeE ? styles.cardShowSingle : styles.cardShowDouble} ${
         styles.markdownStyle
       }`}
     >
       <ReactMarkdown
-        source={cardForm.card.front.value}
-        renderers={{ code: CodeBlock }}
+        source={cardForm.card[side].value}
+        plugins={[math]}
+        renderers={renderers}
       />
     </div>
   );
 
-  const backPrev = (
-    <div
-      className={`${modeE ? styles.cardShowSingle : styles.cardShowDouble} ${
-        styles.markdownStyle
-      }`}
-    >
-      <ReactMarkdown
-        source={cardForm.card.back.value}
-        renderers={{ code: CodeBlock }}
-      />
-    </div>
-  );
+  // const backPrev = (
+  //   <div
+  //     className={`${modeE ? styles.cardShowSingle : styles.cardShowDouble} ${
+  //       styles.markdownStyle
+  //     }`}
+  //   >
+  //     <ReactMarkdown
+  //       source={cardForm.card.back.value}
+  //       renderers={{ code: CodeBlock }}
+  //     />
+  //   </div>
+  // );
 
   const previewButton = (
     <Button
@@ -447,12 +435,12 @@ const CardUpdate = () => {
   } else if (preview && !modeE) {
     form = (
       <>
-        {frontPrev}
-        {backPrev}
+        {prevValue("front")}
+        {prevValue("back")}
       </>
     );
   } else {
-    form = frontSide ? frontPrev : backPrev;
+    form = frontSide ? prevValue("front") : prevValue("back");
   }
 
   let buttons = (

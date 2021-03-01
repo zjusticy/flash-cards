@@ -20,8 +20,8 @@ module.exports = {
     // "plugin:jsx-a11y/recommended",
 
     // Prettier plugin and recommended rules
-    "prettier/@typescript-eslint",
-    "prettier/react",
+    // "prettier/@typescript-eslint",
+    "prettier",
     // auto fix using prettier
     "plugin:prettier/recommended",
   ],
@@ -29,6 +29,7 @@ module.exports = {
     // Include .prettierrc.js rules
     "prettier/prettier": ["error"],
     "no-param-reassign": [2, { props: false }],
+    "object-curly-spacing": [2, "always"],
 
     "react/prop-types": "off",
     "react-hooks/exhaustive-deps": "warn",
