@@ -36,7 +36,7 @@ At card create page, type ${(1+2)?}$ at the obverse side and ${3}$ at the revers
 
 ![](https://github.com/zjusticy/imgs_lib/blob/master/addCard.png)
 
-We can also type “# first” at the start of the obverse side to set the title of the card as fisrt.
+We can also type “# first” at the start of the obverse side to set the title of the card as first.
 
 3. **Update the card**
 
