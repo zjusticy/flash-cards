@@ -16,7 +16,7 @@ export type MemStateType = {
 };
 
 export type CardType = {
-  id: string | null;
+  id: string;
   title: string;
   frontValue: string;
   backValue: string;

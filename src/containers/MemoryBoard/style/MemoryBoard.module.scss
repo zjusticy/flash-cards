@@ -1,17 +1,22 @@
-@import "../../parameter.scss";
+@import "../../../parameter.scss";
 
-@import "../../markdown.scss";
+@import "../../../markdown.scss";
 
 @mixin pad-styles() {
   height: 500px;
   color: rgba(0, 0, 0, 0.7);
   font-size: 1.25rem;
-  box-shadow: 0.75rem 0.75rem 0 rgba(0, 0, 0, 0.1);
+  @media (min-width: 682px) {
+    box-shadow: 0.75rem 0.75rem 0 rgba(0, 0, 0, 0.1);
+  }
 }
 
 @mixin pad-styles-single() {
   @include pad-styles();
-  width: 682px;
+  // width: 100%;
+  @media (min-width: 682px) {
+    width: 682px;
+  }
 }
 
 @mixin pad-styles-double() {
@@ -22,9 +27,12 @@
 @mixin cardShow {
   background-color: white;
   margin: 0.75rem;
-  margin-right: 1.5rem;
   padding: 0.75rem;
+  @media (min-width: 682px) {
+    margin-right: 1.5rem;
+  }
   box-sizing: border-box;
+
   overflow: scroll;
   & > p {
     padding: 12px;
@@ -54,6 +62,15 @@
   }
 }
 
+@mixin flex-styles() {
+  display: flex;
+  height: 100%;
+}
+
+.app {
+  @include flex-styles();
+}
+
 .memBoard {
   display: flex;
   align-items: center;
@@ -66,19 +83,47 @@
   /*margin: 0 auto;*/
   // margin-top: 4rem;
   width: 100%;
-  align-items: center;
-  display: flex;
-  justify-content: space-evenly;
+  @media (min-width: 682px) {
+    align-items: center;
+    display: flex;
+    justify-content: space-evenly;
+  }
 }
 
 .imgWrapperL,
 .imgWrapperR {
+  @media (max-width: 682px) {
+    position: fixed;
+  }
   margin-bottom: 5%;
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
     cursor: pointer;
   }
   padding: 1.5rem;
+}
+
+.imgWrapperL {
+  @media (max-width: 682px) {
+    top: 40%;
+    & img {
+      width: 32px;
+      height: 32px;
+    }
+    opacity: 0.7;
+  }
+}
+
+.imgWrapperR {
+  @media (max-width: 682px) {
+    top: 40%;
+    right: 0;
+    & img {
+      width: 32px;
+      height: 32px;
+    }
+    opacity: 0.7;
+  }
 }
 
 // .imgWrapperL {
@@ -129,7 +174,7 @@
 }
 
 .locked {
-  background-image: url("../../assets/images/lock_100.png");
+  background-image: url("../../../assets/images/lock_100.png");
 }
 
 /* destop display */

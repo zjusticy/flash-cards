@@ -5,15 +5,18 @@ import ReactMarkdown from "react-markdown";
 import { useImmer } from "use-immer";
 import Tex from "@matejmazur/react-katex";
 import math from "remark-math";
-import styles from "./CardUpdate.module.scss";
+import styles from "./style/CardUpdate.module.scss";
 
 import CardsWrapper from "../../hoc/CardsWrapper/CardsWrapper";
-import Layout from "../../hoc/Layout/Layout";
-import PadList from "../../components/PadList/PadList";
+// import Layout from "../../hoc/Layout/Layout.tsx.bak";
+import PadList from "./components/PadList/PadList";
+import Drawer from "../../components/Drawer/Drawer";
 import Button from "../../components/UI/Button/Button";
 import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
+import useCards from "./hooks/useCards";
+// import useWindowSize from "../../hooks/useWindowSize";
 
-import useCards from "../../hooks/useCards";
+import { useGlobalContext } from "../../store/store";
 import CodeBlock from "../../components/CodeBlock/codeBlock";
 import Editor from "../../components/Editor/Editor";
 
@@ -92,20 +95,31 @@ const CardUpdate = () => {
 
   const [frontSide, flipSide] = useState<boolean>(true);
 
+  // const { withinSize } = useWindowSize(768);
+
   const { name } = useParams<{ name: string }>();
 
   const {
-    cardsCache,
-    activeListName,
-    activeId,
-    modeE,
+    // cardsCache,
+    // activeListName,
+    // activeId,
+    // modeE,
     onInitExist,
     onAddCard,
     onDeleteCard,
-    onLoadCards,
     onUpdateCard,
     onCancelled,
+    onLoadCards,
   } = useCards();
+
+  const {
+    cardsData,
+    modeE,
+    drawerVisible,
+    setDrawerVisibility,
+  } = useGlobalContext();
+
+  const { activeId, activeListName, cardsCache } = cardsData;
 
   /**
    * Set new initial value
@@ -253,15 +267,17 @@ const CardUpdate = () => {
 
   // Function when update button clicked
   const cardUpdatedHandler = () => {
-    const newCard = {
-      id: activeId,
-      title: showTitle(cardForm.card.front.value) || "Card",
-      frontValue: cardForm.card.front.value,
-      backValue: cardForm.card.back.value,
-    };
+    if (activeId) {
+      const newCard = {
+        id: activeId,
+        title: showTitle(cardForm.card.front.value) || "Card",
+        frontValue: cardForm.card.front.value,
+        backValue: cardForm.card.back.value,
+      };
 
-    // Use reducer's function
-    if (activeId && onUpdateCard) onUpdateCard(newCard);
+      // Use reducer's function
+      onUpdateCard(activeListName, newCard);
+    }
   };
 
   /**
@@ -270,7 +286,7 @@ const CardUpdate = () => {
 
   const cardRemoveHandler = (cardId: string | null) => {
     // Use reducer's function
-    if (cardId && onDeleteCard) onDeleteCard(cardId);
+    if (cardId) onDeleteCard(activeListName, cardId);
   };
 
   useEffect(() => {
@@ -283,14 +299,20 @@ const CardUpdate = () => {
             const cardIds = Object.keys(cardsCache[name]).sort((a, b) => {
               return parseInt(b, 10) - parseInt(a, 10);
             });
-            if (onInitExist) onInitExist(name, cardIds, null);
-          } else if (onLoadCards) onLoadCards(name);
+            onInitExist(name, cardIds, null);
+
+            // setActiveListName(name);
+            // setSortedIds(cardIds);
+            // setActiveId(null);
+          } else {
+            onLoadCards(name);
+          }
         }
       }
     };
 
     loadCards();
-  }, [name, activeListName, onInitExist, onLoadCards, cardsCache]);
+  }, [name, activeListName, onInitExist, cardsCache, onLoadCards]);
 
   // Preview or raw string the markdown preview
   const preToggled = () => {
@@ -298,6 +320,10 @@ const CardUpdate = () => {
       return !prev;
     });
   };
+
+  useEffect(() => {
+    setDrawerVisibility(true);
+  }, [setDrawerVisibility]);
 
   // Reset pre holder
   const addToggled = () => {
@@ -463,18 +489,6 @@ const CardUpdate = () => {
   if (!addNew) {
     buttons = (
       <>
-        <Button
-          btnType="Success"
-          size="Medium"
-          elementType="normal"
-          clicked={() => {
-            onCancelled();
-            // history.goBack();
-            addToggled();
-          }}
-        >
-          NEW
-        </Button>
         {modeE && sideToggleButton}
         {previewButton}
         <Button
@@ -512,24 +526,29 @@ const CardUpdate = () => {
 
   return (
     <div className={styles.app}>
-      <div className={styles.sideBar}>
-        <Toolbar />
-        <PadList setUpdate={setUpdate} />
-      </div>
-      <Layout home={false}>
-        <div className={styles.memShowWrapper}>
-          <div
-            className={
-              modeE ? styles.padShowWrapperSingle : styles.padShowWrapper
-            }
-          >
-            <CardsWrapper mode={modeE} memBoard={false} preview={preview}>
-              {form}
-            </CardsWrapper>
-            <div className={styles.btnWrapper}>{buttons}</div>
-          </div>
+      <Drawer
+        isOpen={drawerVisible}
+        onClose={() => {
+          setDrawerVisibility(false);
+        }}
+      >
+        <div className={styles.sideBar}>
+          <Toolbar />
+          <PadList setUpdate={setUpdate} addToggled={addToggled} />
         </div>
-      </Layout>
+      </Drawer>
+      <div className={styles.memShowWrapper}>
+        <div
+          className={
+            modeE ? styles.padShowWrapperSingle : styles.padShowWrapper
+          }
+        >
+          <CardsWrapper mode={modeE} memBoard={false} preview={preview}>
+            {form}
+          </CardsWrapper>
+          <div className={styles.btnWrapper}>{buttons}</div>
+        </div>
+      </div>
     </div>
   );
 };

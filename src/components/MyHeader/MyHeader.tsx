@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import * as React from "react";
 
-import { useHistory } from "react-router-dom";
+import { useNavigate, useLocation, matchRoutes } from "react-router-dom";
 
 import cardsLogo from "../../assets/images/title_pic_2.png";
 import homeLogo from "../../assets/images/home_pic.png";
@@ -12,25 +12,49 @@ import NavigationItems from "../Navigation/NavigationItems/NavigationItems";
 
 import styles from "./MyHeader.module.scss";
 
-import useAuth from "../../hooks/useAuth";
-import useCards from "../../hooks/useCards";
+import { useGlobalContext } from "../../store/store";
+// import useCards from "../../hooks/useCards.ts.bak";
 import MoreLogo from "../../assets/images/menu";
+import BeaverLogo from "../../assets/images/beaver";
 import { Settings } from "../../types";
+import useWindowSize from "../../hooks/useWindowSize";
 
-type Props = {
-  home: boolean;
-};
+// type Props = {
+//   home: boolean;
+// };
 
-const MyHeader = ({ home }: Props) => {
+const routes = [{ path: "/cardCreator/:name" }];
+
+const MyHeader = () => {
   const [inputClasses, changeClasses] = useState<string[]>([styles.menu]);
 
   const [toggleShow, toggle] = useState<boolean>(false);
 
-  const { onLogout } = useAuth();
+  const {
+    setAuthState,
+    modeE,
+    modeS,
+    setModeE,
+    setModeS,
+    drawerVisible,
+    setDrawerVisibility,
+  } = useGlobalContext();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  const { modeE, modeS, onModeFlip, onEditModeFlip } = useCards();
+  const windowSize = useWindowSize();
+
+  const location = useLocation();
+
+  const branch = matchRoutes(routes, location);
+
+  useEffect(() => {
+    console.log(windowSize.width);
+  }, [windowSize]);
+
+  const withinSize = windowSize?.width && windowSize?.width < 640;
+
+  // const { modeE, modeS, onModeFlip, onEditModeFlip } = useCards();
 
   const node = useRef<HTMLDivElement>(null);
 
@@ -70,26 +94,32 @@ const MyHeader = ({ home }: Props) => {
   };
 
   const doubleSwich = () => {
-    onModeFlip();
+    setModeE(!modeE);
     toggleClikedhandler();
   };
 
   const doubleEditSwich = () => {
-    onEditModeFlip();
+    setModeS(!modeS);
     toggleClikedhandler();
   };
 
   const goHome = () => {
-    history.push("/");
+    navigate("/");
   };
 
   const goBack = () => {
-    history.goBack();
+    navigate(-1);
   };
 
-  const headStyle = home
-    ? `${styles.container} ${styles.extraPadding}`
-    : `${styles.container}`;
+  const changeCardsListVis = () => {
+    setDrawerVisibility(!drawerVisible);
+  };
+
+  // const headStyle = home
+  //   ? `${styles.container} ${styles.extraPadding}`
+  //   : `${styles.container}`;
+
+  const headStyle = `${styles.container} ${styles.extraPadding}`;
 
   return (
     <header className={styles.myHeader}>
@@ -97,22 +127,39 @@ const MyHeader = ({ home }: Props) => {
         <nav className={styles.buttonHolder}>
           <div className={styles.buttonHeader}>
             <button type="button" onClick={goBack}>
-              <img src={backLogo} alt="Go Back" />
+              <img
+                src={backLogo}
+                alt="Go Back"
+                height={withinSize ? "32" : "null"}
+                width={withinSize ? "32" : "null"}
+              />
             </button>
           </div>
           <div className={styles.buttonHeader}>
             <button type="button" onClick={goHome}>
-              <img src={homeLogo} alt="Home Page" />
+              <img
+                src={homeLogo}
+                alt="Home Page"
+                height={withinSize ? "32" : "null"}
+                width={withinSize ? "32" : "null"}
+              />
             </button>
           </div>
-          <div className={styles.buttonHeader}>
-            <button type="button" onClick={onLogout}>
+          {/* <div className={styles.buttonHeader}>
+            <button type="button" onClick={() => setAuthState(false)}>
               <LogOutLogo alt="Home Page" />
             </button>
-          </div>
+          </div> */}
           <div className={styles.buttonHeaderSecond} ref={node}>
             <button type="button" onClick={toggleClikedhandler}>
-              <MoreLogo alt="navDrawer" />
+              <MoreLogo
+                alt="navDrawer"
+                height={withinSize ? "32" : "53"}
+                // width={withinSize ? "32" : "null"}
+
+                // width = "10",
+                // height = "53",
+              />
             </button>
             <div className={inputClasses.join(" ")}>
               <NavigationItems
@@ -121,13 +168,24 @@ const MyHeader = ({ home }: Props) => {
                 modeS={modeS}
                 modeE={modeE}
                 todo={toggleClikedhandler}
+                logout={() => setAuthState(false)}
               />
             </div>
           </div>
         </nav>
-        <div className={styles.imageHolder}>
-          <img src={cardsLogo} alt="Tom's Cards" />
-        </div>
+        {/* <div className={styles.imageHolder}> */}
+        {/* <img src={cardsLogo} alt="Tom's Cards" /> */}
+        {branch && (
+          <div className={styles.buttonHeader}>
+            <button type="button" onClick={changeCardsListVis}>
+              <BeaverLogo
+                alt="Cards list"
+                height={withinSize ? "32" : "58"}
+                width={withinSize ? "29" : "50"}
+              />
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );

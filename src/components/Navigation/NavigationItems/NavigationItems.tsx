@@ -10,6 +10,7 @@ type Props = {
   modeE: boolean;
   onDoubleEditSwitch: () => void;
   todo: () => void;
+  logout: () => void;
 };
 
 const NavigationItems = ({
@@ -18,10 +19,11 @@ const NavigationItems = ({
   modeE,
   onDoubleEditSwitch,
   todo,
+  logout,
 }: Props) => {
   return (
     <ul className={styles.NavigationItems}>
-      <li>
+      {/* <li>
         <Button clicked={onDoubleSwitch} elementType="normal">
           {modeS ? "Double" : "Single"}
         </Button>
@@ -30,10 +32,15 @@ const NavigationItems = ({
         <Button clicked={onDoubleEditSwitch} elementType="normal">
           {modeE ? "DEdit" : "SEdit"}
         </Button>
-      </li>
+      </li> */}
       <li>
         <Button clicked={todo} elementType="normal">
           Delete
+        </Button>
+      </li>
+      <li>
+        <Button clicked={logout} elementType="normal">
+          Log out
         </Button>
       </li>
     </ul>

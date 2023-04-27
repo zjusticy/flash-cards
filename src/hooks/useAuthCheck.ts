@@ -1,7 +1,10 @@
 import useSWR from "swr";
+import { useEffect, useState } from "react";
 
 // import { signIn, signOut, authCheckState, AuthState } from "../store/authSlice";
-import { signIn } from "./api/authApis";
+import { authCheckState } from "./api/authApis";
+
+import { useGlobalContext } from "../store/store";
 
 // export default function useAuth() {
 //   const dispatch = useDispatch();
@@ -24,15 +27,26 @@ import { signIn } from "./api/authApis";
 //   };
 // }
 
-export default function useAuth(email: string, password: string) {
-  const { data, error, isLoading, mutate } = useSWR(`/api/user`, () => {
-    signIn(email, password);
-  });
+export default function useAuthCheck() {
+  // const [isAuth, setAuthState] = useState(false);
+  const [isLoading, setLoadingState] = useState(true);
+
+  const { setAuthState } = useGlobalContext();
+
+  useEffect(() => {
+    const onSuccess = () => {
+      setAuthState(true);
+      setLoadingState(false);
+    };
+
+    const onFail = () => {
+      setAuthState(false);
+      setLoadingState(false);
+    };
+    authCheckState(onSuccess, onFail);
+  }, [setAuthState, setLoadingState]);
 
   return {
-    userInfo: data,
     isLoading,
-    error,
-    mutate,
   };
 }

@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 import * as React from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import styles from "./Intro.module.scss";
+import useGetLists from "./hooks/useGetLists";
+import addLists from "./api/addList";
+import removeList from "./api/removeList";
 import Button from "../../components/UI/Button/Button";
 import FileHolder from "../../components/FileIndexHolder/FileIndexHolder";
 import InputCombine from "../../components/UI/InputCombine/InputCombine";
 import Modal from "../../components/UI/Modal/Modal";
-import Layout from "../../hoc/Layout/Layout";
-import useCards from "../../hooks/useCards";
+// import Layout from "../../hoc/Layout/Layout.tsx.bak";
+// import useCards from "../../hooks/useCards.ts.bak";
 
 const Intro = () => {
   const [listName, setName] = useState<string>("");
@@ -17,31 +20,38 @@ const Intro = () => {
 
   const [selectedName, setSelectedName] = useState<string>("");
 
-  const { onDelList, onGetLists, onAddList, listNames } = useCards();
+  // const { onDelList } = useCards();
 
-  const history = useHistory();
+  const { cardLists, isLoading, error, mutate } = useGetLists();
 
-  useEffect(() => {
-    if (onGetLists) onGetLists();
-  }, [onGetLists]);
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   if (onGetLists) onGetLists();
+  // }, [onGetLists]);
 
   const onClickedHandler = (_listName: string) => {
-    history.push(`/memoryBoard/${_listName}`);
+    navigate(`/memoryBoard/${_listName}`);
   };
 
   const onEditHandler = (_listName: string) => {
-    history.push(`/cardCreator/${_listName}`);
+    navigate(`/cardCreator/${_listName}`);
   };
 
   const onDeleteHandler = (_listName: string) => {
-    const newLists = listNames.filter((list) => list !== _listName);
-    localStorage.setItem("lists", JSON.stringify(newLists));
-    localStorage.removeItem(`memoryBoard${_listName}`);
-    if (onDelList) onDelList(_listName, newLists);
+    if (cardLists) {
+      const newLists = cardLists.filter((list) => list !== _listName);
+      localStorage.setItem("lists", JSON.stringify(newLists));
+      localStorage.removeItem(`memoryBoard${_listName}`);
+      // if (onDelList) onDelList(_listName, newLists);
+      removeList(_listName)?.then(() => {
+        mutate();
+      });
+    }
   };
 
   const onAddHandler = () => {
-    if (listNames.indexOf(listName) !== -1) {
+    if (!cardLists || cardLists.indexOf(listName) !== -1) {
       // console.log("Exist");
       return;
     }
@@ -49,13 +59,21 @@ const Intro = () => {
       // console.log("Can't be empty");
       return;
     }
-    localStorage.setItem("lists", JSON.stringify([listName, ...listNames]));
+    localStorage.setItem("lists", JSON.stringify([listName, ...cardLists]));
 
-    if (onAddList) onAddList(listName, (+new Date()).toString());
+    if (addLists)
+      addLists(listName, (+new Date()).toString())
+        .then(() => {
+          mutate();
+        })
+        .catch(() => {});
   };
 
   const onLinkClicked = (event: React.MouseEvent) => {
-    if (listName.trim() === "" || listNames.indexOf(listName) !== -1) {
+    if (
+      listName.trim() === "" ||
+      (cardLists && cardLists.indexOf(listName) !== -1)
+    ) {
       event.preventDefault();
     }
   };
@@ -65,7 +83,7 @@ const Intro = () => {
   };
 
   return (
-    <Layout home>
+    <>
       <Modal show={modalShow} modalClosed={() => flipModal(false)}>
         <div className={styles.removeButtonWrapper}>
           <Button
@@ -108,7 +126,7 @@ const Intro = () => {
               debounced
             >
               <Link to={`/cardCreator/${listName}`} onClick={onLinkClicked}>
-                ADD LIST
+                +
               </Link>
             </Button>
           </div>
@@ -116,23 +134,25 @@ const Intro = () => {
           <div className={styles.listsWrap}>
             <h2>Lists</h2>
 
-            {listNames.map((list, index) => (
-              <FileHolder
-                key={list}
-                index={index}
-                listName={list}
-                clicked={() => onClickedHandler(list)}
-                edit={() => onEditHandler(list)}
-                onDelete={() => {
-                  flipModal((prev) => !prev);
-                  setSelectedName(list);
-                }}
-              />
-            ))}
+            {cardLists &&
+              cardLists.map((list, index) => (
+                <FileHolder
+                  key={list}
+                  index={index}
+                  listName={list}
+                  clicked={() => onClickedHandler(list)}
+                  edit={() => onEditHandler(list)}
+                  onDelete={() => {
+                    flipModal((prev) => !prev);
+                    setSelectedName(list);
+                  }}
+                />
+              ))}
           </div>
         </div>
       </div>
-    </Layout>
+    </>
+    // </Layout>
   );
 };
 

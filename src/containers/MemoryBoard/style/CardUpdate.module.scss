@@ -1,4 +1,4 @@
-@import "../../markdown.scss";
+@import "../../../markdown.scss";
 
 .memShowWrapper {
   /*margin: 0 auto;*/
@@ -14,12 +14,18 @@
   height: 500px;
   color: rgba(0, 0, 0, 0.7);
   font-size: 1.25rem;
-  box-shadow: 0.75rem 0.75rem 0 rgba(0, 0, 0, 0.1);
+  @media (min-width: 682px) {
+    box-shadow: 0.75rem 0.75rem 0 rgba(0, 0, 0, 0.1);
+  }
 }
 
 @mixin pad-styles-single() {
   @include pad-styles();
-  width: 682px;
+  // width: 682px;
+
+  @media (min-width: 682px) {
+    width: 682px;
+  }
 }
 
 @mixin pad-styles-double() {
@@ -30,7 +36,10 @@
 @mixin cardShow {
   background-color: white;
   margin: 0.75rem;
-  margin-right: 1.5rem;
+
+  @media (min-width: 682px) {
+    margin-right: 1.5rem;
+  }
   padding: 0.75rem;
   box-sizing: border-box;
   overflow: scroll;
@@ -60,6 +69,7 @@
   display: flex;
   justify-content: flex-end;
   margin-right: 0.5rem;
+  flex-wrap: wrap;
 
   & button {
     margin: 1rem;
@@ -99,7 +109,10 @@
   flex-direction: column;
   & .Editor {
     @include pad-styles-double();
-    margin-right: 0.75rem;
+
+    @media (min-width: 682px) {
+      margin-right: 0.75rem;
+    }
   }
 }
 
@@ -108,7 +121,10 @@
   flex-direction: column;
   & .Editor {
     @include pad-styles-single();
-    margin-right: 0.75rem;
+
+    @media (min-width: 682px) {
+      margin-right: 0.75rem;
+    }
   }
 }
 

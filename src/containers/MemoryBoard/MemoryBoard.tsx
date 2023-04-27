@@ -3,17 +3,19 @@ import * as React from "react";
 // import {Link} from 'react-router-dom';
 import { useImmer } from "use-immer";
 
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import Tex from "@matejmazur/react-katex";
 import math from "remark-math";
-import styles from "./MemoryBoard.module.scss";
+import styles from "./style/MemoryBoard.module.scss";
 
 import Button from "../../components/UI/Button/Button";
 import CardsWrapper from "../../hoc/CardsWrapper/CardsWrapper";
-import Layout from "../../hoc/Layout/Layout";
+// import Layout from "../../hoc/Layout/Layout.tsx.bak";
 
-import useCards from "../../hooks/useCards";
+// import useCards from "../../hooks/useCards.ts.bak";
+import getCards from "./api/getCards";
+import useCards from "./hooks/useCards";
 
 import goPre from "../../assets/images/leftArrow.png";
 import goNext from "../../assets/images/rightArrow.png";
@@ -24,6 +26,8 @@ import type { MemStateType } from "../../types";
 
 // import lock from '../../assets/images/locker.png';
 import CodeBlock from "../../components/CodeBlock/codeBlock";
+
+import { useGlobalContext } from "../../store/store";
 
 type MemStore = {
   listName: string;
@@ -73,9 +77,16 @@ const MemoryBoard = () => {
 
   const [side, flipSide] = useState<boolean>(true);
 
-  const { modeS, cardsCache, onInitCards } = useCards();
+  const [loading, setLoadingState] = useState<boolean>(false);
+  const [loaded, setLoadedState] = useState<boolean>(false);
 
-  const history = useHistory();
+  // const { modeS, cardsCache, onInitCards } = useCards();
+
+  const { modeS, cardsData } = useGlobalContext();
+  const { cardsCache } = cardsData;
+  const { onInitCards } = useCards();
+
+  const navigate = useNavigate();
 
   const { name } = useParams<{ name: string }>();
 
@@ -120,18 +131,16 @@ const MemoryBoard = () => {
           // cards not exist in cache
           if (!Object.keys(cardsCache).includes(myBoard && myBoard.listName)) {
             try {
-              const userId = auth.currentUser && auth.currentUser.uid;
-              if (userId) {
-                const snapshot = await database
-                  .ref(`userData/${userId}/${myBoard.listName}`)
-                  .once("value");
-                if (snapshot.val()) {
-                  // const cardIds = Object.keys(snapshot.val());
-                  onInitCards(snapshot.val(), myBoard.listName, [], null);
-                } else {
-                  onInitCards({}, myBoard.listName, [], null);
-                }
+              // const userId = auth.currentUser && auth.currentUser.uid;
+              // if (userId) {
+              const snapshot = await getCards(myBoard.listName);
+              if (snapshot && snapshot.val()) {
+                // const cardIds = Object.keys(snapshot.val());
+                onInitCards(snapshot.val(), myBoard.listName, [], null);
+              } else {
+                onInitCards({}, myBoard.listName, [], null);
               }
+              // }
             } catch (error) {
               // console.error("Error adding document: ", error);
             }
@@ -146,35 +155,42 @@ const MemoryBoard = () => {
             draft.activeList = myBoard.listA;
             draft.backUpList = myBoard.listB;
           });
+          setLoadedState(true);
         }
         // myBoard not exist, initialize it
 
         // If cards is not in cache, fetch them
         else if (!Object.keys(cardsCache).includes(name)) {
           try {
-            const userId = auth.currentUser && auth.currentUser.uid;
-            if (userId) {
-              const snapshot = await database
-                .ref(`userData/${userId}/${name}`)
-                .once("value");
-              if (snapshot.val()) {
-                const cardIds = Object.keys(snapshot.val());
-                onInitCards(snapshot.val(), name, [], null);
-                setCards(cardIds, name);
-              } else {
-                onInitCards({}, name, [], null);
-              }
+            // const userId = auth.currentUser && auth.currentUser.uid;
+            const snapshot = await getCards(name);
+            // if (userId) {
+            // const snapshot = await database
+            //   .ref(`userData/${userId}/${name}`)
+            //   .once("value");
+            if (!snapshot) return;
+            setLoadedState(true);
+            if (snapshot && snapshot.val()) {
+              const cardIds = Object.keys(snapshot.val());
+              onInitCards(snapshot.val(), name, [], null);
+              setCards(cardIds, name);
+            } else {
+              onInitCards({}, name, [], null);
+              // }
             }
           } catch (error) {
             // console.error("Error adding document: ", error);
           }
         } else {
+          setLoadedState(true);
           setCards(Object.keys(cardsCache[name]), name);
         }
       }
     };
-    loadCards();
-  }, [name, cardsCache, onInitCards, changeMemState]);
+    if (!loaded) {
+      loadCards();
+    }
+  }, [name, changeMemState, onInitCards, cardsCache, loaded]);
 
   /**
    * Move to the next card
@@ -183,10 +199,6 @@ const MemoryBoard = () => {
    * @return {none}
    */
   const showNext = (easy: boolean, arrow: boolean) => {
-    // const updatedOrderForm = {
-    //    ...this.state.orderForm
-    //  };
-
     // Senario when showing the traceback item
     if (memState.traceBack) {
       // If click the right arrow
@@ -380,7 +392,7 @@ const MemoryBoard = () => {
 
   // go to home page
   const goHome = () => {
-    history.push("/");
+    navigate("/");
   };
 
   const objExi =
@@ -492,7 +504,7 @@ const MemoryBoard = () => {
   );
 
   return (
-    <Layout home>
+    <div className={styles.app}>
       <div className={styles.memBoard}>
         <div className={styles.memShowWrapper}>
           <Button
@@ -517,7 +529,7 @@ const MemoryBoard = () => {
           </Button>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 };
 
