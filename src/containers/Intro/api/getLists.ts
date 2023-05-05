@@ -1,4 +1,3 @@
-import * as React from "react";
 import { database } from "../../../components/Firebase/firebase";
 
 export default function getLists(userId: string | null): Promise<any> {
@@ -7,11 +6,10 @@ export default function getLists(userId: string | null): Promise<any> {
     .once("value")
     .then((snapshot) => {
       // for (const )
-      const listNames = Object.keys(snapshot.val()).sort((a, b) => {
-        return (
+      const listNames = Object.keys(snapshot.val()).sort(
+        (a, b) =>
           parseInt(snapshot.val()[b], 10) - parseInt(snapshot.val()[a], 10)
-        );
-      });
+      );
       // console.log(snapshot.val());
       return listNames;
     });

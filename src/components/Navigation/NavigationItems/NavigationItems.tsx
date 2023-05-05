@@ -5,25 +5,24 @@ import styles from "./NavigationItems.module.scss";
 import Button from "../../UI/Button/Button";
 
 type Props = {
-  onDoubleSwitch: () => void;
-  modeS: boolean;
-  modeE: boolean;
-  onDoubleEditSwitch: () => void;
+  // onDoubleSwitch: () => void;
+  // modeS: boolean;
+  // modeE: boolean;
+  // onDoubleEditSwitch: () => void;
   todo: () => void;
   logout: () => void;
 };
 
 const NavigationItems = ({
-  onDoubleSwitch,
-  modeS,
-  modeE,
-  onDoubleEditSwitch,
+  // onDoubleSwitch,
+  // modeS,
+  // modeE,
+  // onDoubleEditSwitch,
   todo,
   logout,
-}: Props) => {
-  return (
-    <ul className={styles.NavigationItems}>
-      {/* <li>
+}: Props) => (
+  <ul className={styles.NavigationItems}>
+    {/* <li>
         <Button clicked={onDoubleSwitch} elementType="normal">
           {modeS ? "Double" : "Single"}
         </Button>
@@ -33,18 +32,17 @@ const NavigationItems = ({
           {modeE ? "DEdit" : "SEdit"}
         </Button>
       </li> */}
-      <li>
-        <Button clicked={todo} elementType="normal">
-          Delete
-        </Button>
-      </li>
-      <li>
-        <Button clicked={logout} elementType="normal">
-          Log out
-        </Button>
-      </li>
-    </ul>
-  );
-};
+    <li>
+      <Button clicked={todo} elementType="normal">
+        Delete
+      </Button>
+    </li>
+    <li>
+      <Button clicked={logout} elementType="normal">
+        Log out
+      </Button>
+    </li>
+  </ul>
+);
 
 export default NavigationItems;

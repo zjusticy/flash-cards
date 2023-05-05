@@ -1,4 +1,3 @@
-import * as React from "react";
 import { auth, database } from "../../../components/Firebase/firebase";
 import { CardType } from "../../../types";
 

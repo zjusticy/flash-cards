@@ -1,4 +1,4 @@
-import useSWR, { Fetcher } from "swr";
+// import useSWR, { Fetcher } from "swr";
 
 // import { signIn, signOut, authCheckState, AuthState } from "../store/authSlice";
 import addCard from "../api/addCard";
@@ -52,9 +52,9 @@ export default function useCards() {
   const onLoadCards = (listName: string) => {
     getCards(listName)?.then((snapshot) => {
       if (snapshot.val()) {
-        const cardIds = Object.keys(snapshot.val()).sort((a, b) => {
-          return parseInt(b, 10) - parseInt(a, 10);
-        });
+        const cardIds = Object.keys(snapshot.val()).sort(
+          (a, b) => parseInt(b, 10) - parseInt(a, 10)
+        );
 
         onInitCards(snapshot.val(), listName, cardIds, null);
       } else {

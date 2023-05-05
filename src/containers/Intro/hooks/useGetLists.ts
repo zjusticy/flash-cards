@@ -1,4 +1,4 @@
-import useSWR, { Fetcher } from "swr";
+import useSWR from "swr";
 
 // import { signIn, signOut, authCheckState, AuthState } from "../store/authSlice";
 import getLists from "../api/getLists";

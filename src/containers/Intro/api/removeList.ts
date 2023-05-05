@@ -1,4 +1,3 @@
-import * as React from "react";
 import { auth, database } from "../../../components/Firebase/firebase";
 
 export default function removeLists(name: string): Promise<any> | undefined {

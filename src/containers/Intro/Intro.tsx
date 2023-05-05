@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -22,7 +22,7 @@ const Intro = () => {
 
   // const { onDelList } = useCards();
 
-  const { cardLists, isLoading, error, mutate } = useGetLists();
+  const { cardLists, mutate } = useGetLists();
 
   const navigate = useNavigate();
 

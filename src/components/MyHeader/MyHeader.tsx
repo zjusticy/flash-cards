@@ -3,10 +3,10 @@ import * as React from "react";
 
 import { useNavigate, useLocation, matchRoutes } from "react-router-dom";
 
-import cardsLogo from "../../assets/images/title_pic_2.png";
+// import cardsLogo from "../../assets/images/title_pic_2.png";
 import homeLogo from "../../assets/images/home_pic.png";
 import backLogo from "../../assets/images/back_pic.png";
-import LogOutLogo from "../../assets/images/logOut";
+// import LogOutLogo from "../../assets/images/logOut";
 // import NavToggleButton from "../UI/NavToggleButton/NavToggleButton";
 import NavigationItems from "../Navigation/NavigationItems/NavigationItems";
 
@@ -34,8 +34,8 @@ const MyHeader = () => {
     setAuthState,
     modeE,
     modeS,
-    setModeE,
-    setModeS,
+    // setModeE,
+    // setModeS,
     drawerVisible,
     setDrawerVisibility,
   } = useGlobalContext();
@@ -47,10 +47,6 @@ const MyHeader = () => {
   const location = useLocation();
 
   const branch = matchRoutes(routes, location);
-
-  useEffect(() => {
-    console.log(windowSize.width);
-  }, [windowSize]);
 
   const withinSize = windowSize?.width && windowSize?.width < 640;
 
@@ -93,15 +89,15 @@ const MyHeader = () => {
     }
   };
 
-  const doubleSwich = () => {
-    setModeE(!modeE);
-    toggleClikedhandler();
-  };
+  // const doubleSwich = () => {
+  //   setModeE(!modeE);
+  //   toggleClikedhandler();
+  // };
 
-  const doubleEditSwich = () => {
-    setModeS(!modeS);
-    toggleClikedhandler();
-  };
+  // const doubleEditSwich = () => {
+  //   setModeS(!modeS);
+  //   toggleClikedhandler();
+  // };
 
   const goHome = () => {
     navigate("/");
@@ -163,10 +159,10 @@ const MyHeader = () => {
             </button>
             <div className={inputClasses.join(" ")}>
               <NavigationItems
-                onDoubleSwitch={doubleSwich}
-                onDoubleEditSwitch={doubleEditSwich}
-                modeS={modeS}
-                modeE={modeE}
+                // onDoubleSwitch={doubleSwich}
+                // onDoubleEditSwitch={doubleEditSwich}
+                // modeS={modeS}
+                // modeE={modeE}
                 todo={toggleClikedhandler}
                 logout={() => setAuthState(false)}
               />

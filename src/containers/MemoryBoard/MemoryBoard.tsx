@@ -20,7 +20,7 @@ import useCards from "./hooks/useCards";
 import goPre from "../../assets/images/leftArrow.png";
 import goNext from "../../assets/images/rightArrow.png";
 
-import { auth, database } from "../../components/Firebase/firebase";
+// import { auth, database } from "../../components/Firebase/firebase";
 
 import type { MemStateType } from "../../types";
 
@@ -77,7 +77,7 @@ const MemoryBoard = () => {
 
   const [side, flipSide] = useState<boolean>(true);
 
-  const [loading, setLoadingState] = useState<boolean>(false);
+  // const [loading, setLoadingState] = useState<boolean>(false);
   const [loaded, setLoadedState] = useState<boolean>(false);
 
   // const { modeS, cardsCache, onInitCards } = useCards();
@@ -368,9 +368,7 @@ const MemoryBoard = () => {
       flipSide(true);
     } else {
       localStorage.removeItem(`memoryBoard${name}`);
-      changeMemState((prevState) => {
-        return { ...prevState, done: true };
-      });
+      changeMemState((prevState) => ({ ...prevState, done: true }));
     }
   };
 

@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
-import * as React from "react";
+
 import { WritableDraft } from "immer/dist/types/types-external";
-import { CardType, CardsCollectionType, CardsCacheType } from "../types";
+import { CardsCacheType } from "../types";
 
 export type CardsDataType = {
   cardsCache: CardsCacheType;

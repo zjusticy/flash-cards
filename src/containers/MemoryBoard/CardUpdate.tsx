@@ -112,12 +112,8 @@ const CardUpdate = () => {
     onLoadCards,
   } = useCards();
 
-  const {
-    cardsData,
-    modeE,
-    drawerVisible,
-    setDrawerVisibility,
-  } = useGlobalContext();
+  const { cardsData, modeE, drawerVisible, setDrawerVisibility } =
+    useGlobalContext();
 
   const { activeId, activeListName, cardsCache } = cardsData;
 
@@ -296,9 +292,9 @@ const CardUpdate = () => {
       if (name) {
         if (name !== activeListName) {
           if (Object.keys(cardsCache).includes(name)) {
-            const cardIds = Object.keys(cardsCache[name]).sort((a, b) => {
-              return parseInt(b, 10) - parseInt(a, 10);
-            });
+            const cardIds = Object.keys(cardsCache[name]).sort(
+              (a, b) => parseInt(b, 10) - parseInt(a, 10)
+            );
             onInitExist(name, cardIds, null);
 
             // setActiveListName(name);
@@ -316,9 +312,7 @@ const CardUpdate = () => {
 
   // Preview or raw string the markdown preview
   const preToggled = () => {
-    flipPreview((prev) => {
-      return !prev;
-    });
+    flipPreview((prev) => !prev);
   };
 
   useEffect(() => {
