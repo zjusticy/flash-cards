@@ -1,37 +1,37 @@
 .cardWrapper {
-	background-color: rgb(236, 245, 240);
-	width: 900px;
-	height: 530px;
-	display: flex;
-	justify-content: space-between;
+  background-color: rgb(236, 245, 240);
+  //   width: 900px;
+  height: 530px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .cardWrapperSingle {
-	background-color: rgb(236, 245, 240);
-	// width: 900px;
-	height: 530px;
-	label {
-		display: none;
-	}
+  background-color: rgb(236, 245, 240);
+  // width: 900px;
+  height: 530px;
+  label {
+    display: none;
+  }
 }
 
 .cardInputWrapper {
-	background-color: rgb(236, 245, 240);
-	width: 900px;
-	height: 530px;
-	& form {
-		display: flex;
-		justify-content: space-between;
-	}
+  background-color: rgb(236, 245, 240);
+  // width: 900px;
+  height: 530px;
+  & form {
+    display: flex;
+    justify-content: space-between;
+  }
 
-	label {
-		display: none;
-	}
+  label {
+    display: none;
+  }
 }
 
 /* destop display */
 @media screen and (min-width: 1800px) {
-	.cardWrapperSingle {
-		height: 680px;
-	}
+  .cardWrapperSingle {
+    height: 680px;
+  }
 }

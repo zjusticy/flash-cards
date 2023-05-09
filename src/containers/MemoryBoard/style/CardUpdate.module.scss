@@ -119,6 +119,7 @@
 .padShowWrapperSingle {
   display: flex;
   flex-direction: column;
+  width: 100%;
   & .Editor {
     @include pad-styles-single();
 
