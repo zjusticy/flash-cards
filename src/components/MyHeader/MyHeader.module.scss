@@ -62,6 +62,7 @@
 
 .buttonHeader {
   @include btnWrapper-styles();
+  position: relative;
 }
 
 .buttonHeaderSecond {
