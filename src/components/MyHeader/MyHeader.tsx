@@ -122,7 +122,11 @@ const MyHeader = () => {
       <div className={headStyle}>
         <nav className={styles.buttonHolder}>
           <div className={styles.buttonHeader}>
-            <button type="button" onClick={goBack}>
+            <button
+              type="button"
+              onClick={goBack}
+              className={styles.iconButton}
+            >
               <img
                 src={backLogo}
                 alt="Go Back"
@@ -177,7 +181,11 @@ const MyHeader = () => {
         {/* <img src={cardsLogo} alt="Tom's Cards" /> */}
         {branch && (
           <div className={styles.buttonHeader}>
-            <button type="button" onClick={changeCardsListVis}>
+            <button
+              type="button"
+              onClick={changeCardsListVis}
+              className={styles.iconButton}
+            >
               <BeaverLogo
                 alt="Cards list"
                 height={withinSize ? "32" : "58"}
