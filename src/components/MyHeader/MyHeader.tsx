@@ -132,7 +132,11 @@ const MyHeader = () => {
             </button>
           </div>
           <div className={styles.buttonHeader}>
-            <button type="button" onClick={goHome}>
+            <button
+              type="button"
+              onClick={goHome}
+              className={styles.iconButton}
+            >
               <img
                 src={homeLogo}
                 alt="Home Page"

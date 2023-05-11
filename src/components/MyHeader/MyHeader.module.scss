@@ -62,7 +62,6 @@
 
 .buttonHeader {
   @include btnWrapper-styles();
-  position: relative;
 }
 
 .buttonHeaderSecond {
@@ -108,4 +107,10 @@
   .extraPadding {
     max-width: 1080px;
   }
+}
+
+.iconButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
