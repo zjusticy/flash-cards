@@ -13,6 +13,7 @@ export type MemStateType = {
   again: boolean;
   traceBack: boolean;
   done: boolean;
+  emptyList: boolean;
 };
 
 export type CardType = {

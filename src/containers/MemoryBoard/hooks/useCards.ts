@@ -16,7 +16,6 @@ export default function useCards() {
     // setSortedIds,
     // setActiveListName,
     // setActiveId,
-    // sortedIds,
     cardsData,
     setCardsData,
   } = useGlobalContext();
@@ -84,8 +83,8 @@ export default function useCards() {
 
   const onDeleteCard = (listName: string, cardId: string) => {
     setCardsData((draft) => {
+      draft.sortedIds = draft.sortedIds.filter((id) => id !== cardId);
       delete draft.cardsCache[listName][cardId];
-      draft.sortedIds.filter((id) => id !== cardId);
     });
     removeCard(listName, cardId)?.catch();
     // addCard(card, listName)?.catch();

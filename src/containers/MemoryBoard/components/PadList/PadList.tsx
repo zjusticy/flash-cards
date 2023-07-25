@@ -23,7 +23,7 @@ const PadList: FunctionComponent<{
   //   onClickPad,
   // } = useCards();
 
-  const { cardsData, setCardsData } = useGlobalContext();
+  const { cardsData, setCardsData, setDrawerVisibility } = useGlobalContext();
 
   const {
     // cardsCache,
@@ -54,6 +54,7 @@ const PadList: FunctionComponent<{
           clicked={() => {
             onCancelled();
             addToggled();
+            setDrawerVisibility(false);
           }}
         >
           NEW

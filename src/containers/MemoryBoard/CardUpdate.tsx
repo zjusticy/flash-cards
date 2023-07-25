@@ -335,7 +335,7 @@ const CardUpdate = () => {
       draft.formIsValid = true;
     });
     flipPreview(false);
-    flipAddNew((prev) => !prev);
+    flipAddNew(true);
     flipSide(true);
   };
 
@@ -503,7 +503,7 @@ const CardUpdate = () => {
           btnType="Success"
           size="Medium"
           elementType="normal"
-          disabled={!cardForm.formIsValid}
+          disabled={!cardForm.formIsValid || preview}
           debounced
           clicked={() => {
             onCancelled();

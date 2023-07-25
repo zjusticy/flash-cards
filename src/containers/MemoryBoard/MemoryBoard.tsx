@@ -47,6 +47,7 @@ const memInit = {
   again: true,
   traceBack: false,
   done: false,
+  emptyList: false,
 };
 
 /**
@@ -114,6 +115,7 @@ const MemoryBoard = () => {
       } else {
         changeMemState((draft) => {
           draft.memIndex = 0;
+          draft.emptyList = true;
         });
       }
     };
@@ -395,11 +397,8 @@ const MemoryBoard = () => {
 
   const objExi =
     memState.memId &&
-    Object.prototype.hasOwnProperty.call(cardsCache, memState.memName) &&
-    Object.prototype.hasOwnProperty.call(
-      cardsCache[memState.memName],
-      memState.memId
-    );
+    Object.hasOwn(cardsCache, memState.memName) &&
+    Object.hasOwn(cardsCache[memState.memName], memState.memId);
 
   const frontPad =
     (memState.memId &&
@@ -450,56 +449,67 @@ const MemoryBoard = () => {
   );
 
   if (modeS) {
-    donePage = memState.done ? (
-      <div className={styles.cardShowSingle}>
-        <p className={styles.doneText}>CLEAR !</p>
-        <p className={styles.doneText}>CLEAR !</p>
-        <p className={styles.doneText}>CLEAR !</p>
-      </div>
-    ) : (
-      <div className={`${styles.cardShowSingle} ${styles.markdownStyle}`}>
-        <ReactMarkdown
-          source={side ? frontPad : backPad}
-          plugins={[math]}
-          renderers={renderers}
-        />
-      </div>
-    );
+    if (memState.emptyList) {
+      donePage = (
+        <div className={styles.cardShowSingle}>
+          <p className={styles.doneText}>EMPTY LIST !</p>
+        </div>
+      );
+    } else if (memState.done) {
+      donePage = (
+        <div className={styles.cardShowSingle}>
+          <p className={styles.doneText}>CLEAR !</p>
+          <p className={styles.doneText}>CLEAR !</p>
+          <p className={styles.doneText}>CLEAR !</p>
+        </div>
+      );
+    } else {
+      donePage = (
+        <div className={`${styles.cardShowSingle} ${styles.markdownStyle}`}>
+          <ReactMarkdown
+            source={side ? frontPad : backPad}
+            plugins={[math]}
+            renderers={renderers}
+          />
+        </div>
+      );
+    }
   }
 
-  const buttons = memState.done ? (
-    <Button
-      btnType="Success"
-      size="Medium"
-      clicked={goHome}
-      elementType="normal"
-    >
-      HOME
-    </Button>
-  ) : (
-    <>
+  const buttons =
+    memState.done || memState.emptyList ? (
       <Button
         btnType="Success"
         size="Medium"
-        elementType="normal"
-        clicked={
-          memState.again
-            ? () => showNext(true, false)
-            : () => showNext(false, false)
-        }
-      >
-        {memState.again ? "EASY" : "AGAIN"}
-      </Button>
-      <Button
-        btnType="Success"
-        size="Medium"
-        clicked={() => flipSide((prev) => !prev)}
+        clicked={goHome}
         elementType="normal"
       >
-        {side ? "SHOW" : "HIDE"}
+        HOME
       </Button>
-    </>
-  );
+    ) : (
+      <>
+        <Button
+          btnType="Success"
+          size="Medium"
+          elementType="normal"
+          clicked={
+            memState.again
+              ? () => showNext(true, false)
+              : () => showNext(false, false)
+          }
+        >
+          {memState.again ? "EASY" : "AGAIN"}
+        </Button>
+        <Button
+          btnType="Success"
+          size="Medium"
+          clicked={() => flipSide((prev) => !prev)}
+          elementType="normal"
+        >
+          {side ? "SHOW" : "HIDE"}
+        </Button>
+      </>
+    );
 
   return (
     <div className={styles.app}>
