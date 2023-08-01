@@ -21,7 +21,7 @@
 
 @mixin pad-styles-single() {
   @include pad-styles();
-  // width: 682px;
+  width: 100%;
 
   @media (min-width: 682px) {
     width: 682px;
