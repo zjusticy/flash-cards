@@ -7,13 +7,16 @@
 }
 
 .cardWrapperSingle {
-  display: flex;
-  justify-content: center;
+  // display: flex;
+  // justify-content: center;
   background-color: rgb(236, 245, 240);
   // width: 900px;
   height: 530px;
   label {
     display: none;
+  }
+  @media (max-width: 682px) {
+    width: 100%;
   }
 }
 

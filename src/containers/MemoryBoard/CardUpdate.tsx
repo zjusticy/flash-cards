@@ -391,16 +391,18 @@ const CardUpdate = () => {
   );
 
   const prevValue = (side: "front" | "back") => (
-    <div
-      className={`${modeE ? styles.cardShowSingle : styles.cardShowDouble} ${
-        styles.markdownStyle
-      }`}
-    >
-      <ReactMarkdown
-        source={cardForm.card[side].value}
-        plugins={[math]}
-        renderers={renderers}
-      />
+    <div className={styles.cardCenter}>
+      <div
+        className={`${modeE ? styles.cardShowSingle : styles.cardShowDouble} ${
+          styles.markdownStyle
+        }`}
+      >
+        <ReactMarkdown
+          source={cardForm.card[side].value}
+          plugins={[math]}
+          renderers={renderers}
+        />
+      </div>
     </div>
   );
 
@@ -451,7 +453,11 @@ const CardUpdate = () => {
       </form>
     );
   } else if (!preview && modeE) {
-    form = <form>{frontSide ? frontForm : backForm}</form>;
+    form = (
+      <div className={styles.cardCenter}>
+        <form>{frontSide ? frontForm : backForm}</form>
+      </div>
+    );
   } else if (preview && !modeE) {
     form = (
       <>

@@ -10,6 +10,11 @@
   height: 100%;
 }
 
+.cardCenter {
+  display: flex;
+  justify-content: center;
+}
+
 @mixin pad-styles() {
   height: 500px;
   color: rgba(0, 0, 0, 0.7);
@@ -107,6 +112,7 @@
 .padShowWrapper {
   display: flex;
   flex-direction: column;
+
   & .Editor {
     @include pad-styles-double();
 
@@ -120,8 +126,17 @@
   // display: flex;
   flex-direction: column;
   width: 100%;
+  & form {
+    @media (max-width: 681px) {
+      width: 100%;
+    }
+  }
+
   & .Editor {
     @include pad-styles-single();
+
+    @include pad-styles();
+    width: 100%;
 
     @media (min-width: 682px) {
       margin-right: 0.75rem;
