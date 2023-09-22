@@ -1,12 +1,11 @@
 import { createContext, useContext } from "react";
 
-import { WritableDraft } from "immer/dist/types/types-external";
-import { CardsCacheType } from "../types";
+// import { WritableDraft } from "immer/dist/types/types-external";
+import { CardsCollectionType } from "../types";
 
 export type CardsDataType = {
-  cardsCache: CardsCacheType;
+  cardsCache: CardsCollectionType | null;
   sortedIds: Array<string>;
-  activeListName: string;
   activeId: string | null;
 };
 
@@ -23,16 +22,8 @@ export type GlobalContent = {
   drawerVisible: boolean;
   setDrawerVisibility: (c: boolean) => void;
 
-  cardsData: CardsDataType;
-  setCardsData: (f: (draft: WritableDraft<CardsDataType>) => void) => void;
-  //   cardsCache: CardsCacheType;
-  //   setCardsCache: (f: (draft: WritableDraft<CardsCacheType>) => void) => void;
-  //   sortedIds: Array<string>;
-  //   setSortedIds: (f: (draft: string[]) => void | string[]) => void;
-  //   activeListName: string;
-  //   setActiveListName: (c: string) => void;
-  //   activeId: string | null;
-  //   setActiveId: (c: string | null) => void;
+  // cardsData: CardsDataType;
+  // setCardsData: (f: (draft: WritableDraft<CardsDataType>) => void) => void;
 };
 
 export const MyGlobalContext = createContext<GlobalContent>({
@@ -44,21 +35,7 @@ export const MyGlobalContext = createContext<GlobalContent>({
   setModeE: () => {},
   drawerVisible: false,
   setDrawerVisibility: () => {},
-  cardsData: {
-    cardsCache: {},
-    sortedIds: [],
-    activeListName: "",
-    activeId: null,
-  },
-  setCardsData: () => {},
-  //   cardsCache: {},
-  //   setCardsCache: () => {},
-  //   sortedIds: [],
-  //   setSortedIds: () => {},
-  //   activeListName: "",
-  //   setActiveListName: () => {},
-  //   activeId: null,
-  //   setActiveId: () => {},
+  // setCardsData: () => {},
 });
 
 export const useGlobalContext = () => useContext(MyGlobalContext);

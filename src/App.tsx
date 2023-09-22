@@ -1,20 +1,14 @@
 import { useEffect, useState } from "react";
 import * as React from "react";
 import { Route, Routes, Outlet, Navigate } from "react-router-dom";
-import { useImmer } from "use-immer";
+import { MyHeader, Spinner } from "features/ui";
 
-import styles from "./App.module.scss";
-import Intro from "./containers/Intro/Intro";
-import MyHeader from "./components/MyHeader/MyHeader";
+import useAuthCheck from "features/user/use-auth-check";
+import { CardUpdate, MemoryBoard, Intro, Auth } from "pages";
+import styles from "App.module.scss";
 // import AddCard from "./containers/AddCard/AddCard";
-import CardUpdate from "./containers/MemoryBoard/CardUpdate";
-import MemoryBoard from "./containers/MemoryBoard/MemoryBoard";
-import useAuthCheck from "./hooks/useAuthCheck";
-// import useCards from "./hooks/useCards.ts.bak";
-import Auth from "./containers/Auth/Auth";
-import Spinner from "./components/UI/Spinner/Spinner";
-import { MyGlobalContext, CardsDataType } from "./store/store";
-import { Settings } from "./types";
+import { MyGlobalContext } from "store/store";
+import { Settings } from "types";
 
 const RequireAuth = ({ isAuth }: { isAuth: boolean }) => {
   if (!isAuth) {
@@ -47,12 +41,12 @@ const App = () => {
   // const [sortedIds, setSortedIds] = useImmer<Array<string>>([]);
   // const [activeListName, setActiveListName] = useState<string>("");
   // const [activeId, setActiveId] = useState<string | null>(null);
-  const [cardsData, setCardsData] = useImmer<CardsDataType>({
-    cardsCache: {},
-    sortedIds: [],
-    activeListName: "",
-    activeId: null,
-  });
+  // const [cardsData, setCardsData] = useImmer<CardsDataType>({
+  //   cardsCache: {},
+  //   sortedIds: [],
+  //   // activeListName: "",
+  //   activeId: null,
+  // });
 
   // const { onModeInit } = useCards();
 
@@ -105,8 +99,6 @@ const App = () => {
         setModeE,
         drawerVisible,
         setDrawerVisibility,
-        cardsData,
-        setCardsData,
       }}
     >
       {routes}
