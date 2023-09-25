@@ -1,11 +1,13 @@
 @import "../../../markdown.scss";
 
 .memShowWrapper {
-  /*margin: 0 auto;*/
+  // margin: 0 auto;
   // margin-top: 4rem;
+
   align-items: center;
   display: flex;
   justify-content: center;
+
   width: 100%;
   height: 100%;
 }
@@ -26,7 +28,7 @@
 
 @mixin pad-styles-single() {
   @include pad-styles();
-  width: 100%;
+  // width: 100%;
 
   @media (min-width: 682px) {
     width: 682px;
@@ -43,7 +45,7 @@
   margin: 0.75rem;
 
   @media (min-width: 682px) {
-    margin-right: 1.5rem;
+    margin: 1.75rem;
   }
   padding: 0.75rem;
   box-sizing: border-box;
@@ -78,8 +80,11 @@
 
   & button {
     margin: 1rem;
-    width: 6rem;
+    width: 4rem;
     font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -112,7 +117,6 @@
 .padShowWrapper {
   display: flex;
   flex-direction: column;
-
   & .Editor {
     @include pad-styles-double();
 
@@ -123,9 +127,12 @@
 }
 
 .padShowWrapperSingle {
-  // display: flex;
+  display: flex;
   flex-direction: column;
-  width: 100%;
+  @media (max-width: 681px) {
+    width: 100%;
+  }
+
   & form {
     @media (max-width: 681px) {
       width: 100%;

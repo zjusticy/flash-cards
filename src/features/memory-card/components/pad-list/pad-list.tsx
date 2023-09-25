@@ -2,7 +2,7 @@ import * as React from "react";
 import { FunctionComponent } from "react";
 import Button from "features/ui/button/button";
 import { CardType } from "features/memory-card/types-memory-card";
-import Card from "features/memory-card/components/card/card";
+import Card from "features/memory-card/components/list-card/list-card";
 import { useGlobalContext, CardsDataType } from "store/store";
 import { WritableDraft } from "immer/dist/types/types-external";
 

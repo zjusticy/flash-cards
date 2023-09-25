@@ -8,14 +8,22 @@ import math from "remark-math";
 import useCards from "features/memory-card/use-swr-memory-card";
 import useCardsForPage from "features/memory-card/use-memory-card";
 import {
-  CardsWrapper,
+  CardsShowWrapper,
+  // CardsEditWrapper,
   PadList,
   CodeBlock,
   Editor,
 } from "features/memory-card/components";
 import { Drawer, Button, Toolbar } from "features/ui";
 import { useGlobalContext } from "store/store";
-import styles from "./style/CardUpdate.module.scss";
+import {
+  CardFlip,
+  EditIcon,
+  TextView,
+  DeleteIcon,
+  SaveIcon,
+} from "assets/images";
+import styles from "./style/card-update.module.scss";
 
 const myPlaceHolderF =
   'This is the front side \n\nUse "#" and a blank space at the beginning before the actual title';
@@ -346,18 +354,16 @@ const CardUpdate = () => {
   );
 
   const prevValue = (side: "front" | "back") => (
-    <div className={styles.cardCenter}>
-      <div
-        className={`${modeE ? styles.cardShowSingle : styles.cardShowDouble} ${
-          styles.markdownStyle
-        }`}
-      >
-        <ReactMarkdown
-          source={cardForm.card[side].value}
-          plugins={[math]}
-          renderers={renderers}
-        />
-      </div>
+    <div
+      className={`${modeE ? styles.cardShowSingle : styles.cardShowDouble} ${
+        styles.markdownStyle
+      }`}
+    >
+      <ReactMarkdown
+        source={cardForm.card[side].value}
+        plugins={[math]}
+        renderers={renderers}
+      />
     </div>
   );
 
@@ -369,7 +375,12 @@ const CardUpdate = () => {
       clicked={preToggled}
       elementType="normal"
     >
-      {preview ? "EDIT" : "PREVIEW"}
+      {/* {preview ? "EDIT" : "PREVIEW"} */}
+      {preview ? (
+        <EditIcon alt="edit button" fill="rgba(9, 132, 113, 0.9)" />
+      ) : (
+        <TextView alt="text view" fill="rgba(9, 132, 113, 0.9)" />
+      )}
     </Button>
   );
 
@@ -381,34 +392,40 @@ const CardUpdate = () => {
       clicked={() => flipSide((prev) => !prev)}
       elementType="normal"
     >
-      FLIP
+      <CardFlip alt="flip card" fill="rgba(9, 132, 113, 0.9)" />
     </Button>
   );
 
-  let form;
+  let cardContentForm;
 
   if (!preview && !modeE) {
-    form = (
-      <form>
-        {frontForm}
-        {backForm}
-      </form>
+    cardContentForm = (
+      <CardsShowWrapper mode={modeE} memBoard={false} preview={preview}>
+        <form>
+          {frontForm}
+          {backForm}
+        </form>
+      </CardsShowWrapper>
     );
   } else if (!preview && modeE) {
-    form = (
-      <div className={styles.cardCenter}>
+    cardContentForm = (
+      <CardsShowWrapper mode={modeE} memBoard={false} preview={preview}>
         <form>{frontSide ? frontForm : backForm}</form>
-      </div>
+      </CardsShowWrapper>
     );
   } else if (preview && !modeE) {
-    form = (
-      <>
+    cardContentForm = (
+      <CardsShowWrapper mode={modeE} memBoard={false} preview={preview}>
         {prevValue("front")}
         {prevValue("back")}
-      </>
+      </CardsShowWrapper>
     );
   } else {
-    form = frontSide ? prevValue("front") : prevValue("back");
+    cardContentForm = (
+      <CardsShowWrapper mode={modeE} memBoard={false} preview={preview}>
+        {frontSide ? prevValue("front") : prevValue("back")}
+      </CardsShowWrapper>
+    );
   }
 
   let buttons = (
@@ -445,7 +462,7 @@ const CardUpdate = () => {
             // history.goBack();
           }}
         >
-          DELETE
+          <DeleteIcon alt="delete card" fill="rgba(9, 132, 113, 0.9)" />
         </Button>
         <Button
           btnType="Success"
@@ -460,7 +477,7 @@ const CardUpdate = () => {
             addToggled();
           }}
         >
-          UPDATE
+          <SaveIcon alt="save the change" fill="rgba(9, 132, 113, 0.9)" />
         </Button>
       </>
     );
@@ -491,9 +508,7 @@ const CardUpdate = () => {
             modeE ? styles.padShowWrapperSingle : styles.padShowWrapper
           }
         >
-          <CardsWrapper mode={modeE} memBoard={false} preview={preview}>
-            {form}
-          </CardsWrapper>
+          {cardContentForm}
           <div className={styles.btnWrapper}>{buttons}</div>
         </div>
       </div>

@@ -13,8 +13,8 @@ import useCards from "features/memory-card/use-swr-memory-card";
 import useCardsForPage from "features/memory-card/use-memory-card";
 
 import { Button } from "features/ui";
-import { CardsWrapper, CodeBlock } from "features/memory-card/components";
-import styles from "./style/MemoryBoard.module.scss";
+import { CardsShowWrapper, CodeBlock } from "features/memory-card/components";
+import styles from "./style/memory-board.module.scss";
 
 import type { MemStateType } from "../../types";
 
@@ -484,9 +484,9 @@ const MemoryBoard = () => {
             <img src={goPre} alt="Go Previous" />
           </Button>
           <div className={styles.padShowWrapper}>
-            <CardsWrapper memBoard mode={modeS} preview={false}>
+            <CardsShowWrapper memBoard mode={modeS} preview={false}>
               {donePage}
-            </CardsWrapper>
+            </CardsShowWrapper>
             <div className={styles.btnWrapper}>{buttons}</div>
           </div>
           <Button

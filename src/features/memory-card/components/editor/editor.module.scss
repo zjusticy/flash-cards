@@ -15,6 +15,11 @@
 
 .Input {
   /*width: 100%;*/
-  padding: 12px;
+  padding: 0.75rem;
   box-sizing: border-box;
+
+  @media (min-width: 682px) {
+    padding: 1.75rem;
+    padding-right: 1rem;
+  }
 }

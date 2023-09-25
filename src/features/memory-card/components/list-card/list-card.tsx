@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import styles from "./card.module.scss";
+import styles from "./list-card.module.scss";
 
 type Props = {
   active: boolean;
@@ -10,7 +10,7 @@ type Props = {
   clicked: () => void;
 };
 
-const card = ({ active, index, title, front, clicked }: Props) => {
+const ListCard = ({ active, index, title, front, clicked }: Props) => {
   let attachedclasses = [styles.card];
   if (active) {
     attachedclasses = [styles.card, styles.active];
@@ -30,4 +30,4 @@ const card = ({ active, index, title, front, clicked }: Props) => {
   );
 };
 
-export default card;
+export default ListCard;
