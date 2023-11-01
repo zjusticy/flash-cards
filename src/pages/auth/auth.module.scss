@@ -39,3 +39,22 @@
     vertical-align: middle;
   }
 }
+
+.divider {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  border: 0;
+  border-top: 1px dashed #b9b9b9;
+}
+
+.btnMiddleWrapper {
+  display: flex;
+  justify-content: center;
+  // margin-right: 0.5rem;
+
+  & button {
+    // margin: 1rem;
+    width: 8rem;
+    font-size: 1rem;
+  }
+}

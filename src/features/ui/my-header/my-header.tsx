@@ -23,9 +23,12 @@ import styles from "./my-header.module.scss";
 //   home: boolean;
 // };
 
-const routes = [{ path: "/cardCreator/:name" }];
+const routes = [
+  { path: "/cardCreator/:name" },
+  { path: "/local/cardCreator/:name" },
+];
 
-const MyHeader = () => {
+const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
   const [inputClasses, changeClasses] = useState<string[]>([styles.menu]);
 
   const [toggleShow, toggle] = useState<boolean>(false);
@@ -100,11 +103,19 @@ const MyHeader = () => {
   // };
 
   const goHome = () => {
+    if (localDB) {
+      navigate("/local/intro");
+      return;
+    }
     navigate("/");
   };
 
   const goBack = () => {
     navigate(-1);
+  };
+
+  const toSignInPage = () => {
+    navigate("/login");
   };
 
   const changeCardsListVis = () => {
@@ -149,36 +160,21 @@ const MyHeader = () => {
               />
             </button>
           </div>
-          {/* <div className={styles.buttonHeader}>
-            <button type="button" onClick={() => setAuthState(false)}>
-              <LogOutLogo alt="Home Page" />
-            </button>
-          </div> */}
           <div className={styles.buttonHeaderSecond} ref={node}>
             <button type="button" onClick={toggleClikedhandler}>
-              <MoreLogo
-                alt="navDrawer"
-                height={withinSize ? "32" : "53"}
-                // width={withinSize ? "32" : "null"}
-
-                // width = "10",
-                // height = "53",
-              />
+              <MoreLogo alt="navDrawer" height={withinSize ? "32" : "53"} />
             </button>
             <div className={inputClasses.join(" ")}>
               <NavigationItems
-                // onDoubleSwitch={doubleSwich}
-                // onDoubleEditSwitch={doubleEditSwich}
-                // modeS={modeS}
-                // modeE={modeE}
+                branch={Boolean(branch)}
+                signin={toSignInPage}
+                localDB={localDB}
                 todo={toggleClikedhandler}
                 logout={() => setAuthState(false)}
               />
             </div>
           </div>
         </nav>
-        {/* <div className={styles.imageHolder}> */}
-        {/* <img src={cardsLogo} alt="Tom's Cards" /> */}
         {branch && (
           <div className={styles.buttonHeader}>
             <button
@@ -199,5 +195,4 @@ const MyHeader = () => {
   );
 };
 
-// export default withRouter(MyHeader);
 export default MyHeader;

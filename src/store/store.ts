@@ -22,6 +22,10 @@ export type GlobalContent = {
   drawerVisible: boolean;
   setDrawerVisibility: (c: boolean) => void;
 
+  // true: local storage, false: on cloud
+  useLocalDB: boolean;
+  setUseLocalDB: (c: boolean) => void;
+
   // cardsData: CardsDataType;
   // setCardsData: (f: (draft: WritableDraft<CardsDataType>) => void) => void;
 };
@@ -33,6 +37,8 @@ export const MyGlobalContext = createContext<GlobalContent>({
   setModeS: () => {},
   modeE: false,
   setModeE: () => {},
+  useLocalDB: false,
+  setUseLocalDB: () => {},
   drawerVisible: false,
   setDrawerVisibility: () => {},
   // setCardsData: () => {},

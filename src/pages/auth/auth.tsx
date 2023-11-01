@@ -31,7 +31,7 @@ const Auth = () => {
 
   const navigate = useNavigate();
 
-  const { isAuth } = useGlobalContext();
+  const { isAuth, setUseLocalDB } = useGlobalContext();
 
   const { isLoading, error, submitHandler } = useAuth();
 
@@ -139,6 +139,20 @@ const Auth = () => {
           </Button>
         </div>
       </form>
+      <hr className={styles.divider} />
+      <div className={styles.btnMiddleWrapper}>
+        <Button
+          btnType="Success"
+          size="Medium"
+          elementType="submit"
+          clicked={() => {
+            setUseLocalDB(true);
+            navigate(`/local/intro`);
+          }}
+        >
+          Try it
+        </Button>
+      </div>
     </div>
   );
 };

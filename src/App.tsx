@@ -22,9 +22,17 @@ const RequireAuth = ({ isAuth }: { isAuth: boolean }) => {
     </main>
   );
 };
-
 function BasicLayout() {
   return <Outlet />;
+}
+
+function LocalLayout() {
+  return (
+    <main className={styles.content}>
+      <MyHeader localDB />
+      <Outlet />
+    </main>
+  );
 }
 
 const App = () => {
@@ -37,6 +45,7 @@ const App = () => {
   const [modeS, setModeS] = useState<boolean>(true);
   const [modeE, setModeE] = useState<boolean>(true);
   const [drawerVisible, setDrawerVisibility] = useState<boolean>(true);
+  const [useLocalDB, setUseLocalDB] = useState<boolean>(false);
   // const [cardsCache, setCardsCache] = useImmer<CardsCacheType>({});
   // const [sortedIds, setSortedIds] = useImmer<Array<string>>([]);
   // const [activeListName, setActiveListName] = useState<string>("");
@@ -79,6 +88,17 @@ const App = () => {
       <Route path="/login" element={<BasicLayout />}>
         <Route index element={<Auth />} />
       </Route>
+      <Route path="/local" element={<LocalLayout />}>
+        <Route path="/local/intro" element={<Intro localDB />} />
+        <Route
+          path="/local/memoryBoard/:name"
+          element={<MemoryBoard localDB />}
+        />
+        <Route
+          path="/local/cardCreator/:name"
+          element={<CardUpdate localDB />}
+        />
+      </Route>
 
       {/* <redirect to="/login" /> */}
     </Routes>
@@ -99,6 +119,8 @@ const App = () => {
         setModeE,
         drawerVisible,
         setDrawerVisibility,
+        useLocalDB,
+        setUseLocalDB,
       }}
     >
       {routes}

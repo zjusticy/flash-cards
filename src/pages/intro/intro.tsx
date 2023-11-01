@@ -1,78 +1,62 @@
 import { useState } from "react";
 import * as React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import useGetLists from "features/file-list/use-file-list";
+import useGetLocalLists from "features/file-list/use-local-file-list";
 import Button from "features/ui/button/button";
 import FileHolder from "features/file-list/file-index-holder/file-index-holder";
 import Modal from "features/ui/modal/modal";
 import InputCombine from "features/ui/input-combine/input-combine";
 import styles from "./intro.module.scss";
 
-const Intro = () => {
+const Intro = ({ localDB = false }: { localDB?: boolean }) => {
   const [listName, setName] = useState<string>("");
 
   const [modalShow, flipModal] = useState<boolean>(false);
 
   const [selectedName, setSelectedName] = useState<string>("");
 
-  // const { onDelList } = useCards();
+  // const { useLocalDB } = useGlobalContext();
 
   const { cardLists, delelteList, addList } = useGetLists();
 
+  const {
+    fileList,
+    error,
+    actionError,
+    delelteList: deleteLocalList,
+    addList: addLocalList,
+  } = useGetLocalLists();
+
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (onGetLists) onGetLists();
-  // }, [onGetLists]);
-
   const onClickedHandler = (_listName: string) => {
+    if (localDB) {
+      navigate(`/local/memoryBoard/${_listName}`);
+      return;
+    }
     navigate(`/memoryBoard/${_listName}`);
   };
 
   const onEditHandler = (_listName: string) => {
+    if (localDB) {
+      navigate(`/local/cardCreator/${_listName}`);
+      return;
+    }
     navigate(`/cardCreator/${_listName}`);
   };
 
-  // const onDeleteHandler = (_listName: string) => {
-  //   if (cardLists) {
-  //     const newLists = cardLists.filter((list) => list !== _listName);
-  //     localStorage.setItem("lists", JSON.stringify(newLists));
-  //     localStorage.removeItem(`memoryBoard${_listName}`);
-  //     // if (onDelList) onDelList(_listName, newLists);
-  //     removeList(_listName)?.then(() => {
-  //       mutate();
-  //     });
+  const myFileList = localDB ? fileList : cardLists;
+
+  // const onLinkClicked = (event: React.MouseEvent) => {
+  //   if (
+  //     listName.trim() === "" ||
+  //     (cardLists && cardLists.indexOf(listName) !== -1)
+  //   ) {
+  //     event.preventDefault();
   //   }
   // };
-
-  // const onAddHandler = () => {
-  //   if (!cardLists || cardLists.indexOf(listName) !== -1) {
-  //     // console.log("Exist");
-  //     return;
-  //   }
-  //   if (listName.trim() === "") {
-  //     // console.log("Can't be empty");
-  //     return;
-  //   }
-  //   localStorage.setItem("lists", JSON.stringify([listName, ...cardLists]));
-
-  //   if (addLists)
-  //     addLists(listName, (+new Date()).toString())
-  //       .then(() => {
-  //         mutate();
-  //       })
-  //       .catch(() => {});
-  // };
-
-  const onLinkClicked = (event: React.MouseEvent) => {
-    if (
-      listName.trim() === "" ||
-      (cardLists && cardLists.indexOf(listName) !== -1)
-    ) {
-      event.preventDefault();
-    }
-  };
 
   const inputChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -87,7 +71,11 @@ const Intro = () => {
             size="Big"
             debounced
             clicked={() => {
-              delelteList(selectedName);
+              if (localDB) {
+                deleteLocalList(selectedName);
+              } else {
+                delelteList(selectedName);
+              }
               flipModal(false);
             }}
             elementType="normal"
@@ -117,21 +105,27 @@ const Intro = () => {
             <Button
               btnType="Success"
               size="Big"
-              clicked={() => addList(listName)}
+              clicked={() => {
+                if (localDB) {
+                  addLocalList(listName);
+                  return;
+                }
+                addList(listName);
+              }}
               elementType="normal"
               debounced
             >
-              <Link to={`/cardCreator/${listName}`} onClick={onLinkClicked}>
+              {/* <Link to={`/cardCreator/${listName}`} onClick={onLinkClicked}>
                 +
-              </Link>
+              </Link> */}
+              +
             </Button>
           </div>
 
           <div className={styles.listsWrap}>
             <h2>Lists</h2>
-
-            {cardLists &&
-              cardLists.map((list, index) => (
+            {myFileList &&
+              myFileList.map((list, index) => (
                 <FileHolder
                   key={list}
                   index={index}
@@ -148,7 +142,6 @@ const Intro = () => {
         </div>
       </div>
     </>
-    // </Layout>
   );
 };
 

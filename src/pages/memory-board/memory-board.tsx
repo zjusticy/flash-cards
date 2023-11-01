@@ -10,6 +10,7 @@ import math from "remark-math";
 import goPre from "assets/images/leftArrow.png";
 import goNext from "assets/images/rightArrow.png";
 import useCards from "features/memory-card/use-swr-memory-card";
+import useLocalCards from "features/memory-card/use-local-memory-card";
 import useCardsForPage from "features/memory-card/use-memory-card";
 
 import { Button } from "features/ui";
@@ -66,7 +67,11 @@ const renderers = {
 };
 /* eslint-enable */
 
-const MemoryBoard = () => {
+const MemoryBoard: React.FC<{ localDB?: boolean }> = ({
+  localDB = false,
+}: {
+  localDB?: boolean;
+}) => {
   const [memState, changeMemState] = useImmer<MemStateType>(memInit);
 
   const [side, flipSide] = useState<boolean>(true);
@@ -77,24 +82,25 @@ const MemoryBoard = () => {
 
   const { name } = useParams<{ name: string }>();
 
-  const { isLoading, cards } = useCards(name || "");
+  const { isLoading: isServerLoading, cards } = useCards(name || "");
+
+  const { isLoading: isLocalLoading, cardsDataLocal } = useLocalCards(
+    name || ""
+  );
+
+  const isLoading = localDB ? isLocalLoading : isServerLoading;
 
   const { cardsData, setCardsData } = useCardsForPage();
 
-  const { cardsCache } = cardsData;
+  const { cardsCache } = localDB ? cardsDataLocal : cardsData;
 
   useEffect(() => {
-    if (cards) {
-      // const cardIds = Object.keys(cards).sort(
-      //   (a, b) => parseInt(b, 10) - parseInt(a, 10)
-      // );
+    if (cards && !localDB) {
       setCardsData((draft) => {
         draft.cardsCache = cards;
-        // draft.sortedIds = cardIds;
-        // draft.activeListName = activeListName;
       });
     }
-  }, [cards, setCardsData]);
+  }, [cards, setCardsData, localDB]);
 
   useEffect(() => {
     // Use to set the cards parameters for init
@@ -357,6 +363,10 @@ const MemoryBoard = () => {
 
   // go to home page
   const goHome = () => {
+    if (localDB) {
+      navigate("/local/intro");
+      return;
+    }
     navigate("/");
   };
 

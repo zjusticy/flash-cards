@@ -44,14 +44,7 @@ export default function useCardsForPage() {
     //   draft.unshift(card.id);
     // });
     setCardsData((draft) => {
-      if (
-        Object.prototype.hasOwnProperty.call(
-          draft.cardsCache,
-          activeListName
-        ) &&
-        card.id &&
-        draft.cardsCache
-      ) {
+      if (card.id && draft.cardsCache) {
         draft.cardsCache[card.id] = card;
         draft.sortedIds.unshift(card.id);
       }

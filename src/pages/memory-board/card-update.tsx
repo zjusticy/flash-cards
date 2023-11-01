@@ -6,6 +6,7 @@ import { useImmer } from "use-immer";
 import Tex from "@matejmazur/react-katex";
 import math from "remark-math";
 import useCards from "features/memory-card/use-swr-memory-card";
+import useLocalCards from "features/memory-card/use-local-memory-card";
 import useCardsForPage from "features/memory-card/use-memory-card";
 import {
   CardsShowWrapper,
@@ -91,7 +92,11 @@ const renderers = {
 };
 /* eslint-enable */
 
-const CardUpdate = () => {
+const CardUpdate: React.FC<{ localDB?: boolean }> = ({
+  localDB = false,
+}: {
+  localDB?: boolean;
+}) => {
   const [cardForm, changeForm] = useImmer<UpdateInitState>(initForm);
 
   const [preview, flipPreview] = useState<boolean>(false);
@@ -103,13 +108,24 @@ const CardUpdate = () => {
   const { name: activeListName } = useParams<{ name: string }>();
 
   const {
-    onAddCard,
-    onUpdateCard,
-    onDeleteCard,
-    onCancelled,
-    cardsData,
-    setCardsData,
+    onAddCard: onCloudAddCard,
+    onUpdateCard: onCloudUpdateCard,
+    onDeleteCard: onCloudDeleteCard,
+    onCancelled: onCloudCancelled,
+    cardsData: cloudCardsData,
+    setCardsData: setCloudCardsData,
   } = useCardsForPage();
+
+  const {
+    cardsDataLocal,
+    onAddCard: onLocalAddCard,
+    onDeleteCard: onLocalDeleteCard,
+    onUpdateCard: onLocalUpdateCard,
+    onCancelled: onLocalCancelled,
+    setCardsDataLocal,
+  } = useLocalCards(activeListName || "");
+
+  const cardsData = localDB ? cardsDataLocal : cloudCardsData;
 
   const { cards } = useCards(activeListName || "");
 
@@ -122,13 +138,13 @@ const CardUpdate = () => {
       const cardIds = Object.keys(cards).sort(
         (a, b) => parseInt(b, 10) - parseInt(a, 10)
       );
-      setCardsData((draft) => {
+      setCloudCardsData((draft) => {
         draft.cardsCache = cards;
         draft.sortedIds = cardIds;
         // draft.activeListName = activeListName;
       });
     }
-  }, [cards, setCardsData]);
+  }, [cards, setCloudCardsData]);
 
   /**
    * Set new initial value
@@ -230,8 +246,9 @@ const CardUpdate = () => {
       backValue: cardForm.card.back.value,
     };
 
-    if (onAddCard) onAddCard(newCard, activeListName || "");
-
+    if (onLocalAddCard && localDB)
+      onLocalAddCard(newCard, activeListName || "");
+    else if (onCloudAddCard) onCloudAddCard(newCard, activeListName || "");
     changeForm((draft) => {
       draft.card.front = {
         value: myPlaceHolderF,
@@ -261,7 +278,11 @@ const CardUpdate = () => {
       };
 
       // Use reducer's function
-      onUpdateCard(activeListName || "", newCard);
+      if (localDB) {
+        onLocalUpdateCard(activeListName || "", newCard);
+        return;
+      }
+      onCloudUpdateCard(activeListName || "", newCard);
     }
   };
 
@@ -270,29 +291,14 @@ const CardUpdate = () => {
    */
   const cardRemoveHandler = (cardId: string | null) => {
     // Use reducer's function
-    if (cardId) onDeleteCard(activeListName || "", cardId);
+    if (cardId && localDB) {
+      onLocalDeleteCard(activeListName || "", cardId);
+      return;
+    }
+    if (cardId) {
+      onCloudDeleteCard(activeListName || "", cardId);
+    }
   };
-
-  // useEffect(() => {
-  //   // Load card when initial generate page
-  //   const loadCards = async () => {
-  //     // Get the name from URL
-  //     if (name) {
-  //       if (name !== activeListName) {
-  //         if (Object.keys(cardsCache).includes(name)) {
-  //           const cardIds = Object.keys(cardsCache[name]).sort(
-  //             (a, b) => parseInt(b, 10) - parseInt(a, 10)
-  //           );
-  //           onInitExist(name, cardIds, null);
-  //         } else {
-  //           onLoadCards(name);
-  //         }
-  //       }
-  //     }
-  //   };
-
-  //   loadCards();
-  // }, [name, activeListName, onInitExist, cardsCache, onLoadCards]);
 
   // Preview or raw string the markdown preview
   const preToggled = () => {
@@ -457,7 +463,8 @@ const CardUpdate = () => {
           debounced
           clicked={() => {
             cardRemoveHandler(activeId);
-            onCancelled();
+            if (localDB) onLocalCancelled();
+            else onCloudCancelled();
             addToggled();
             // history.goBack();
           }}
@@ -471,7 +478,8 @@ const CardUpdate = () => {
           disabled={!cardForm.formIsValid || preview}
           debounced
           clicked={() => {
-            onCancelled();
+            if (localDB) onLocalCancelled();
+            else onCloudCancelled();
             cardUpdatedHandler();
             // history.goBack();
             addToggled();
@@ -497,8 +505,8 @@ const CardUpdate = () => {
             setUpdate={setUpdate}
             addToggled={addToggled}
             cardsData={cardsData}
-            setCardsData={setCardsData}
-            onCancelled={onCancelled}
+            setCardsData={localDB ? setCardsDataLocal : setCloudCardsData}
+            onCancelled={localDB ? onLocalCancelled : onCloudCancelled}
           />
         </div>
       </Drawer>
