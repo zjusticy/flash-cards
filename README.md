@@ -1,4 +1,4 @@
-[**DEMO without Firebase**](https://toms-cards.vercel.app)
+[**DEMO**](https://flash-cards.vercel.app/)
 
 ## Description
 
@@ -53,7 +53,6 @@ After all the cards are added to the list, and you want to start memorize the co
 5. **That’s it**. Now you can enjoy memorize the cards!
 
 ![](https://github.com/zjusticy/imgs_lib/blob/master/memCard.png)
-
 
 [More Info](https://github.com/zjusticy/flashCards/blob/master/doc/userManual.md)
 

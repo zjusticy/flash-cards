@@ -55,6 +55,7 @@ export default function useFileList() {
         }
         const newList = [_listName, ...fileList];
         await localForage.setItem("fileList", newList);
+        await localForage.setItem(_listName, {});
         setFileList(newList);
       } catch (err) {
         // This code runs if there were any errors.
