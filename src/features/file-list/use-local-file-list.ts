@@ -33,6 +33,7 @@ export default function useFileList() {
       try {
         const newLists = fileList.filter((list) => list !== _listName);
         await localForage.setItem("fileList", newLists);
+        await localForage.removeItem(_listName);
         // This code runs once the value has been loaded
         // from the offline store.
         setFileList(newLists);
