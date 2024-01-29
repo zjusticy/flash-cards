@@ -1,4 +1,5 @@
 import Button from "@/features/ui/button/button";
+import Link from "next/link";
 
 type Props = {
   listName: string;
@@ -6,6 +7,7 @@ type Props = {
   onDelete: () => void;
   clicked: () => void;
   index: number;
+  localDB: boolean;
 };
 
 const FileIndexHolder = ({
@@ -14,19 +16,28 @@ const FileIndexHolder = ({
   onDelete,
   index,
   clicked,
+  localDB,
 }: Props) => {
   return (
     <div className="flex justify-between h-[66px] w-full">
       <div className="nameHolder">
         <img src="/images/file.png" alt="file" />
-        <div
-          role="button"
-          tabIndex={index}
-          onClick={clicked}
-          onKeyDown={() => {}}
+        <Link
+          href={
+            localDB
+              ? `/local/memoryBoard/${listName}`
+              : `/memoryBoard/${listName}`
+          }
         >
-          <span>{listName}</span>
-        </div>
+          <div
+            // role="button"
+            tabIndex={index}
+            // onClick={clicked}
+            onKeyDown={() => {}}
+          >
+            <span>{listName}</span>
+          </div>
+        </Link>
       </div>
       <div className="flex items-center mr-[6px]">
         <Button
