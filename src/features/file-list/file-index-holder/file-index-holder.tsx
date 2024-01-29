@@ -5,7 +5,7 @@ type Props = {
   listName: string;
   edit: () => void;
   onDelete: () => void;
-  clicked: () => void;
+  // clicked: () => void;
   index: number;
   localDB: boolean;
 };
@@ -15,7 +15,7 @@ const FileIndexHolder = ({
   edit,
   onDelete,
   index,
-  clicked,
+  // clicked,
   localDB,
 }: Props) => {
   return (
