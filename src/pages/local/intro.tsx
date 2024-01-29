@@ -120,7 +120,8 @@ const Intro = () => {
                   key={list}
                   index={index}
                   listName={list}
-                  clicked={() => onClickedHandler(list)}
+                  localDB={localDB}
+                  // clicked={() => onClickedHandler(list)}
                   edit={() => onEditHandler(list)}
                   onDelete={() => {
                     flipModal((prev) => !prev);
