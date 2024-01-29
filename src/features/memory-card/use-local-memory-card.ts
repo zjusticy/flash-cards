@@ -1,5 +1,4 @@
-// import { signIn, signOut, authCheckState, AuthState } from "../store/authSlice";
-import { CardsDataType } from "store/store";
+import { CardsDataType } from "@/types";
 import { useEffect, useCallback, useState } from "react";
 import * as localForage from "localforage";
 import { useImmer } from "use-immer";
@@ -15,37 +14,42 @@ export default function useLocalCards(activeListName: string) {
     activeId: null,
   });
 
-  const getLocalCards = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const value = await localForage.getItem(activeListName);
-      // This code runs once the value has been loaded
-      // from the offline store.
+  const getLocalCards = useCallback(
+    async (_activeListName: string) => {
+      try {
+        setIsLoading(true);
+        const value = await localForage.getItem(_activeListName);
+        // This code runs once the value has been loaded
+        // from the offline store.
 
-      if (!value) {
-        await localForage.setItem(activeListName, {});
+        if (!value) {
+          await localForage.setItem(_activeListName, {});
+          setCardsDataLocal((draft) => {
+            draft.cardsCache = {};
+          });
+          return;
+        }
+
         setCardsDataLocal((draft) => {
-          draft.cardsCache = {};
+          draft.cardsCache = value as CardsCollectionType;
+          draft.sortedIds = Object.keys(value).sort(
+            (a, b) => parseInt(b, 10) - parseInt(a, 10)
+          );
         });
-        return;
+
+        setIsLoading(false);
+      } catch (err) {
+        // This code runs if there were any errors.
+        setError("err");
       }
-
-      setCardsDataLocal((draft) => {
-        draft.cardsCache = value as CardsCollectionType;
-        draft.sortedIds = Object.keys(value).sort(
-          (a, b) => parseInt(b, 10) - parseInt(a, 10)
-        );
-      });
-
-      setIsLoading(false);
-    } catch (err) {
-      // This code runs if there were any errors.
-      setError("err");
-    }
-  }, [activeListName, setCardsDataLocal]);
+    },
+    [activeListName, setCardsDataLocal]
+  );
 
   useEffect(() => {
-    getLocalCards();
+    if (activeListName) {
+      getLocalCards(activeListName);
+    }
   }, [getLocalCards]);
 
   const onAddCard = async (card: CardType, listName: string) => {

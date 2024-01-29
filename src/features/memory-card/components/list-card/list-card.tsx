@@ -1,6 +1,4 @@
-import * as React from "react";
-
-import styles from "./list-card.module.scss";
+import React from "react";
 
 type Props = {
   active: boolean;
@@ -11,15 +9,10 @@ type Props = {
 };
 
 const ListCard = ({ active, index, title, front, clicked }: Props) => {
-  let attachedclasses = [styles.card];
-  if (active) {
-    attachedclasses = [styles.card, styles.active];
-  }
-
   return (
     <div
       role="button"
-      className={attachedclasses.join(" ")}
+      className={active ? "card bg-[#FBE091]" : "card"}
       onClick={clicked}
       onKeyDown={() => {}}
       tabIndex={index}

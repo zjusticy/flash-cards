@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 // import { signIn, signOut, authCheckState, AuthState } from "../store/authSlice";
-import { useGlobalContext } from "store/store";
+import { useCardStore } from "@/store/zustand";
 import { authCheckState } from "./api-auth";
 
 // export default function useAuth() {
@@ -30,7 +30,7 @@ export default function useAuthCheck() {
   // const [isAuth, setAuthState] = useState(false);
   const [isLoading, setLoadingState] = useState(true);
 
-  const { setAuthState } = useGlobalContext();
+  const { setAuthState } = useCardStore();
 
   useEffect(() => {
     const onSuccess = () => {

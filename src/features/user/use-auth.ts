@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useGlobalContext } from "store/store";
+import { useCardStore } from "@/store/zustand";
 
 // import { signIn, signOut, authCheckState, AuthState } from "../store/authSlice";
 import { signIn } from "./api-auth";
@@ -10,7 +10,7 @@ export default function useAuth() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { setAuthState } = useGlobalContext();
+  const { setAuthState } = useCardStore();
 
   const submitHandler = async (email: string, password: string) => {
     setIsLoading(true);
@@ -31,21 +31,5 @@ export default function useAuth() {
     error,
     isLoading,
     submitHandler,
-    // onAuth,
-    // onLogout,
-    // onAuthCheck,
   };
 }
-
-// export default function useAuth(email: string, password: string) {
-//   const { data, error, isLoading, mutate } = useSWR(`/api/user`, () => {
-//     signIn(email, password);
-//   });
-
-//   return {
-//     userInfo: data,
-//     isLoading,
-//     error,
-//     mutate,
-//   };
-// }

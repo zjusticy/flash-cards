@@ -1,0 +1,49 @@
+.drawerContainer {
+    --transition-speed: 0.3s;
+  }
+  
+.drawer {
+    background: #fff;
+    height: 100%;
+    overflow: auto;
+    position: fixed;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    transition: transform var(--transition-speed) ease;
+    z-index: 1000;
+    &.drawerLeft {
+        top: 0;
+        left: 0;
+        transform: translateX(-100%);
+    }
+}
+  
+.drawerContainer.drawerOpen {
+  & .drawerLeft {
+    transform: translateX(0);
+  }
+  & .drawerLeft {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  }
+  & .drawerBackdrop {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 999;
+  }
+}
+  
+  .drawerBackdrop {
+    visibility: hidden;
+    opacity: 0;
+    background: rgba(0, 0, 0, 0.5);
+    transition: opacity var(--transition-speed) ease,
+      visibility var(--transition-speed) ease;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+  }
+  

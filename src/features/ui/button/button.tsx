@@ -1,9 +1,34 @@
-import * as React from "react";
 import { FunctionComponent } from "react";
-// import _ from "lodash";
 import { useDebouncedCallback } from "use-debounce";
+import { cn } from "@/utils/mergeClasses";
 
-import styles from "./button.module.scss";
+const buttonStyle =
+  "bg-transparent cursor-pointer font-bold border-none \
+  font-pressStart duration-100 disabled:color-[#ccc] disabled:cursor-not-allowed \
+  [&_a]:inline-block [&_a]:no-underline [&_a]:h-full [&_a]:w-full [&_a]:align-middle \
+  [&_a]:text-center [&_a]:font-pressStart";
+
+const buttonTypeStyle: {
+  Success: string;
+  Danger: string;
+  Navi: string;
+  FileM: string;
+} = {
+  Success:
+    "outline-none text-button-color border-2 border-solid border-button-color \
+    hover:bg-button-color hover:text-secondary-color [&_a]:hover:text-secondary-color \
+    [&_a]:text-button-color text-button-color text-[1rem]",
+  Danger: "text-[#944317] p-[10px] m-[12px]",
+  Navi: "text-gray-700 w-21 h-10 text-[0.75rem]",
+  FileM: "",
+};
+
+const buttonSizeStyle: { Big: string; Medium: string; Small: string } = {
+  Big: "h-16 px-4 py-2 [&_a]:leading-10 [&_a]:text-[1rem]",
+  Medium:
+    "h-10 py-2 shadow-button-shadow active:translate-y-2 active:shadow-button-shadow-active",
+  Small: "",
+};
 
 type Props = {
   btnType?: "Success" | "Danger" | "Navi" | "FileM";
@@ -39,9 +64,12 @@ const Button: FunctionComponent<Props> = ({
       buttonElement = (
         <button
           disabled={disabled || false}
-          className={`${styles.Button} ${(btnType && styles[btnType]) || ""} ${
-            (size && styles[size]) || ""
-          } ${className || ""}`}
+          className={cn(
+            buttonStyle,
+            btnType ? buttonTypeStyle[btnType] : "",
+            size ? buttonSizeStyle[size] : "",
+            className || ""
+          )}
           onClick={clickFunc}
           type="button"
         >
@@ -54,9 +82,12 @@ const Button: FunctionComponent<Props> = ({
         <button
           disabled={disabled || false}
           type="submit"
-          className={`${styles.Button} ${(btnType && styles[btnType]) || ""} ${
-            (size && styles[size]) || ""
-          } ${className || ""}`}
+          className={cn(
+            buttonStyle,
+            btnType ? buttonTypeStyle[btnType] : "",
+            size ? buttonSizeStyle[size] : "",
+            className || ""
+          )}
           onClick={clickFunc}
         >
           {children}
@@ -67,9 +98,12 @@ const Button: FunctionComponent<Props> = ({
       buttonElement = (
         <button
           disabled={disabled || false}
-          className={`${styles.Button} ${(btnType && styles[btnType]) || ""} ${
-            (size && styles[size]) || ""
-          } ${className || ""}`}
+          className={cn(
+            buttonStyle,
+            btnType ? buttonTypeStyle[btnType] : "",
+            size ? buttonSizeStyle[size] : "",
+            className || ""
+          )}
           onClick={clickFunc}
           type="button"
         >

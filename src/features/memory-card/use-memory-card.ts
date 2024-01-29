@@ -1,12 +1,9 @@
-// import { signIn, signOut, authCheckState, AuthState } from "../store/authSlice";
-import { CardsDataType } from "store/store";
+import { CardsDataType } from "@/types";
 import { useImmer } from "use-immer";
 import { addCard, removeCard, updateCard } from "./api-memory-card";
 import { CardType } from "./types-memory-card";
 
 export default function useCardsForPage() {
-  //   const { setCardsData } = useGlobalContext();
-
   const [cardsData, setCardsData] = useImmer<CardsDataType>({
     cardsCache: null,
     sortedIds: [],
@@ -14,7 +11,7 @@ export default function useCardsForPage() {
   });
 
   const onInitExist = (
-    listName: string,
+    // listName: string,
     ids: Array<string>,
     id: string | null
   ) => {
@@ -25,24 +22,7 @@ export default function useCardsForPage() {
     });
   };
 
-  // const onLoadCards = (listName: string) => {
-  //   getCards(listName)?.then((snapshot) => {
-  //     if (snapshot.val()) {
-  //       const cardIds = Object.keys(snapshot.val()).sort(
-  //         (a, b) => parseInt(b, 10) - parseInt(a, 10)
-  //       );
-
-  //       onInitCards(snapshot.val(), listName, cardIds, null);
-  //     } else {
-  //       onInitCards({}, listName, [], null);
-  //     }
-  //   });
-  // };
-
   const onAddCard = (card: CardType, activeListName: string) => {
-    // setSortedIds((draft) => {
-    //   draft.unshift(card.id);
-    // });
     setCardsData((draft) => {
       if (card.id && draft.cardsCache) {
         draft.cardsCache[card.id] = card;
@@ -60,7 +40,6 @@ export default function useCardsForPage() {
       }
     });
     removeCard(listName, cardId)?.catch();
-    // addCard(card, listName)?.catch();
   };
 
   const onUpdateCard = (listName: string, card: CardType) => {
@@ -79,7 +58,6 @@ export default function useCardsForPage() {
   };
 
   return {
-    // onInitCards,
     cardsData,
     setCardsData,
     onInitExist,

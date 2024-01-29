@@ -1,7 +1,4 @@
-import * as React from "react";
 import { FunctionComponent } from "react";
-
-import styles from "./input.module.scss";
 
 type Props = {
   elementType: "input" | "textarea" | "select";
@@ -31,13 +28,13 @@ const Input: FunctionComponent<Props> = ({
   ref,
 }) => {
   let inputElement = null;
-  const inputClasses = [styles.InputElement];
 
   switch (elementType) {
     case "input":
       inputElement = (
         <input
-          className={`${inputClasses.join(" ")} ${styles.input}`}
+          className="outline-none bg-white font-inherit padding-[12px] 
+          box-border border border-gray-300 block"
           value={value}
           id={id}
           onChange={iChanged}
@@ -47,7 +44,8 @@ const Input: FunctionComponent<Props> = ({
     case "textarea":
       inputElement = (
         <textarea
-          className={`${inputClasses.join(" ")} ${styles.textarea}`}
+          className="outline-none bg-white font-inherit padding-[12px] 
+          box-border resize-none border-none"
           value={value}
           id={id}
           onChange={tChanged}
@@ -60,7 +58,8 @@ const Input: FunctionComponent<Props> = ({
     case "select":
       inputElement = (
         <select
-          className={`${inputClasses.join(" ")} ${styles.select}`}
+          className="outline-none bg-white font-inherit padding-[12px] 
+          box-border"
           value={value}
           onChange={sChanged}
           id={id}
@@ -77,7 +76,8 @@ const Input: FunctionComponent<Props> = ({
     default:
       inputElement = (
         <input
-          className={inputClasses.join(" ")}
+          className="outline-none bg-white font-inherit padding-[12px] 
+          box-border"
           value={value}
           id={id}
           onChange={iChanged}
@@ -86,8 +86,8 @@ const Input: FunctionComponent<Props> = ({
   }
 
   return (
-    <div className={styles.Input}>
-      <label htmlFor={id} className={styles.Label}>
+    <div className="padding-[12px] box-border">
+      <label htmlFor={id} className="font-bold block mb-2">
         {label}
       </label>
       {inputElement}

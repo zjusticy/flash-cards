@@ -1,11 +1,4 @@
-import * as React from "react";
-
-import Button from "features/ui/button/button";
-import fileLogo from "assets/images/file.png";
-import editLogo from "assets/images/edit.png";
-import delLogo from "assets/images/delete.png";
-
-import styles from "./file-index-holder.module.scss";
+import Button from "@/features/ui/button/button";
 
 type Props = {
   listName: string;
@@ -22,12 +15,10 @@ const FileIndexHolder = ({
   index,
   clicked,
 }: Props) => {
-  const attachedclasses = [styles.fileIndex];
-
   return (
-    <div className={attachedclasses.join(" ")}>
-      <div className={styles.nameHolder}>
-        <img src={fileLogo} alt="file" />
+    <div className="flex justify-between h-[66px] w-full">
+      <div className="nameHolder">
+        <img src="/images/file.png" alt="file" />
         <div
           role="button"
           tabIndex={index}
@@ -37,22 +28,24 @@ const FileIndexHolder = ({
           <span>{listName}</span>
         </div>
       </div>
-      <div className={styles.buttonHolder}>
+      <div className="flex items-center mr-[6px]">
         <Button
           btnType="FileM"
           disabled={false}
           clicked={edit}
           elementType="normal"
+          className="px-[6px] hover:bg-[rgba(0, 0, 0, 0.1)]"
         >
-          <img src={editLogo} alt="edit" />
+          <img src="/images/edit.png" alt="edit" />
         </Button>
         <Button
           btnType="FileM"
           disabled={false}
           clicked={onDelete}
           elementType="normal"
+          className="px-[6px] hover:bg-[rgba(0, 0, 0, 0.1)]"
         >
-          <img src={delLogo} alt="delete" />
+          <img src="/images/delete.png" alt="delete" />
         </Button>
       </div>
     </div>

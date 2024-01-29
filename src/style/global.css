@@ -1,0 +1,37 @@
+@import "tailwindcss/base";
+
+@import "tailwindcss/components";
+@import "./markdown.css";
+@import "./nameHolder.css";
+@import "./modal.css";
+@import "./card.css";
+@import "./spinner.css";
+@import "./drawer.css";
+
+@import "tailwindcss/utilities";
+
+@layer base {
+  #root, 
+  html, 
+  body {
+    height: 100%;
+  }
+
+  #__next {@apply h-full}
+
+  body {
+    /*font-family: sans-serif;*/
+    font-family: "Source Sans Pro", sans-serif;
+  }
+
+  button {
+    @apply leading-[1.15]
+  }
+}
+
+@layer components {
+  .CodeMirror {
+    @apply text-[1.25rem];
+  }
+}
+

@@ -1,12 +1,10 @@
-import * as React from "react";
 import { FunctionComponent } from "react";
-import Button from "features/ui/button/button";
-import { CardType } from "features/memory-card/types-memory-card";
-import Card from "features/memory-card/components/list-card/list-card";
-import { useGlobalContext, CardsDataType } from "store/store";
+import Button from "@/features/ui/button/button";
+import { CardType } from "@/features/memory-card/types-memory-card";
+import Card from "@/features/memory-card/components/list-card/list-card";
+import { useCardStore } from "@/store/zustand";
+import { CardsDataType } from "@/types";
 import { WritableDraft } from "immer/dist/types/types-external";
-
-import styles from "./pad-list.module.scss";
 
 const PadList: FunctionComponent<{
   setUpdate: (front: string, back: string) => void;
@@ -17,7 +15,7 @@ const PadList: FunctionComponent<{
   ) => void;
   onCancelled: () => void;
 }> = ({ setUpdate, addToggled, cardsData, setCardsData, onCancelled }) => {
-  const { setDrawerVisibility } = useGlobalContext();
+  const { setDrawerVisibility } = useCardStore();
 
   const { cardsCache, activeId, sortedIds } = cardsData;
 
@@ -31,12 +29,16 @@ const PadList: FunctionComponent<{
   };
 
   return (
-    <div className={styles.padList}>
-      <div className={styles.btnWrapper}>
+    <div
+      className="flex-auto bg-[#f9f9f9] w-full overflow-scroll 
+    border-r border-solid border-black-10"
+    >
+      <div className="flex justify-center mr-2 flex-wrap">
         <Button
           btnType="Success"
           size="Medium"
           elementType="normal"
+          className="m-4 w-24 text-[0.75rem]"
           clicked={() => {
             onCancelled();
             addToggled();

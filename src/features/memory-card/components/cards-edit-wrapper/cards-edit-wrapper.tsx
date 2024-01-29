@@ -1,7 +1,4 @@
-import * as React from "react";
 import { FunctionComponent } from "react";
-
-import styles from "./cards-edit-wrapper.module.scss";
 
 const CardsEditWrapper: FunctionComponent<{
   memBoard: boolean;
@@ -9,8 +6,13 @@ const CardsEditWrapper: FunctionComponent<{
   mode: boolean;
 }> = ({ memBoard, preview, mode, children }) => {
   const classT =
-    memBoard || preview ? styles.cardWrapper : styles.cardInputWrapper;
-  const classSelect = mode ? styles.cardWrapperSingle : classT;
+    memBoard || preview
+      ? "bg-[rgb(236, 245, 240)] h-[530px] flex justify-between"
+      : "bg-[rgb(236, 245, 240)] h-[530px] [&_label]:hidden [&_form]:flex \
+      [&_form]:justify-between";
+  const classSelect = mode
+    ? "bg-[rgb(236, 245, 240)] h-[530px] [&_label]:hidden md:w-full"
+    : classT;
 
   return <div className={classSelect}>{children}</div>;
 };

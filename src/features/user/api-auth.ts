@@ -1,7 +1,8 @@
-import { auth } from "utils/firebase";
+import { auth } from "@/utils/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export const signIn = (email: string, password: string) =>
-  auth.signInWithEmailAndPassword(email, password);
+  signInWithEmailAndPassword(auth, email, password);
 
 export const signOut = () => auth.signOut();
 

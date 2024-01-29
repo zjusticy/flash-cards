@@ -1,4 +1,6 @@
-import { auth, database } from "utils/firebase";
+import { auth, database } from "@/utils/firebase";
+import { ref, update, child, get } from "firebase/database";
+
 import { CardType } from "./types-memory-card";
 
 export const addCard = (
@@ -7,9 +9,12 @@ export const addCard = (
 ): Promise<any> | undefined => {
   const userId = auth.currentUser && auth.currentUser.uid;
   if (userId && card.id) {
-    return database
-      .ref(`userData/${userId}/${activeListName}/`)
-      .update({ [card.id]: card });
+    return update(
+      ref(database, `userData/${userId}/collections/${activeListName}/`),
+      {
+        [card.id]: card,
+      }
+    );
   }
   return undefined;
 };
@@ -17,7 +22,10 @@ export const addCard = (
 export const getCards = (activeListName: string): Promise<any> | undefined => {
   const userId = auth.currentUser && auth.currentUser.uid;
   if (userId) {
-    return database.ref(`userData/${userId}/${activeListName}/`).once("value");
+    const dbRef = ref(database);
+    return get(
+      child(dbRef, `userData/${userId}/collections/${activeListName}/`)
+    );
   }
   return undefined;
 };
@@ -28,9 +36,12 @@ export const removeCard = (
 ): Promise<any> | undefined => {
   const userId = auth.currentUser && auth.currentUser.uid;
   if (userId) {
-    return database
-      .ref(`userData/${userId}/${activeListName}/`)
-      .update({ [cardId]: null });
+    return update(
+      ref(database, `userData/${userId}/collections/${activeListName}/`),
+      {
+        [cardId]: null,
+      }
+    );
   }
   return undefined;
 };
@@ -41,14 +52,12 @@ export const updateCard = (
 ): Promise<any> | undefined => {
   const userId = auth.currentUser && auth.currentUser.uid;
   if (userId && card.id) {
-    return database
-      .ref(`userData/${userId}/${activeListName}/`)
-      .update({ [card.id]: card });
+    return update(
+      ref(database, `userData/${userId}/collections/${activeListName}/`),
+      {
+        [card.id]: card,
+      }
+    );
   }
-  // if (userId) {
-  //   database
-  //     .ref(`userData/${userId}/${activeListName}/`)
-  //     .update({ [cardId]: null });
-  // }
   return undefined;
 };

@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vs } from "react-syntax-highlighter/dist/cjs/styles/prism";
 

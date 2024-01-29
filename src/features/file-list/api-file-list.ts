@@ -1,23 +1,22 @@
-import { auth, database } from "utils/firebase";
+import { auth, database } from "@/utils/firebase";
+import { ref, child, get, update } from "firebase/database";
 
 export function addLists(name: string, id: string): Promise<any> {
   const userId = auth.currentUser && auth.currentUser.uid;
-  return database.ref(`userData/${userId}/lists`).update({ [name]: id });
+  console.log(userId);
+  return update(ref(database, `userData/${userId}/lists`), { [name]: id });
 }
 
 export function getLists(userId: string | null): Promise<any> {
-  return database
-    .ref(`userData/${userId}/lists`)
-    .once("value")
-    .then((snapshot) => {
-      // for (const )
-      const listNames = Object.keys(snapshot.val()).sort(
-        (a, b) =>
-          parseInt(snapshot.val()[b], 10) - parseInt(snapshot.val()[a], 10)
-      );
-      // console.log(snapshot.val());
-      return listNames;
-    });
+  const dbRef = ref(database);
+  return get(child(dbRef, `userData/${userId}/lists`)).then((snapshot) => {
+    // for (const )
+    const listNames = Object.keys(snapshot.val()).sort(
+      (a, b) =>
+        parseInt(snapshot.val()[b], 10) - parseInt(snapshot.val()[a], 10)
+    );
+    return listNames;
+  });
 }
 
 export function removeList(name: string): Promise<any> | undefined {
@@ -25,8 +24,8 @@ export function removeList(name: string): Promise<any> | undefined {
   if (userId) {
     const updates: any = {};
     updates[`userData/${userId}/lists/${name}`] = null;
-    updates[`userData/${userId}/${name}`] = null;
-    return database.ref().update(updates);
+    updates[`userData/${userId}/collections/${name}`] = null;
+    return update(ref(database), updates);
   }
   return undefined;
 }

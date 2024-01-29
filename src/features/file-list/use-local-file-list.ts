@@ -1,5 +1,3 @@
-// import { signIn, signOut, authCheckState, AuthState } from "../store/authSlice";
-
 import { useEffect, useState, useCallback } from "react";
 import * as localForage from "localforage";
 

@@ -35,3 +35,9 @@ export type Settings = {
   modeSingleBoard: boolean;
   modeSingleUpdate: boolean;
 };
+
+export type CardsDataType = {
+  cardsCache: CardsCollectionType | null;
+  sortedIds: Array<string>;
+  activeId: string | null;
+};

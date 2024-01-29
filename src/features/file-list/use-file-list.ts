@@ -1,7 +1,7 @@
 import useSWR from "swr";
 
 // import { signIn, signOut, authCheckState, AuthState } from "../store/authSlice";
-import { auth } from "utils/firebase";
+import { auth } from "@/utils/firebase";
 import { getLists, removeList, addLists } from "./api-file-list";
 
 export default function useFileList() {
@@ -27,7 +27,11 @@ export default function useFileList() {
   };
 
   const addList = (_listName: string) => {
-    if (!cardLists || cardLists.indexOf(_listName) !== -1) {
+    let newCardLists: string[] = [];
+    if (cardLists) {
+      newCardLists = cardLists;
+    }
+    if (cardLists && cardLists.indexOf(_listName) !== -1) {
       // console.log("Exist");
       return;
     }
@@ -35,7 +39,7 @@ export default function useFileList() {
       // console.log("Can't be empty");
       return;
     }
-    localStorage.setItem("lists", JSON.stringify([_listName, ...cardLists]));
+    localStorage.setItem("lists", JSON.stringify([_listName, ...newCardLists]));
 
     if (_listName)
       addLists(_listName, (+new Date()).toString())

@@ -1,7 +1,3 @@
-import * as React from "react";
-
-import styles from "./drawer.module.scss";
-
 type DrawerParams = {
   isOpen: boolean;
   onClose: () => void;
@@ -11,17 +7,13 @@ type DrawerParams = {
 const Drawer = ({ isOpen, children, onClose }: DrawerParams) => (
   <div
     aria-hidden={isOpen ? "false" : "true"}
-    className={
-      isOpen
-        ? `${styles.drawerContainer} ${styles.open}`
-        : styles.drawerContainer
-    }
+    className={isOpen ? "drawerContainer drawerOpen" : "drawerContainer"}
   >
-    <div className={`${styles.drawer} ${styles.left}`} role="dialog">
+    <div className="drawer drawerLeft" role="dialog">
       {children}
     </div>
     <div
-      className={styles.backdrop}
+      className="drawerBackdrop"
       onClick={onClose}
       onKeyDown={onClose}
       role="button"

@@ -1,7 +1,4 @@
-import * as React from "react";
 import { FunctionComponent } from "react";
-
-import classes from "./backdrop.module.scss";
 
 const Backdrop: FunctionComponent<{ show: boolean; clicked: () => void }> = ({
   show,
@@ -9,7 +6,7 @@ const Backdrop: FunctionComponent<{ show: boolean; clicked: () => void }> = ({
 }) =>
   show ? (
     <div
-      className={classes.Backdrop}
+      className="w-full h-full fixed z-[100] left-0 top-0 bg-black bg-opacity-50"
       onClick={clicked}
       onKeyDown={() => {}}
       role="button"

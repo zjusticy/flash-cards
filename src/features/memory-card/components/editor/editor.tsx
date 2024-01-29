@@ -1,5 +1,4 @@
 import { FunctionComponent } from "react";
-import * as React from "react";
 // import CodeMirror from "codemirror";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import "codemirror/mode/markdown/markdown";
@@ -7,9 +6,8 @@ import TurndownService from "turndown";
 // import htmlSanitizer from "../../util/htmlSanitizer";
 import sanitizeHtml from "sanitize-html";
 // import "codemirror/keymap/sublime";
-import styles from "./editor.module.scss";
 
-require("codemirror/lib/codemirror.css");
+import "codemirror/lib/codemirror.css";
 
 type Props = {
   textValue: string;
@@ -44,7 +42,7 @@ const Editor: FunctionComponent<Props> = ({
   myPlaceHolder,
   className,
 }) => (
-  <div className={styles.Input}>
+  <div className="p-3 box-border md:p-7 md:pr-4">
     <CodeMirror
       value={textValue}
       options={{
@@ -54,7 +52,7 @@ const Editor: FunctionComponent<Props> = ({
       editorDidMount={(editor) => {
         editor.setSize("auto", "100%");
       }}
-      className={`${className} ${styles.InputElement}`}
+      className={`${className} outline-none bg-white font-inherit p-[12px] box-border`}
       // onBeforeChange={(editor, data, value) => {}}
       onBeforeChange={(editor, data, value) => {
         inputChangedHandler(value, side);

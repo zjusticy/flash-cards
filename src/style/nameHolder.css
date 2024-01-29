@@ -1,0 +1,25 @@
+.nameHolder {
+	display: flex;
+	align-items: center;
+	margin-left: 1rem;
+	flex: 1 1 150px;
+	overflow: hidden;
+
+	& > div {
+		flex: 1 1 auto;
+		height: 42px;
+		outline: none;
+	}
+	& > div > span {
+		font-size: 24px;
+		color: rgba(0, 0, 0, 0.5);
+		padding-left: 6px;
+
+		line-height: 42px;
+		/*overflow: hidden;*/
+	}
+	& > div:hover {
+		background-color: rgba(0, 0, 0, 0.1);
+		cursor: pointer;
+	}
+}
