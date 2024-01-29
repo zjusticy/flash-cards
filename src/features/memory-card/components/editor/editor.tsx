@@ -8,8 +8,6 @@ import TurndownService from "turndown";
 import sanitizeHtml from "sanitize-html";
 // import "codemirror/keymap/sublime";
 
-import "codemirror/lib/codemirror.css";
-
 // import dynamic from "next/dynamic";
 
 // const { Controlled: CodeMirror } = dynamic(

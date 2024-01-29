@@ -7,6 +7,7 @@
 @import "./card.css";
 @import "./spinner.css";
 @import "./drawer.css";
+@import "codemirror/lib/codemirror.css";
 
 @import "tailwindcss/utilities";
 
