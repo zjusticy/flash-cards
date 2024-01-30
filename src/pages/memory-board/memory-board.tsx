@@ -466,11 +466,12 @@ const MemoryBoard: React.FC<{
     );
 
   return (
-    <div className="flex h-full">
-      <div className="flex items-center justify-center w-full h-full">
-        <div className="w-full md:items-center md:flex md:justify-evenly">
+    <div className="h-full">
+      <div className="w-full h-full flex items-center justify-center ">
+        <div className="w-full md:items-center md:flex md:justify-center">
           <Button
-            className="mb-[5%] p-6 hover:bg-gray-200 max-[681px]:fixed max-[681px]:top-[40%] max-[681px]:opacity-70"
+            className="mb-[5%] mr-8 p-6 hover:bg-gray-200 max-[681px]:fixed max-[681px]:top-[40%] max-[681px]:opacity-70 \
+            max-[681px]:mr-0"
             clicked={showPrev}
             elementType="normal"
           >
@@ -490,8 +491,8 @@ const MemoryBoard: React.FC<{
             <div className="flex justify-end md:mr-2">{buttons}</div>
           </div>
           <Button
-            className="mb-[5%] p-6 hover:bg-gray-200 max-[681px]:fixed \
-             max-[681px]:top-[40%] max-[681px]:opacity-70 max-[681px]:right-0"
+            className="mb-[5%] p-6 ml-8 hover:bg-gray-200 max-[681px]:fixed \
+             max-[681px]:top-[40%] max-[681px]:opacity-70 max-[681px]:right-0 max-[681px]:ml-0"
             clicked={() => showNext(false, true)}
             elementType="normal"
           >
