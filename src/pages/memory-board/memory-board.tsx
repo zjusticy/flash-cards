@@ -12,6 +12,7 @@ import { Button } from "@/features/ui";
 import { CardsShowWrapper, CodeBlock } from "@/features/memory-card/components";
 import type { MemStateType } from "@/types";
 import { useCardStore } from "@/store/zustand";
+import { GoNext, GoPrev } from "@/assets/images";
 
 type MemStore = {
   listName: string;
@@ -475,10 +476,9 @@ const MemoryBoard: React.FC<{
             clicked={showPrev}
             elementType="normal"
           >
-            <img
-              src="/images/leftArrow.png"
-              alt="Go Previous"
-              className="max-[681px]:h-[32px] max-[681px]:w-[32px]"
+            <GoPrev
+              alt="Previous card"
+              className="max-[681px]:w-[32px] max-[681px]:h-[32px]"
             />
           </Button>
           <div
@@ -496,10 +496,9 @@ const MemoryBoard: React.FC<{
             clicked={() => showNext(false, true)}
             elementType="normal"
           >
-            <img
-              src="/images/rightArrow.png"
-              alt="Go Next"
-              className="max-[681px]:h-[32px] max-[681px]:w-[32px]"
+            <GoNext
+              alt="next card"
+              className="max-[681px]:w-[32px] max-[681px]:h-[32px]"
             />
           </Button>
         </div>

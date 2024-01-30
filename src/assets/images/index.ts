@@ -7,3 +7,5 @@ export { default as Beaver } from "./beaver";
 export { default as TextView } from "./text-view";
 export { default as DeleteIcon } from "./delete-icon";
 export { default as SaveIcon } from "./save-icon";
+export { default as GoNext } from "./goNext";
+export { default as GoPrev } from "./goPrev";
