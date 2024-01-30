@@ -9,3 +9,4 @@ export { default as DeleteIcon } from "./delete-icon";
 export { default as SaveIcon } from "./save-icon";
 export { default as GoNext } from "./goNext";
 export { default as GoPrev } from "./goPrev";
+export { default as FileIcon } from "./file-icon";

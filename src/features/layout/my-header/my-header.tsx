@@ -103,7 +103,7 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
   };
 
   const toSignInPage = () => {
-    navigate("/auth");
+    navigate("/login");
   };
 
   const changeCardsListVis = () => {

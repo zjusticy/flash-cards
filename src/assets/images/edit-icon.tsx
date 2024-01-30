@@ -14,7 +14,7 @@ type Props = {
 
 const EditIcon: FunctionComponent<Props> = ({
   style = {},
-  fill = "#000",
+  fill = "#86A3BD",
   width = "25",
   height = "25",
   className = "",

@@ -1,4 +1,5 @@
 import Button from "@/features/ui/button/button";
+import { FileIcon, EditIcon, DeleteIcon } from "@/assets/images";
 
 type Props = {
   listName: string;
@@ -18,7 +19,7 @@ const FileIndexHolder = ({
   return (
     <div className="flex justify-between h-[66px] w-full">
       <div className="nameHolder">
-        <img src="/images/file.png" alt="file" />
+        <FileIcon alt="file" className="h-8 w-8" />
         <div
           role="button"
           tabIndex={index}
@@ -34,18 +35,18 @@ const FileIndexHolder = ({
           disabled={false}
           clicked={edit}
           elementType="normal"
-          className="px-[6px] hover:bg-[rgba(0, 0, 0, 0.1)]"
+          className="p-[6px] hover:bg-gray-200"
         >
-          <img src="/images/edit.png" alt="edit" />
+          <EditIcon alt="edit" className="h-8 w-8" />
         </Button>
         <Button
           btnType="FileM"
           disabled={false}
           clicked={onDelete}
           elementType="normal"
-          className="px-[6px] hover:bg-[rgba(0, 0, 0, 0.1)]"
+          className="p-[6px] hover:bg-gray-200"
         >
-          <img src="/images/delete.png" alt="delete" />
+          <DeleteIcon alt="delete" className="h-8 w-8" />
         </Button>
       </div>
     </div>
