@@ -14,7 +14,7 @@ const RequireAuth = ({ isAuth }: { isAuth: boolean }) => {
   }
 
   return (
-    <div className="flex flex-auto flex-col h-full">
+    <div className="flex flex-col h-full">
       <MyHeader />
       <main className="flex-grow">
         <Outlet />
@@ -28,7 +28,7 @@ function BasicLayout() {
 
 function LocalLayout() {
   return (
-    <div className="flex flex-auto flex-col h-full">
+    <div className="flex flex-col h-full">
       <MyHeader localDB={true} />
       <main className="flex-grow">
         <Outlet />
