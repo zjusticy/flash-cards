@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useCardStore } from "@/store/zustand";
 
 // import { signIn, signOut, authCheckState, AuthState } from "../store/authSlice";
-import { signIn } from "./api-auth";
+import { signIn, signOut } from "./api-auth";
 
 export default function useAuth() {
   //   const [user, setUser] = useState(null);
@@ -27,9 +27,15 @@ export default function useAuth() {
       });
   };
 
+  const signOutHandler = async () => {
+    setAuthState(false);
+    signOut();
+  };
+
   return {
     error,
     isLoading,
     submitHandler,
+    signOutHandler,
   };
 }

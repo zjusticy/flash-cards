@@ -9,6 +9,7 @@ import BeaverLogo from "@/assets/images/beaver";
 import { Settings } from "@/types";
 import NavigationItems from "@/features/layout/navigation-items/navigation-items";
 import { cn } from "@/utils/mergeClasses";
+import useAuth from "@/features/user/use-auth";
 
 // const isCreateCardPath = (path: string) => {
 //   const pwd = /.*\/cardCreator\/.*/;
@@ -28,8 +29,9 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
 
   const [toggleShow, toggle] = useState<boolean>(false);
 
-  const { setAuthState, modeE, modeS, drawerVisible, setDrawerVisibility } =
-    useCardStore();
+  const { modeE, modeS, drawerVisible, setDrawerVisibility } = useCardStore();
+
+  const { signOutHandler } = useAuth();
 
   const navigate = useNavigate();
 
@@ -101,7 +103,7 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
   };
 
   const toSignInPage = () => {
-    navigate("/login");
+    navigate("/auth");
   };
 
   const changeCardsListVis = () => {
@@ -184,7 +186,9 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
                 signin={toSignInPage}
                 localDB={localDB}
                 todo={toggleClikedhandler}
-                logout={() => setAuthState(false)}
+                logout={() => {
+                  signOutHandler();
+                }}
               />
             </div>
           </div>
