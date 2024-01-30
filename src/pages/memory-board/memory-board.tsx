@@ -467,8 +467,8 @@ const MemoryBoard: React.FC<{
 
   return (
     <div className="h-full">
-      <div className="w-full h-full flex items-center justify-center ">
-        <div className="w-full md:items-center md:flex md:justify-center">
+      <div className="h-full flex items-center justify-center max-[681px]:w-full">
+        <div className="max-[681px]:w-full md:items-center md:flex md:justify-center">
           <Button
             className="mb-[5%] mr-8 p-6 hover:bg-gray-200 max-[681px]:fixed max-[681px]:top-[40%] max-[681px]:opacity-70 \
             max-[681px]:mr-0"
