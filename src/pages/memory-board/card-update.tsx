@@ -4,6 +4,8 @@ import ReactMarkdown from "react-markdown";
 import { useImmer } from "use-immer";
 import Tex from "@matejmazur/react-katex";
 import math from "remark-math";
+import { useParams } from "react-router-dom";
+
 import useCards from "@/features/memory-card/use-swr-memory-card";
 import useLocalCards from "@/features/memory-card/use-local-memory-card";
 import useCardsForPage from "@/features/memory-card/use-memory-card";
@@ -90,13 +92,7 @@ const renderers = {
 };
 /* eslint-enable */
 
-const CardUpdate: React.FC<{ localDB?: boolean; collectionSlug: string }> = ({
-  localDB = false,
-  collectionSlug,
-}: {
-  localDB?: boolean;
-  collectionSlug: string;
-}) => {
+const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
   const [cardForm, changeForm] = useImmer<UpdateInitState>(initForm);
 
   const [preview, flipPreview] = useState<boolean>(false);
@@ -104,6 +100,8 @@ const CardUpdate: React.FC<{ localDB?: boolean; collectionSlug: string }> = ({
   const [addNew, flipAddNew] = useState<boolean>(true);
 
   const [frontSide, flipSide] = useState<boolean>(true);
+
+  const { name: activeListName } = useParams<{ name: string }>();
 
   const {
     onAddCard: onCloudAddCard,
@@ -121,11 +119,11 @@ const CardUpdate: React.FC<{ localDB?: boolean; collectionSlug: string }> = ({
     onUpdateCard: onLocalUpdateCard,
     onCancelled: onLocalCancelled,
     setCardsDataLocal,
-  } = useLocalCards(collectionSlug || "");
+  } = useLocalCards(activeListName || "");
 
   const cardsData = localDB ? cardsDataLocal : cloudCardsData;
 
-  const { cards } = useCards(collectionSlug || "");
+  const { cards } = useCards(activeListName || "");
 
   const { modeE, drawerVisible, setDrawerVisibility } = useCardStore();
 
@@ -245,8 +243,8 @@ const CardUpdate: React.FC<{ localDB?: boolean; collectionSlug: string }> = ({
     };
 
     if (onLocalAddCard && localDB)
-      onLocalAddCard(newCard, collectionSlug || "");
-    else if (onCloudAddCard) onCloudAddCard(newCard, collectionSlug || "");
+      onLocalAddCard(newCard, activeListName || "");
+    else if (onCloudAddCard) onCloudAddCard(newCard, activeListName || "");
     changeForm((draft) => {
       draft.card.front = {
         value: myPlaceHolderF,
@@ -277,10 +275,10 @@ const CardUpdate: React.FC<{ localDB?: boolean; collectionSlug: string }> = ({
 
       // Use reducer's function
       if (localDB) {
-        onLocalUpdateCard(collectionSlug || "", newCard);
+        onLocalUpdateCard(activeListName || "", newCard);
         return;
       }
-      onCloudUpdateCard(collectionSlug || "", newCard);
+      onCloudUpdateCard(activeListName || "", newCard);
     }
   };
 
@@ -290,11 +288,11 @@ const CardUpdate: React.FC<{ localDB?: boolean; collectionSlug: string }> = ({
   const cardRemoveHandler = (cardId: string | null) => {
     // Use reducer's function
     if (cardId && localDB) {
-      onLocalDeleteCard(collectionSlug || "", cardId);
+      onLocalDeleteCard(activeListName || "", cardId);
       return;
     }
     if (cardId) {
-      onCloudDeleteCard(collectionSlug || "", cardId);
+      onCloudDeleteCard(activeListName || "", cardId);
     }
   };
 

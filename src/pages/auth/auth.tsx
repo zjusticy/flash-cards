@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useImmer } from "use-immer";
-import { useRouter } from "next/router";
+import { useNavigate } from "react-router-dom";
 
 import { useCardStore } from "@/store/zustand";
 import useAuth from "@/features/user/use-auth";
@@ -19,7 +19,7 @@ const Auth = () => {
     password: string;
   }>(initState);
 
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const { isAuth, setUseLocalDB } = useCardStore();
 
@@ -27,9 +27,9 @@ const Auth = () => {
 
   useEffect(() => {
     if (isAuth) {
-      router.push(`/`);
+      navigate(`/intro`);
     }
-  }, [isAuth, router]);
+  }, [isAuth, navigate]);
 
   /**
    * Connect input and data
@@ -109,7 +109,7 @@ const Auth = () => {
           elementType="submit"
           clicked={() => {
             setUseLocalDB(true);
-            router.push(`/local/intro`);
+            navigate(`/local/intro`);
           }}
           className="w-32 text-[1rem]"
         >

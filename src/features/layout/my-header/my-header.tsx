@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-// import { useLocation, matchRoutes } from "react-router-dom";
-import { useRouter } from "next/router";
+import { useLocation, matchRoutes, useNavigate } from "react-router-dom";
 
 import { useCardStore } from "@/store/zustand";
 import useWindowSize from "@/utils/useWindowSize";
@@ -11,10 +10,15 @@ import { Settings } from "@/types";
 import NavigationItems from "@/features/layout/navigation-items/navigation-items";
 import { cn } from "@/utils/mergeClasses";
 
-const isCreateCardPath = (path: string) => {
-  const pwd = /.*\/cardCreator\/.*/;
-  return pwd.test(path);
-};
+// const isCreateCardPath = (path: string) => {
+//   const pwd = /.*\/cardCreator\/.*/;
+//   return pwd.test(path);
+// };
+
+const routes = [
+  { path: "/cardCreator/:name" },
+  { path: "/local/cardCreator/:name" },
+];
 
 const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
   const [inputClasses, changeClasses] = useState<string[]>([
@@ -27,11 +31,13 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
   const { setAuthState, modeE, modeS, drawerVisible, setDrawerVisibility } =
     useCardStore();
 
-  const router = useRouter();
+  const navigate = useNavigate();
+
+  const location = useLocation();
 
   const windowSize = useWindowSize();
 
-  const branch = isCreateCardPath(router.pathname);
+  const branch = matchRoutes(routes, location);
 
   const withinSize = windowSize?.width && windowSize?.width < 640;
 
@@ -84,18 +90,18 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
 
   const goHome = () => {
     if (localDB) {
-      router.push("/local/intro");
+      navigate("/local/intro");
       return;
     }
-    router.push("/");
+    navigate("/");
   };
 
   const goBack = () => {
-    router.back();
+    navigate(-1);
   };
 
   const toSignInPage = () => {
-    router.push("/login");
+    navigate("/login");
   };
 
   const changeCardsListVis = () => {

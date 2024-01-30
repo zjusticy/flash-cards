@@ -8,6 +8,7 @@
 @import "./spinner.css";
 @import "./drawer.css";
 @import "codemirror/lib/codemirror.css";
+@import "katex/dist/katex.min.css";
 
 @import "tailwindcss/utilities";
 

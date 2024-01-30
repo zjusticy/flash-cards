@@ -1,18 +1,14 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { useCardStore } from "@/store/zustand";
 import useGetLists from "@/features/file-list/use-file-list";
 import useGetLocalLists from "@/features/file-list/use-local-file-list";
 import Button from "@/features/ui/button/button";
 import FileHolder from "@/features/file-list/file-index-holder/file-index-holder";
 import Modal from "@/features/ui/modal/modal";
 import InputCombine from "@/features/ui/input-combine/input-combine";
-import PageLayout from "@/features/layout/pageLayout";
 
-const localDB = true;
-
-const Intro = () => {
+const Intro = ({ localDB = false }: { localDB?: boolean }) => {
   const [listName, setName] = useState<string>("");
 
   const [modalShow, flipModal] = useState<boolean>(false);
@@ -21,30 +17,30 @@ const Intro = () => {
 
   const { cardLists, delelteList, addList } = useGetLists();
 
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const {
     fileList,
-    error,
-    actionError,
+    // error,
+    // actionError,
     delelteList: deleteLocalList,
     addList: addLocalList,
   } = useGetLocalLists();
 
   const onClickedHandler = (_listName: string) => {
     if (localDB) {
-      router.push(`/local/memoryBoard/${_listName}`);
+      navigate(`/local/memoryBoard/${_listName}`);
       return;
     }
-    router.push(`/memoryBoard/${_listName}`);
+    navigate(`/memoryBoard/${_listName}`);
   };
 
   const onEditHandler = (_listName: string) => {
     if (localDB) {
-      router.push(`/local/cardCreator/${_listName}`);
+      navigate(`/local/cardCreator/${_listName}`);
       return;
     }
-    router.push(`/cardCreator/${_listName}`);
+    navigate(`/cardCreator/${_listName}`);
   };
 
   const myFileList = localDB ? fileList : cardLists;
@@ -54,7 +50,7 @@ const Intro = () => {
   };
 
   return (
-    <PageLayout localDB={localDB}>
+    <>
       <Modal show={modalShow} modalClosed={() => flipModal(false)}>
         <div className="flex justify-around">
           <Button
@@ -111,7 +107,10 @@ const Intro = () => {
           </div>
 
           <div className="border-[2px] border-solid border-gray-300 min-h-20 overflow-auto flex-grow">
-            <h2 className="absolute mt-[-1rem] ml-4 bg-[#ffffff] h-5 p-1 text-[#b9b9b9] text-[1rem] font-pressStart">
+            <h2
+              className="absolute mt-[-1.25rem] ml-4 bg-[#ffffff] h-5 p-1 \
+             text-[#b9b9b9] text-[1rem] font-pressStart [&+div]:mt-4"
+            >
               Lists
             </h2>
             {myFileList &&
@@ -120,8 +119,7 @@ const Intro = () => {
                   key={list}
                   index={index}
                   listName={list}
-                  localDB={localDB}
-                  // clicked={() => onClickedHandler(list)}
+                  clicked={() => onClickedHandler(list)}
                   edit={() => onEditHandler(list)}
                   onDelete={() => {
                     flipModal((prev) => !prev);
@@ -132,7 +130,7 @@ const Intro = () => {
           </div>
         </div>
       </div>
-    </PageLayout>
+    </>
   );
 };
 

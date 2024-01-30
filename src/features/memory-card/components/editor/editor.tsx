@@ -1,8 +1,8 @@
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent } from "react";
 // import CodeMirror from "codemirror";
 import { Controlled as CodeMirror } from "react-codemirror2";
 
-// import "codemirror/mode/markdown/markdown";
+import "codemirror/mode/markdown/markdown";
 import TurndownService from "turndown";
 // import htmlSanitizer from "../../util/htmlSanitizer";
 import sanitizeHtml from "sanitize-html";
@@ -19,9 +19,9 @@ import sanitizeHtml from "sanitize-html";
 //   { ssr: false }
 // );
 
-if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
-  require("codemirror/mode/markdown/markdown");
-}
+// if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
+//   require("codemirror/mode/markdown/markdown");
+// }
 
 type Props = {
   textValue: string;

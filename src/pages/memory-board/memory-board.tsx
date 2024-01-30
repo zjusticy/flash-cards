@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import { useImmer } from "use-immer";
 import ReactMarkdown from "react-markdown";
 import Tex from "@matejmazur/react-katex";
 import math from "remark-math";
+import { useParams, useNavigate } from "react-router-dom";
 
 import useCards from "@/features/memory-card/use-swr-memory-card";
 import useLocalCards from "@/features/memory-card/use-local-memory-card";
@@ -59,20 +59,21 @@ const renderers = {
 
 const MemoryBoard: React.FC<{
   localDB?: boolean;
-  collectionSlug: string;
-}> = ({ localDB = false, collectionSlug }) => {
+}> = ({ localDB = false }) => {
   const [memState, changeMemState] = useImmer<MemStateType>(memInit);
 
   const [side, flipSide] = useState<boolean>(true);
 
   const { modeS } = useCardStore();
 
-  const router = useRouter();
+  const navigate = useNavigate();
 
-  const { isLoading: isServerLoading, cards } = useCards(collectionSlug || "");
+  const { name: activeListName } = useParams<{ name: string }>();
+
+  const { isLoading: isServerLoading, cards } = useCards(activeListName || "");
 
   const { isLoading: isLocalLoading, cardsDataLocal } = useLocalCards(
-    collectionSlug || ""
+    activeListName || ""
   );
 
   const isLoading = localDB ? isLocalLoading : isServerLoading;
@@ -121,9 +122,9 @@ const MemoryBoard: React.FC<{
       }
     };
 
-    if (collectionSlug) {
+    if (activeListName) {
       // Load the last record of memory board
-      const myBoardJ = localStorage.getItem(`memoryBoard${collectionSlug}`);
+      const myBoardJ = localStorage.getItem(`memoryBoard${activeListName}`);
       // If myBoard exist
       if (myBoardJ) {
         const myBoard: MemStore = JSON.parse(myBoardJ);
@@ -144,12 +145,12 @@ const MemoryBoard: React.FC<{
       else if (
         cardsCache &&
         !isLoading &&
-        !Object.keys(cardsCache).includes(collectionSlug)
+        !Object.keys(cardsCache).includes(activeListName)
       ) {
-        setCards(Object.keys(cardsCache), collectionSlug);
+        setCards(Object.keys(cardsCache), activeListName);
       }
     }
-  }, [collectionSlug, changeMemState, cardsCache, isLoading]);
+  }, [activeListName, changeMemState, cardsCache, isLoading]);
 
   /**
    * Move to the next card
@@ -326,7 +327,7 @@ const MemoryBoard: React.FC<{
       });
       flipSide(true);
     } else {
-      localStorage.removeItem(`memoryBoard${collectionSlug}`);
+      localStorage.removeItem(`memoryBoard${activeListName}`);
       changeMemState((prevState) => ({ ...prevState, done: true }));
     }
   };
@@ -347,10 +348,10 @@ const MemoryBoard: React.FC<{
   // go to home page
   const goHome = () => {
     if (localDB) {
-      router.push("/local/intro");
+      navigate("/local/intro");
       return;
     }
-    router.push("/");
+    navigate("/");
   };
 
   const objExi =

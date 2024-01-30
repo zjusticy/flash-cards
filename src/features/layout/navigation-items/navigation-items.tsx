@@ -1,10 +1,6 @@
 import Button from "@/features/ui/button/button";
 
 type Props = {
-  // onDoubleSwitch: () => void;
-  // modeS: boolean;
-  // modeE: boolean;
-  // onDoubleEditSwitch: () => void;
   todo: () => void;
   logout: () => void;
   signin: () => void;
@@ -12,16 +8,7 @@ type Props = {
   branch: boolean;
 };
 
-const NavigationItems = ({
-  // onDoubleSwitch,
-  // modeS,
-  // modeE,
-  branch,
-  signin,
-  localDB,
-  todo,
-  logout,
-}: Props) => (
+const NavigationItems = ({ branch, signin, localDB, todo, logout }: Props) => (
   <ul
     className="m-0 p-0 list-none flex flex-col items-center \ 
   bg-white border border-solid border-[color:rgba(0, 0, 0, 0.1)] [&_li]:last:border-b-0"
