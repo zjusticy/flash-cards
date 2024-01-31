@@ -1,4 +1,4 @@
-[**DEMO**](https://flash-cards.vercel.app/)
+[**DEMO**](https://flash-cards.vercel.app/local/intro)
 
 ## Description
 
