@@ -8,12 +8,22 @@ import { CardUpdate, MemoryBoard, Intro, Auth } from "@/pages";
 // import { Settings } from "@/types";
 import { useCardStore } from "@/store/zustand";
 
-const RequireAuth = ({ isAuth }: { isAuth: boolean }) => {
-  if (!isAuth) {
+const RequireAuth = ({
+  isAuth,
+  isLoading,
+}: {
+  isAuth: boolean;
+  isLoading: boolean;
+}) => {
+  if (!isLoading && !isAuth) {
     return <Navigate to={{ pathname: "/login" }} replace />;
   }
 
-  return (
+  return isLoading ? (
+    <div className="mt-40">
+      <Spinner />
+    </div>
+  ) : (
     <div className="flex flex-col h-full">
       <MyHeader />
       <main className="flex-grow">
@@ -43,7 +53,7 @@ const App = () => {
   // }
   const { isLoading } = useAuthCheck();
 
-  const { isAuth, setModeS, setModeE } = useCardStore();
+  const { isAuth } = useCardStore();
 
   //   useEffect(() => {
   //     const stickyValue = window.localStorage.getItem("Settings");
@@ -58,7 +68,10 @@ const App = () => {
   // let routes = this.props.isWaiting || this.props.isAuthenticated ? (
   const routes = (
     <Routes>
-      <Route path="/" element={<RequireAuth isAuth={isAuth} />}>
+      <Route
+        path="/"
+        element={<RequireAuth isAuth={isAuth} isLoading={isLoading} />}
+      >
         <Route path="/memoryBoard/:name" element={<MemoryBoard />} />
         <Route path="/cardCreator/:name" element={<CardUpdate />} />
         <Route path="/intro" element={<Intro />} />
@@ -84,13 +97,7 @@ const App = () => {
     </Routes>
   );
 
-  const mainPage = isLoading ? (
-    <div className="mt-40">
-      <Spinner />
-    </div>
-  ) : (
-    <>{routes}</>
-  );
+  const mainPage = <>{routes}</>;
 
   return mainPage;
 };
