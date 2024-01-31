@@ -1,8 +1,8 @@
-[**DEMO**](https://flash-cards.vercel.app/)
+[**DEMO**](https://flash-cards.vercel.app/local/intro)
 
 ## Description
 
-This is a flashcard web app that helps you memorize anything for free. It is built with React, Redux and localStorage. You can create your own card collections.
+This is a flashcard web app that helps you memorize anything for free. It is built with React, Zustand and Firebase. You can create your own card collections.
 
 ![](https://github.com/zjusticy/imgs_lib/blob/master/memoryCardMemBoard.png)
 
