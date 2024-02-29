@@ -19,6 +19,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./src/*"
@@ -27,7 +28,7 @@
     "incremental": true
   },
   "include": [
-    "src", "vite.config.ts"
+    "src"
   ],
   "exclude": [
     "node_modules"

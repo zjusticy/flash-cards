@@ -3,7 +3,6 @@ import { ref, child, get, update } from "firebase/database";
 
 export function addLists(name: string, id: string): Promise<any> {
   const userId = auth.currentUser && auth.currentUser.uid;
-  console.log(userId);
   return update(ref(database, `userData/${userId}/lists`), { [name]: id });
 }
 
