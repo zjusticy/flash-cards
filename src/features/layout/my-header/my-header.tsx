@@ -1,15 +1,14 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 
-import { useLocation, matchRoutes, useNavigate } from "react-router-dom";
+import { useLocation, matchRoutes, useNavigate } from 'react-router-dom';
 
-import { useCardStore } from "@/store/zustand";
-import useWindowSize from "@/utils/useWindowSize";
-import MoreLogo from "@/assets/images/menu";
-import BeaverLogo from "@/assets/images/beaver";
-import { Settings } from "@/types";
-import NavigationItems from "@/features/layout/navigation-items/navigation-items";
-import { cn } from "@/utils/mergeClasses";
-import useAuth from "@/features/user/use-auth";
+import { useCardStore } from '@/store/zustand';
+import useWindowSize from '@/utils/useWindowSize';
+import { BeaverLogo, Menu, Home, RouterBack } from '@/assets/images';
+import { Settings } from '@/types';
+import NavigationItems from '@/features/layout/navigation-items/navigation-items';
+import { cn } from '@/utils/mergeClasses';
+import useAuth from '@/features/user/use-auth';
 
 // const isCreateCardPath = (path: string) => {
 //   const pwd = /.*\/cardCreator\/.*/;
@@ -17,14 +16,14 @@ import useAuth from "@/features/user/use-auth";
 // };
 
 const routes = [
-  { path: "/cardCreator/:name" },
-  { path: "/local/cardCreator/:name" },
+  { path: '/cardCreator/:name' },
+  { path: '/local/cardCreator/:name' },
 ];
 
 const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
   const [inputClasses, changeClasses] = useState<string[]>([
-    "absolute \
-   left-[-1px] top-[100px] scale-0 z-[20] opacity-0 [&>ul]:leading-[3rem]",
+    'absolute \
+   left-[-1px] top-[100px] scale-0 z-[20] opacity-0 [&>ul]:leading-[3rem]',
   ]);
 
   const [toggleShow, toggle] = useState<boolean>(false);
@@ -53,38 +52,38 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
     }
     // outside click
     changeClasses([
-      "absolute left-[-1px] top-[100px] \
-       scale-0 z-[20] opacity-0 [&>ul]:leading-[3rem]",
+      'absolute left-[-1px] top-[100px] \
+       scale-0 z-[20] opacity-0 [&>ul]:leading-[3rem]',
     ]);
     toggle(false);
   };
 
   useEffect(() => {
     // add when mounted
-    document.addEventListener("mousedown", handleOtherClick);
+    document.addEventListener('mousedown', handleOtherClick);
     // return function to be called when unmounted
     return () => {
-      document.removeEventListener("mousedown", handleOtherClick);
+      document.removeEventListener('mousedown', handleOtherClick);
     };
   }, []);
 
   useEffect(() => {
     const value: Settings = { modeSingleBoard: modeS, modeSingleUpdate: modeE };
-    window.localStorage.setItem("Settings", JSON.stringify(value));
+    window.localStorage.setItem('Settings', JSON.stringify(value));
   }, [modeS, modeE]);
 
   const toggleClikedhandler = () => {
     if (!toggleShow) {
       changeClasses([
-        "absolute left-[-1px] top-[100px] \
-      scale-0 z-[20] opacity-0 [&>ul]:leading-[3rem]",
-        "scale-100 duration-[250ms] opacity-100",
+        'absolute left-[-1px] top-[100px] \
+      scale-0 z-[20] opacity-0 [&>ul]:leading-[3rem]',
+        'scale-100 duration-[250ms] opacity-100',
       ]);
       toggle(!toggleShow);
     } else {
       changeClasses([
-        "absolute left-[-1px] top-[100px] \
-      scale-0 z-[20] opacity-0 [&>ul]:leading-[3rem]",
+        'absolute left-[-1px] top-[100px] \
+      scale-0 z-[20] opacity-0 [&>ul]:leading-[3rem]',
       ]);
       toggle(!toggleShow);
     }
@@ -92,10 +91,10 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
 
   const goHome = () => {
     if (localDB) {
-      navigate("/local/intro");
+      navigate('/local/intro');
       return;
     }
-    navigate("/");
+    navigate('/');
   };
 
   const goBack = () => {
@@ -103,7 +102,7 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
   };
 
   const toSignInPage = () => {
-    navigate("/login");
+    navigate('/login');
   };
 
   const changeCardsListVis = () => {
@@ -128,17 +127,22 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
               type="button"
               onClick={goBack}
               className={cn(
-                "outline-none w-full h-full hover:cursor-pointer \
-               hover:border-[3px] hover:border-gray-400 active:border-3 active:border-gray-400",
-                "flex justify-center items-center [&_svg]:block"
+                'outline-none w-full h-full hover:cursor-pointer \
+               hover:border-[3px] hover:border-gray-400 active:border-3 active:border-gray-400',
+                'flex justify-center items-center [&_svg]:block'
               )}
             >
-              <img
+              {/* <img
                 src="/images/back_pic.png"
                 alt="Go Back"
-                height={withinSize ? "32" : "null"}
-                width={withinSize ? "32" : "null"}
+                height={withinSize ? '32' : 'null'}
+                width={withinSize ? '32' : 'null'}
                 className="align-middle"
+              /> */}
+              <RouterBack
+                alt="back to previous page"
+                height={withinSize ? '0' : '60'}
+                width={withinSize ? '0' : '60'}
               />
             </button>
           </div>
@@ -150,25 +154,30 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
               type="button"
               onClick={goHome}
               className={cn(
-                "outline-none w-full h-full hover:cursor-pointer \
-                hover:border-[3px] hover:border-gray-400 active:border-[3px] active:border-gray-400",
-                "flex justify-center items-center [&_svg]:block"
+                'outline-none w-full h-full hover:cursor-pointer \
+                hover:border-[3px] hover:border-gray-400 active:border-[3px] active:border-gray-400',
+                'flex justify-center items-center [&_svg]:block'
               )}
             >
-              <img
+              {/* <img
                 src="/images/home_pic.png"
                 alt="Home Page"
-                height={withinSize ? "32" : "null"}
-                width={withinSize ? "32" : "null"}
+                height={withinSize ? '53' : 'null'}
+                width={withinSize ? '32' : 'null'}
                 className="align-middle"
+              /> */}
+              <Home
+                alt="home button"
+                height={withinSize ? '0' : '60'}
+                width={withinSize ? '0' : '60'}
               />
             </button>
           </div>
           <div
             className={cn(
-              "border-r border-solid border-gray-200 leading-[50px] w-[50px] \
-          duration-100 box-border md:w-[100px] md:leading-[100px]",
-              "relative"
+              'border-r border-solid border-gray-200 leading-[50px] w-[50px] \
+          duration-100 box-border md:w-[100px] md:leading-[100px]',
+              'relative'
             )}
             ref={node}
           >
@@ -178,9 +187,9 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
               type="button"
               onClick={toggleClikedhandler}
             >
-              <MoreLogo alt="navDrawer" height={withinSize ? "32" : "53"} />
+              <Menu alt="navDrawer" height={withinSize ? '32' : '53'} />
             </button>
-            <div className={inputClasses.join(" ")}>
+            <div className={inputClasses.join(' ')}>
               <NavigationItems
                 branch={Boolean(branch)}
                 signin={toSignInPage}
@@ -202,15 +211,15 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
               type="button"
               onClick={changeCardsListVis}
               className={cn(
-                "outline-none w-full h-full hover:cursor-pointer \
-               hover:boder-[3px_solid_rgba(0, 0, 0, 0.3)] active:boder-[3px_solid_rgba(0, 0, 0, 0.3)]",
-                "flex justify-center items-center [&_svg]:block"
+                'outline-none w-full h-full hover:cursor-pointer \
+               hover:boder-[3px_solid_rgba(0, 0, 0, 0.3)] active:boder-[3px_solid_rgba(0, 0, 0, 0.3)]',
+                'flex justify-center items-center [&_svg]:block'
               )}
             >
               <BeaverLogo
                 alt="Cards list"
-                height={withinSize ? "32" : "58"}
-                width={withinSize ? "29" : "50"}
+                height={withinSize ? '32' : '58'}
+                width={withinSize ? '29' : '50'}
                 className="align-middle"
               />
             </button>
