@@ -4,6 +4,8 @@
 
 This is a flashcard web app that helps you memorize anything for free. It is built with React, Zustand and Firebase. You can create your own card collections.
 
+**New Function:** use generative ai to generate cards (Gemini pro 1.5)
+
 ![](https://github.com/zjusticy/imgs_lib/blob/master/memoryCardMemBoard.png)
 
 **Some features**:
