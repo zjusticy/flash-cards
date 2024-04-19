@@ -32,7 +32,9 @@ const myPlaceHolderF =
 const myPlaceHolderB = 'This is the back side';
 
 const googleGenerativeAiUrl =
-  'https://google-generative-api.vercel.app/api/generate-content';
+  process.env.MODE === 'development'
+    ? 'https://google-generative-api.vercel.app/api/generate-content'
+    : '/api/generate-content';
 
 type UpdateInitState = {
   card: {
