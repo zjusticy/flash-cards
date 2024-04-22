@@ -1,12 +1,12 @@
 // import { useEffect, useState } from "react";
-import { Route, Routes, Outlet, Navigate } from "react-router-dom";
-import { Spinner } from "@/features/ui";
-import MyHeader from "@/features/layout/my-header/my-header";
+import { Route, Routes, Outlet, Navigate } from 'react-router-dom';
+import { Spinner } from '@/features/ui';
+import MyHeader from '@/features/layout/my-header/my-header';
 
-import useAuthCheck from "@/features/user/use-auth-check";
-import { CardUpdate, MemoryBoard, Intro, Auth } from "@/pages";
+import useAuthCheck from '@/features/user/use-auth-check';
+import { CardUpdate, MemoryBoard, Intro, Auth } from '@/pages';
 // import { Settings } from "@/types";
-import { useCardStore } from "@/store/zustand";
+import { useCardStore } from '@/store/zustand';
 
 const RequireAuth = ({
   isAuth,
@@ -16,7 +16,7 @@ const RequireAuth = ({
   isLoading: boolean;
 }) => {
   if (!isLoading && !isAuth) {
-    return <Navigate to={{ pathname: "/login" }} replace />;
+    return <Navigate to={{ pathname: '/login' }} replace />;
   }
 
   return isLoading ? (
@@ -26,7 +26,7 @@ const RequireAuth = ({
   ) : (
     <div className="flex flex-col h-full">
       <MyHeader />
-      <main className="flex-grow">
+      <main className="flex-grow mx-4">
         <Outlet />
       </main>
     </div>
@@ -40,7 +40,7 @@ function LocalLayout() {
   return (
     <div className="flex flex-col h-full">
       <MyHeader localDB={true} />
-      <main className="flex-grow">
+      <main className="flex-grow mx-2">
         <Outlet />
       </main>
     </div>
