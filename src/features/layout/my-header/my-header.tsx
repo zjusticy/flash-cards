@@ -141,8 +141,8 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
               /> */}
               <RouterBack
                 alt="back to previous page"
-                height={withinSize ? '0' : '60'}
-                width={withinSize ? '0' : '60'}
+                height={withinSize ? '32' : '53'}
+                width={withinSize ? '32' : '53'}
               />
             </button>
           </div>
@@ -168,8 +168,8 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
               /> */}
               <Home
                 alt="home button"
-                height={withinSize ? '0' : '60'}
-                width={withinSize ? '0' : '60'}
+                height={withinSize ? '32' : '53'}
+                width={withinSize ? '32' : '53'}
               />
             </button>
           </div>
