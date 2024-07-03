@@ -1,17 +1,18 @@
-import React from "react";
+import React from 'react';
 // import renderer from "react-test-renderer";
 // import configureStore from 'redux-mock-store'
 // import { shallow } from 'enzyme';
 // import toJson from 'enzyme-to-json';
+import { afterEach, describe, it, expect } from 'vitest';
 
-import { render, cleanup } from "@testing-library/react";
+import { render, cleanup } from '@testing-library/react';
 
-import Button from "../button";
+import Button from '../button';
 
 afterEach(cleanup);
 
-describe("Button", () => {
-  it("renders correctly", () => {
+describe('Button', () => {
+  it('renders correctly', () => {
     const { asFragment } = render(
       <Button btnType="Success" size="Big" elementType="submit">
         Facebook

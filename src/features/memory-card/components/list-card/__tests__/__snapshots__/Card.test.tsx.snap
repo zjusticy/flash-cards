@@ -1,4 +1,21 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Card > renders correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="card bg-[#FBE091]"
+    role="button"
+    tabindex="0"
+  >
+    <h3>
+      Title
+    </h3>
+    <p>
+      hello
+    </p>
+  </div>
+</DocumentFragment>
+`;
 
 exports[`Card renders correctly 1`] = `
 <DocumentFragment>

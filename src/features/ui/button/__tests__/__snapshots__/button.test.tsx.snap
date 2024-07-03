@@ -1,4 +1,15 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Button > renders correctly 1`] = `
+<DocumentFragment>
+  <button
+    class="bg-transparent cursor-pointer font-bold font-pressStart duration-100 disabled:color-[#ccc] disabled:cursor-not-allowed [&_a]:inline-block [&_a]:no-underline [&_a]:h-full [&_a]:w-full [&_a]:align-middle [&_a]:text-center [&_a]:font-pressStart outline-none border-2 border-solid border-button-color hover:bg-button-color hover:text-secondary-color [&_a]:hover:text-secondary-color [&_a]:text-button-color text-button-color text-[1rem] h-16 px-4 py-2 [&_a]:text-[1rem]"
+    type="submit"
+  >
+    Facebook
+  </button>
+</DocumentFragment>
+`;
 
 exports[`Button renders correctly 1`] = `
 <DocumentFragment>
