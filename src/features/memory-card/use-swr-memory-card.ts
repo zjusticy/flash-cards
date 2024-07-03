@@ -1,5 +1,5 @@
-import useSWR from "swr";
-import { getCards } from "./api-memory-card";
+import useSWR from 'swr';
+import { getCards } from './api-memory-card';
 
 export default function useCards(activeListName: string) {
   const {
@@ -17,10 +17,8 @@ export default function useCards(activeListName: string) {
   });
 
   return {
-    // onInitCards,
     cards,
     mutate,
-    // onLoadCards,
     error,
     isLoading,
   };
