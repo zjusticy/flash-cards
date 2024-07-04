@@ -9,7 +9,6 @@ import { useParams } from 'react-router-dom';
 import useCards from '@/features/memory-card/use-swr-memory-card';
 import useLocalCards from '@/features/memory-card/use-local-memory-card';
 import useCardsForPage from '@/features/memory-card/use-memory-card';
-import { SmallSpinner } from '@/features/ui';
 import {
   CardsShowWrapper,
   // CardsEditWrapper,
@@ -17,19 +16,21 @@ import {
   CodeBlock,
   Editor,
 } from '@/features/memory-card/components';
-import { Drawer, Button, Toolbar } from '@/features/ui';
-import { useCardStore } from '@/store/zustand';
 import {
-  CardFlip,
-  EditIcon,
-  TextView,
-  DeleteIcon,
-  SaveIcon,
-} from '@/assets/images';
+  Drawer,
+  Button,
+  Toolbar,
+  PreviewButton,
+  SideToggleButton,
+  AiGenButton,
+} from '@/features/ui';
+import { useCardStore } from '@/store/zustand';
+import { DeleteIcon, SaveIcon } from '@/assets/images';
 
 const myPlaceHolderF =
-  'This is the front side \n\nUse "#" and a blank space at the beginning before the actual title';
+  'Front side/Questions \n\nYou can use "# YourTitleHere" to add a title';
 const myPlaceHolderB = 'This is the back side';
+const promptHolder = 'Additional information for AI';
 
 const googleGenerativeAiUrl =
   process.env.MODE === 'development'
@@ -47,6 +48,7 @@ type UpdateInitState = {
       valid: boolean;
     };
   };
+  prompt: string;
   formIsValid: boolean;
 };
 
@@ -88,6 +90,7 @@ const initForm = {
     },
   },
   formIsValid: true,
+  prompt: promptHolder,
 };
 
 /* eslint-disable*/
@@ -133,7 +136,7 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
 
   const { cards } = useCards(activeListName || '');
 
-  const { modeE, drawerVisible, setDrawerVisibility } = useCardStore();
+  const { modeS, drawerVisible, setDrawerVisibility } = useCardStore();
 
   const { activeId } = cardsData;
 
@@ -361,18 +364,31 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
   };
 
   const frontForm = (
-    <Editor
-      key="front"
-      textValue={cardForm.card.front.value}
-      side="front"
-      inputChangedHandler={inputChangedHandlerFromValue}
-      // inputChangedHandler={inputChangedHandlerFromEvents}
-      // id="frontInput"
-      focusedHandler={focusedHandler}
-      bluredHandler={bluredHandler}
-      myPlaceHolder={myPlaceHolderF}
-      className="Editor"
-    />
+    <div className="flex flex-col">
+      <Editor
+        key="front"
+        textValue={cardForm.card.front.value}
+        side="front"
+        inputChangedHandler={inputChangedHandlerFromValue}
+        focusedHandler={focusedHandler}
+        bluredHandler={bluredHandler}
+        myPlaceHolder={myPlaceHolderF}
+        stack={true}
+        className="editor halfHeight"
+      />
+
+      <Editor
+        key="prompt"
+        textValue={cardForm.prompt}
+        side="front"
+        inputChangedHandler={inputChangedHandlerFromValue}
+        focusedHandler={focusedHandler}
+        bluredHandler={bluredHandler}
+        myPlaceHolder={promptHolder}
+        stack={true}
+        className="editor halfHeight"
+      />
+    </div>
   );
 
   const backForm = (
@@ -381,102 +397,56 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
       textValue={cardForm.card.back.value}
       side="back"
       inputChangedHandler={inputChangedHandlerFromValue}
-      // inputChangedHandler={inputChangedHandlerFromEvents}
-      // id="backInput"
       focusedHandler={focusedHandler}
       bluredHandler={bluredHandler}
       myPlaceHolder={myPlaceHolderB}
-      className="Editor"
+      className="editor shadow fullHeight"
     />
   );
 
   const prevValue = (side: 'front' | 'back') => (
     <div
       className={
-        modeE
+        modeS
           ? 'padStyles md:w-[682px] cardShow markdownStyle 2xl:h-[650px]'
           : 'padStyles w-[400px] cardShow markdownStyle'
       }
     >
       <ReactMarkdown
-        source={cardForm.card[side].value}
+        children={cardForm.card[side].value}
         plugins={[math]}
         renderers={renderers}
       />
     </div>
   );
 
-  const previewButton = (
-    <Button
-      btnType="Success"
-      className="m-4 w-16 text-[0.75rem] inline-flex justify-center items-center"
-      disabled={!cardForm.formIsValid}
-      size="Medium"
-      clicked={preToggled}
-      elementType="normal"
-    >
-      {/* {preview ? "EDIT" : "PREVIEW"} */}
-      {preview ? (
-        <EditIcon alt="edit button" fill="rgba(9, 132, 113, 0.9)" />
-      ) : (
-        <TextView alt="text view" fill="rgba(9, 132, 113, 0.9)" />
-      )}
-    </Button>
-  );
-
-  const sideToggleButton = (
-    <Button
-      btnType="Success"
-      className="m-4 w-16 text-[0.75rem] inline-flex justify-center items-center"
-      disabled={false}
-      size="Medium"
-      clicked={() => flipSide((prev) => !prev)}
-      elementType="normal"
-    >
-      <CardFlip alt="flip card" fill="rgba(9, 132, 113, 0.9)" />
-    </Button>
-  );
-
-  const aiGenButton = (
-    <Button
-      btnType="Success"
-      className="m-4 w-16 text-[0.75rem] inline-flex justify-center items-center"
-      disabled={false}
-      size="Medium"
-      clicked={() => generateAnswerHandler(cardForm.card.front.value)}
-      elementType="normal"
-    >
-      {isGettingAiResult ? <SmallSpinner /> : 'AI'}
-    </Button>
-  );
-
   let cardContentForm;
 
-  if (!preview && !modeE) {
+  if (!preview && !modeS) {
     cardContentForm = (
-      <CardsShowWrapper mode={modeE} memBoard={false} preview={preview}>
+      <CardsShowWrapper mode={modeS} memBoard={false} preview={preview}>
         <form>
           {frontForm}
           {backForm}
         </form>
       </CardsShowWrapper>
     );
-  } else if (!preview && modeE) {
+  } else if (!preview && modeS) {
     cardContentForm = (
-      <CardsShowWrapper mode={modeE} memBoard={false} preview={preview}>
+      <CardsShowWrapper mode={modeS} memBoard={false} preview={preview}>
         <form>{frontSide ? frontForm : backForm}</form>
       </CardsShowWrapper>
     );
-  } else if (preview && !modeE) {
+  } else if (preview && !modeS) {
     cardContentForm = (
-      <CardsShowWrapper mode={modeE} memBoard={false} preview={preview}>
+      <CardsShowWrapper mode={modeS} memBoard={false} preview={preview}>
         {prevValue('front')}
         {prevValue('back')}
       </CardsShowWrapper>
     );
   } else {
     cardContentForm = (
-      <CardsShowWrapper mode={modeE} memBoard={false} preview={preview}>
+      <CardsShowWrapper mode={modeS} memBoard={false} preview={preview}>
         {frontSide ? prevValue('front') : prevValue('back')}
       </CardsShowWrapper>
     );
@@ -484,9 +454,24 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
 
   let buttons = (
     <>
-      {!frontSide && aiGenButton}
-      {modeE && sideToggleButton}
-      {previewButton}
+      {(!frontSide || !modeS) && (
+        <AiGenButton
+          disabled={false}
+          isGettingAiResult={isGettingAiResult}
+          onClick={() => generateAnswerHandler(cardForm.card.front.value)}
+        />
+      )}
+      {modeS && (
+        <SideToggleButton
+          disabled={false}
+          onClick={() => flipSide((prev) => !prev)}
+        />
+      )}
+      <PreviewButton
+        formIsValid={!cardForm.formIsValid}
+        onClick={preToggled}
+        preview={preview}
+      />
       <Button
         btnType="Success"
         disabled={!cardForm.formIsValid}
@@ -504,8 +489,17 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
   if (!addNew) {
     buttons = (
       <>
-        {modeE && sideToggleButton}
-        {previewButton}
+        {modeS && (
+          <SideToggleButton
+            disabled={false}
+            onClick={() => flipSide((prev) => !prev)}
+          />
+        )}
+        <PreviewButton
+          formIsValid={!cardForm.formIsValid}
+          onClick={preToggled}
+          preview={preview}
+        />
         <Button
           btnType="Success"
           size="Medium"
@@ -517,7 +511,6 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
             if (localDB) onLocalCancelled();
             else onCloudCancelled();
             addToggled();
-            // history.goBack();
           }}
         >
           <DeleteIcon alt="delete card" fill="rgba(9, 132, 113, 0.9)" />
@@ -533,7 +526,6 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
             if (localDB) onLocalCancelled();
             else onCloudCancelled();
             cardUpdatedHandler();
-            // history.goBack();
             addToggled();
           }}
         >
@@ -563,7 +555,7 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
         </div>
       </Drawer>
       <div className="flex items-center justify-center w-full h-full">
-        <div className={modeE ? 'padShowWrapperSingle' : 'padShowWrapper'}>
+        <div className={modeS ? 'padShowWrapperSingle' : 'padShowWrapper'}>
           {cardContentForm}
           <div className="flex justify-end mr-2 flex-wrap">{buttons}</div>
         </div>

@@ -26,13 +26,15 @@
 }
 
 .padStyles {
-  height: 500px;
   color: rgba(0, 0, 0, 0.7);
   font-size: 1.25rem;
-  @media (min-width: 682px) {
-    box-shadow: 0.75rem 0.75rem 0 rgba(0, 0, 0, 0.1);
-  }
 }
+
+.halfPadStyles {
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 1.25rem;
+}
+
 
 .padShowWrapperSingle {
   display: flex;
@@ -48,7 +50,7 @@
     }
   }
 
-.padShowWrapperSingle .Editor {
+.padShowWrapperSingle .editor {
   @apply padStyles;
   width: 100%;
 
@@ -59,7 +61,7 @@
 }
 @media screen and (min-width: 1800px) {
   .padShowWrapperSingle {
-    & .Editor {
+    & .editor {
       height: 650px;
     }
   }
@@ -70,13 +72,33 @@
   flex-direction: column;
 }
 
-.padShowWrapper .Editor {
+.padShowWrapper .editor {
   @apply padStyles;
   width: 400px;
   @media (min-width: 682px) {
     margin-right: 0.75rem;
   }
 }
+
+.padShowWrapper .shadow {
+  @media (min-width: 682px) {
+    box-shadow: 0.75rem 0.75rem 0 rgba(0, 0, 0, 0.1);
+  }
+}
+
+.padShowWrapper .fullHeight {
+  height: 500px
+}
+
+.padShowWrapper .halfHeight {
+  height: 240px
+}
+
+
+
+
+
+
 
 .cardShow {
   background-color: white;
