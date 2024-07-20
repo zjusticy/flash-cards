@@ -1,18 +1,18 @@
-import { useState, useEffect } from "react";
-import { useImmer } from "use-immer";
-import ReactMarkdown from "react-markdown";
-import Tex from "@matejmazur/react-katex";
-import math from "remark-math";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { useImmer } from 'use-immer';
+import ReactMarkdown from 'react-markdown';
+import Tex from '@matejmazur/react-katex';
+import math from 'remark-math';
+import { useParams, useNavigate } from 'react-router-dom';
 
-import useCards from "@/features/memory-card/use-swr-memory-card";
-import useLocalCards from "@/features/memory-card/use-local-memory-card";
-import useCardsForPage from "@/features/memory-card/use-memory-card";
-import { Button } from "@/features/ui";
-import { CardsShowWrapper, CodeBlock } from "@/features/memory-card/components";
-import type { MemStateType } from "@/types";
-import { useCardStore } from "@/store/zustand";
-import { GoNext, GoPrev } from "@/assets/images";
+import useCards from '@/features/memory-card/use-swr-memory-card';
+import useLocalCards from '@/features/memory-card/use-local-memory-card';
+import useCardsForPage from '@/features/memory-card/use-memory-card';
+import { Button } from '@/features/ui';
+import { CardsShowWrapper, CodeBlock } from '@/features/memory-card/components';
+import type { MemStateType } from '@/types';
+import { useCardStore } from '@/store/zustand';
+import { GoNext, GoPrev } from '@/assets/images';
 
 type MemStore = {
   listName: string;
@@ -23,7 +23,7 @@ type MemStore = {
 };
 
 const memInit = {
-  memName: "",
+  memName: '',
   memId: null,
   memIndex: 0,
   flashBack: null,
@@ -71,10 +71,10 @@ const MemoryBoard: React.FC<{
 
   const { name: activeListName } = useParams<{ name: string }>();
 
-  const { isLoading: isServerLoading, cards } = useCards(activeListName || "");
+  const { isLoading: isServerLoading, cards } = useCards(activeListName || '');
 
   const { isLoading: isLocalLoading, cardsDataLocal } = useLocalCards(
-    activeListName || ""
+    activeListName || ''
   );
 
   const isLoading = localDB ? isLocalLoading : isServerLoading;
@@ -349,20 +349,20 @@ const MemoryBoard: React.FC<{
   // go to home page
   const goHome = () => {
     if (localDB) {
-      navigate("/local/intro");
+      navigate('/local/intro');
       return;
     }
-    navigate("/");
+    navigate('/');
   };
 
   const objExi =
     memState.memId && cardsCache && Object.hasOwn(cardsCache, memState.memId);
 
   const frontPad =
-    (memState.memId && objExi && cardsCache[memState.memId].frontValue) || "";
+    (memState.memId && objExi && cardsCache[memState.memId].frontValue) || '';
 
   const backPad =
-    (memState.memId && objExi && cardsCache[memState.memId].backValue) || "";
+    (memState.memId && objExi && cardsCache[memState.memId].backValue) || '';
 
   let donePage = memState.done ? (
     <>
@@ -377,7 +377,7 @@ const MemoryBoard: React.FC<{
     <>
       <div className="padStyles w-[400px] cardShow markdownStyle">
         <ReactMarkdown
-          source={frontPad}
+          children={frontPad}
           plugins={[math]}
           renderers={renderers}
         />
@@ -386,12 +386,12 @@ const MemoryBoard: React.FC<{
         className={
           side
             ? "padStyles w-[400px] cardShow bg-[url('/images/lock_100.png')]"
-            : "padStyles w-[400px] cardShow markdownStyle"
+            : 'padStyles w-[400px] cardShow markdownStyle'
         }
       >
         {side ? null : (
           <ReactMarkdown
-            source={backPad}
+            children={backPad}
             plugins={[math]}
             renderers={renderers}
           />
@@ -419,7 +419,7 @@ const MemoryBoard: React.FC<{
       donePage = (
         <div className="padStyles md:w-[682px] cardShow 2xl:h-[650px] markdownStyle">
           <ReactMarkdown
-            source={side ? frontPad : backPad}
+            children={side ? frontPad : backPad}
             plugins={[math]}
             renderers={renderers}
           />
@@ -452,7 +452,7 @@ const MemoryBoard: React.FC<{
               : () => showNext(false, false)
           }
         >
-          {memState.again ? "EASY" : "AGAIN"}
+          {memState.again ? 'EASY' : 'AGAIN'}
         </Button>
         <Button
           btnType="Success"
@@ -461,7 +461,7 @@ const MemoryBoard: React.FC<{
           className="m-4 w-24"
           elementType="normal"
         >
-          {side ? "SHOW" : "HIDE"}
+          {side ? 'SHOW' : 'HIDE'}
         </Button>
       </>
     );

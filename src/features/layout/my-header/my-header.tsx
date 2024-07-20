@@ -28,7 +28,7 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
 
   const [toggleShow, toggle] = useState<boolean>(false);
 
-  const { modeE, modeS, drawerVisible, setDrawerVisibility } = useCardStore();
+  const { modeS, drawerVisible, setDrawerVisibility } = useCardStore();
 
   const { signOutHandler } = useAuth();
 
@@ -68,9 +68,9 @@ const MyHeader = ({ localDB = false }: { localDB?: boolean }) => {
   }, []);
 
   useEffect(() => {
-    const value: Settings = { modeSingleBoard: modeS, modeSingleUpdate: modeE };
+    const value: Settings = { modeSingleBoard: modeS };
     window.localStorage.setItem('Settings', JSON.stringify(value));
-  }, [modeS, modeE]);
+  }, [modeS]);
 
   const toggleClikedhandler = () => {
     if (!toggleShow) {

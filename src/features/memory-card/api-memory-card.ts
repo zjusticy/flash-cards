@@ -1,7 +1,7 @@
-import { auth, database } from "@/utils/firebase";
-import { ref, update, child, get } from "firebase/database";
+import { auth, database } from '@/utils/firebase';
+import { ref, update, child, get } from 'firebase/database';
 
-import { CardType } from "./types-memory-card";
+import { CardType } from './types-memory-card';
 
 export const addCard = (
   card: CardType,

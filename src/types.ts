@@ -33,7 +33,6 @@ export type CardsCacheType = {
 
 export type Settings = {
   modeSingleBoard: boolean;
-  modeSingleUpdate: boolean;
 };
 
 export type CardsDataType = {

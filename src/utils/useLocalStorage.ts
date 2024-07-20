@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export default function useLocalStroage<T>(defaultValue: T, key: string) {
   const [value, setValue] = useState(() => {

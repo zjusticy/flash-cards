@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react-hooks';
 import useLocalCards from '../use-local-memory-card'; // Adjust the import according to your file structure
 // import localforage from 'localforage';
-import { CardsDataType } from '@/types';
+// import { CardsDataType } from '@/types';
 import { CardType } from '../types-memory-card';
 import { beforeEach, describe, test, expect, vi } from 'vitest';
 

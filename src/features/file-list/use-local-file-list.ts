@@ -1,24 +1,24 @@
-import { useEffect, useState, useCallback } from "react";
-import * as localForage from "localforage";
+import { useEffect, useState, useCallback } from 'react';
+import localforage from 'localforage';
 
-export default function useFileList() {
-  const [error, setError] = useState("");
-  const [actionError, setActionError] = useState("");
+export default function useLocalFileList() {
+  const [error, setError] = useState('');
+  const [actionError, setActionError] = useState('');
   const [fileList, setFileList] = useState<string[]>([]);
 
   const getList = useCallback(async () => {
     try {
-      const value = await localForage.getItem("fileList");
+      const value = await localforage.getItem('fileList');
       // This code runs once the value has been loaded
       // from the offline store.
       if (!value) {
-        await localForage.setItem("fileList", []);
+        await localforage.setItem('fileList', []);
         return;
       }
       setFileList(value as string[]);
     } catch (err) {
       // This code runs if there were any errors.
-      setError("err");
+      setError('err');
     }
   }, []);
 
@@ -30,14 +30,14 @@ export default function useFileList() {
     async (_listName: string) => {
       try {
         const newLists = fileList.filter((list) => list !== _listName);
-        await localForage.setItem("fileList", newLists);
-        await localForage.removeItem(_listName);
+        await localforage.setItem('fileList', newLists);
+        await localforage.removeItem(_listName);
         // This code runs once the value has been loaded
         // from the offline store.
         setFileList(newLists);
       } catch (err) {
         // This code runs if there were any errors.
-        setActionError("Delete action failed");
+        setActionError('Delete action failed');
       }
     },
     [fileList]
@@ -49,16 +49,16 @@ export default function useFileList() {
         if (!fileList || fileList.indexOf(_listName) !== -1) {
           return;
         }
-        if (_listName.trim() === "") {
+        if (_listName.trim() === '') {
           return;
         }
         const newList = [_listName, ...fileList];
-        await localForage.setItem("fileList", newList);
-        await localForage.setItem(_listName, {});
+        await localforage.setItem('fileList', newList);
+        await localforage.setItem(_listName, {});
         setFileList(newList);
       } catch (err) {
         // This code runs if there were any errors.
-        setActionError("Add action failed");
+        setActionError('Add action failed');
       }
     },
     [fileList]

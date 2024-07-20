@@ -177,46 +177,62 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
    * Clear the hint info when focusing
    */
 
-  const focusedHandler = (
-    // event: React.FocusEvent<HTMLTextAreaElement>,
-    value: string,
-    iniValue: string,
-    inputIdentifier: 'front' | 'back'
-  ) => {
-    if (value === iniValue) {
-      changeForm((draft) => {
-        draft.card[inputIdentifier] = {
-          value: '',
-          valid: false,
-        };
-        draft.formIsValid = false;
-      });
-    }
-  };
+  const focusedHandler =
+    (type: string = 'question') =>
+    (
+      // event: React.FocusEvent<HTMLTextAreaElement>,
+      value: string,
+      iniValue: string,
+      inputIdentifier: 'front' | 'back'
+    ) => {
+      if (type === 'prompt') {
+        changeForm((draft) => {
+          draft.prompt = '';
+        });
+        return;
+      }
+      if (value === iniValue) {
+        changeForm((draft) => {
+          draft.card[inputIdentifier] = {
+            value: '',
+            valid: false,
+          };
+          draft.formIsValid = false;
+        });
+      }
+    };
 
   /**
    * Back to initial when empty and blured
    */
 
-  const bluredHandler = (
-    // event: React.FocusEvent<HTMLTextAreaElement>,
-    value: string,
-    iniValue: string,
-    inputIdentifier: 'front' | 'back'
-  ) => {
-    if (value === '') {
-      changeForm((draft) => {
-        draft.card[inputIdentifier] = {
-          value: iniValue,
-          valid: true,
-        };
-        draft.formIsValid =
-          inputIdentifier === 'front'
-            ? draft.card.back.valid
-            : draft.card.front.valid;
-      });
-    }
-  };
+  const bluredHandler =
+    (type: string = 'question') =>
+    (
+      // event: React.FocusEvent<HTMLTextAreaElement>,
+      value: string,
+      iniValue: string,
+      inputIdentifier: 'front' | 'back'
+    ) => {
+      if (type === 'prompt' && value === '') {
+        changeForm((draft) => {
+          draft.prompt = promptHolder;
+        });
+        return;
+      }
+      if (value === '') {
+        changeForm((draft) => {
+          draft.card[inputIdentifier] = {
+            value: iniValue,
+            valid: true,
+          };
+          draft.formIsValid =
+            inputIdentifier === 'front'
+              ? draft.card.back.valid
+              : draft.card.front.valid;
+        });
+      }
+    };
 
   /**
    * Common input data update
@@ -240,6 +256,18 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
         inputIdentifier === 'front'
           ? inputValid && draft.card.back.valid
           : inputValid && draft.card.front.valid;
+    });
+  };
+
+  // Prompt input handler
+  const promptInputChangedHandler = (
+    // event: React.ChangeEvent<HTMLTextAreaElement>,
+    value: string
+  ) => {
+    // const { value } = event.target;
+
+    changeForm((draft) => {
+      draft.prompt = value;
     });
   };
 
@@ -370,8 +398,8 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
         textValue={cardForm.card.front.value}
         side="front"
         inputChangedHandler={inputChangedHandlerFromValue}
-        focusedHandler={focusedHandler}
-        bluredHandler={bluredHandler}
+        focusedHandler={focusedHandler()}
+        bluredHandler={bluredHandler()}
         myPlaceHolder={myPlaceHolderF}
         stack={true}
         className="editor halfHeight"
@@ -381,9 +409,9 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
         key="prompt"
         textValue={cardForm.prompt}
         side="front"
-        inputChangedHandler={inputChangedHandlerFromValue}
-        focusedHandler={focusedHandler}
-        bluredHandler={bluredHandler}
+        inputChangedHandler={promptInputChangedHandler}
+        focusedHandler={focusedHandler('prompt')}
+        bluredHandler={bluredHandler('prompt')}
         myPlaceHolder={promptHolder}
         stack={true}
         className="editor halfHeight"
@@ -397,8 +425,8 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
       textValue={cardForm.card.back.value}
       side="back"
       inputChangedHandler={inputChangedHandlerFromValue}
-      focusedHandler={focusedHandler}
-      bluredHandler={bluredHandler}
+      focusedHandler={focusedHandler()}
+      bluredHandler={bluredHandler()}
       myPlaceHolder={myPlaceHolderB}
       className="editor shadow fullHeight"
     />
@@ -458,7 +486,11 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
         <AiGenButton
           disabled={false}
           isGettingAiResult={isGettingAiResult}
-          onClick={() => generateAnswerHandler(cardForm.card.front.value)}
+          onClick={() =>
+            generateAnswerHandler(
+              `${cardForm.card.front.value}, ${cardForm.prompt}`
+            )
+          }
         />
       )}
       {modeS && (
