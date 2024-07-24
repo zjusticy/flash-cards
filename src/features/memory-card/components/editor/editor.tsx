@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState, Fragment, useEffect } from 'react';
 // import CodeMirror from "codemirror";
 import { Controlled as CodeMirror } from 'react-codemirror2';
 
@@ -26,20 +26,7 @@ import sanitizeHtml from 'sanitize-html';
 type Props = {
   textValue: string;
   stack?: boolean;
-  inputChangedHandler: (val: string, inputIdentifier: 'front' | 'back') => void;
-  //   id: string;
-  focusedHandler: (
-    // event: React.FocusEvent<HTMLTextAreaElement>,
-    value: string,
-    iniValue: string,
-    inputIdentifier: 'front' | 'back'
-  ) => void;
-  bluredHandler: (
-    // event: React.FocusEvent<HTMLTextAreaElement>,
-    textValue: string,
-    iniValue: string,
-    inputIdentifier: 'front' | 'back'
-  ) => void;
+  inputChangedHandler: (value: string) => void;
   side: 'front' | 'back';
   myPlaceHolder: string;
   // label?: string;
@@ -48,18 +35,27 @@ type Props = {
 
 const Editor: FunctionComponent<Props> = ({
   textValue,
-  //   onChange,
   inputChangedHandler,
   stack = false,
-  focusedHandler,
-  bluredHandler,
   side,
   myPlaceHolder,
   className,
 }) => {
+  const [isFocused, setIsFocused] = useState(false);
+
+  // Convert newlines to <br> tags
+  const formattedPlaceholder = myPlaceHolder
+    .split('\n')
+    .map((line, index, array) => (
+      <Fragment key={index}>
+        {line || <>&nbsp;</>}
+        {index < array.length - 1 && <br />}
+      </Fragment>
+    ));
+
   return (
     <div
-      className={`p-3 box-border md:p-7 md:pt-4 md:pr-4 ${
+      className={`relative p-3 box-border md:p-7 md:pt-4 md:pr-4 ${
         stack ? 'md:pb-[10px]' : ''
       }`}
     >
@@ -75,7 +71,7 @@ const Editor: FunctionComponent<Props> = ({
         className={`${className} outline-none bg-white font-inherit p-[12px] box-border`}
         // onBeforeChange={(editor, data, value) => {}}
         onBeforeChange={(editor, data, value) => {
-          inputChangedHandler(value, side);
+          inputChangedHandler(value);
         }}
         onPaste={(editor, event) => {
           event.preventDefault();
@@ -111,17 +107,14 @@ const Editor: FunctionComponent<Props> = ({
           if (editor.somethingSelected()) editor.replaceSelection(data);
           else editor.replaceRange(data, pos);
         }}
-        onBlur={(editor) => {
-          const val = editor.getValue();
-          if (val === '') editor.setValue(myPlaceHolder);
-          bluredHandler(val, myPlaceHolder, side);
-        }}
-        onFocus={(editor) => {
-          const val = editor.getValue();
-          if (val === myPlaceHolder) editor.setValue('');
-          focusedHandler(val, myPlaceHolder, side);
-        }}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
       />
+      {textValue === '' && !isFocused && (
+        <div className="absolute left-8 top-6 text-gray-400 pointer-events-none">
+          {formattedPlaceholder}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,7 +1,7 @@
-import { CardsDataType } from "@/types";
-import { useImmer } from "use-immer";
-import { addCard, removeCard, updateCard } from "./api-memory-card";
-import { CardType } from "./types-memory-card";
+import { CardsDataType } from '@/types';
+import { useImmer } from 'use-immer';
+import { addCard, removeCard, updateCard } from './api-memory-card';
+import { CardType } from './types-memory-card';
 
 export default function useCardsForPage() {
   const [cardsData, setCardsData] = useImmer<CardsDataType>({
@@ -39,7 +39,7 @@ export default function useCardsForPage() {
         delete draft.cardsCache[cardId];
       }
     });
-    removeCard(listName, cardId)?.catch();
+    removeCard({ activeListName: listName, cardId: cardId })?.catch();
   };
 
   const onUpdateCard = (listName: string, card: CardType) => {

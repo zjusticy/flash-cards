@@ -21,6 +21,7 @@ export type CardType = {
   title: string;
   frontValue: string;
   backValue: string;
+  prompt?: string;
 };
 
 export type CardsCollectionType = {

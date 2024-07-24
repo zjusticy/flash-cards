@@ -4,20 +4,15 @@ import { EditIcon, TextView } from '@/assets/images';
 
 type Props = {
   preview: boolean;
-  formIsValid: boolean;
   onClick: () => void;
 };
 
-const PreviewButton: FunctionComponent<Props> = ({
-  preview,
-  onClick,
-  formIsValid,
-}) => {
+const PreviewButton: FunctionComponent<Props> = ({ preview, onClick }) => {
   return (
     <Button
       btnType="Success"
       className="m-4 w-16 text-[0.75rem] inline-flex justify-center items-center"
-      disabled={formIsValid}
+      // disabled={formIsValid}
       size="Medium"
       clicked={onClick}
       elementType="normal"

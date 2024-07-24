@@ -30,10 +30,13 @@ export const getCards = (activeListName: string): Promise<any> | undefined => {
   return undefined;
 };
 
-export const removeCard = (
-  cardId: string,
-  activeListName: string
-): Promise<any> | undefined => {
+export const removeCard = ({
+  cardId,
+  activeListName,
+}: {
+  cardId: string;
+  activeListName: string;
+}): Promise<any> | undefined => {
   const userId = auth.currentUser && auth.currentUser.uid;
   if (userId) {
     return update(

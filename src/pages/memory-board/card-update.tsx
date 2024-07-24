@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import * as React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { useImmer } from 'use-immer';
 import Tex from '@matejmazur/react-katex';
 import math from 'remark-math';
 import { useParams } from 'react-router-dom';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
 
 import useCards from '@/features/memory-card/use-swr-memory-card';
 import useLocalCards from '@/features/memory-card/use-local-memory-card';
@@ -37,21 +37,6 @@ const googleGenerativeAiUrl =
     ? 'https://google-generative-api.vercel.app/api/generate-content'
     : '/api/generate-content';
 
-type UpdateInitState = {
-  card: {
-    front: {
-      value: string;
-      valid: boolean;
-    };
-    back: {
-      value: string;
-      valid: boolean;
-    };
-  };
-  prompt: string;
-  formIsValid: boolean;
-};
-
 /**
  * Check the input valid or not
  */
@@ -78,21 +63,6 @@ const showTitle = (text: string): string => {
   return '';
 };
 
-const initForm = {
-  card: {
-    front: {
-      value: myPlaceHolderF,
-      valid: true,
-    },
-    back: {
-      value: myPlaceHolderB,
-      valid: true,
-    },
-  },
-  formIsValid: true,
-  prompt: promptHolder,
-};
-
 /* eslint-disable*/
 const renderers = {
   code: CodeBlock,
@@ -102,7 +72,11 @@ const renderers = {
 /* eslint-enable */
 
 const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
-  const [cardForm, changeForm] = useImmer<UpdateInitState>(initForm);
+  // const [cardForm, changeForm] = useImmer<UpdateInitState>(initForm);
+
+  const [frontValue, changeFrontValue] = useState<string>('');
+  const [backValue, changeBackValue] = useState<string>('');
+  const [promptValue, changePromptValue] = useState<string>('');
 
   const [preview, flipPreview] = useState<boolean>(false);
 
@@ -138,6 +112,8 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
 
   const { modeS, drawerVisible, setDrawerVisibility } = useCardStore();
 
+  const [response, setResponse] = useState('');
+
   const { activeId } = cardsData;
 
   useEffect(() => {
@@ -157,146 +133,33 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
    * Set new initial value
    */
 
-  const setUpdate = (frontValue: string, backValue: string) => {
-    changeForm((draft) => {
-      draft.card.front.value = frontValue;
-      draft.card.front.valid = true;
-
-      draft.card.back.value = backValue;
-      draft.card.back.valid = true;
-
-      draft.formIsValid = true;
-    });
+  const setUpdate = (frontValue: string, backValue: string, prompt: string) => {
+    changeFrontValue(frontValue);
+    changeBackValue(backValue);
+    changePromptValue(prompt);
 
     flipPreview(true);
     flipSide(true);
     flipAddNew(false);
   };
 
-  /**
-   * Clear the hint info when focusing
-   */
-
-  const focusedHandler =
-    (type: string = 'question') =>
-    (
-      // event: React.FocusEvent<HTMLTextAreaElement>,
-      value: string,
-      iniValue: string,
-      inputIdentifier: 'front' | 'back'
-    ) => {
-      if (type === 'prompt') {
-        changeForm((draft) => {
-          draft.prompt = '';
-        });
-        return;
-      }
-      if (value === iniValue) {
-        changeForm((draft) => {
-          draft.card[inputIdentifier] = {
-            value: '',
-            valid: false,
-          };
-          draft.formIsValid = false;
-        });
-      }
-    };
-
-  /**
-   * Back to initial when empty and blured
-   */
-
-  const bluredHandler =
-    (type: string = 'question') =>
-    (
-      // event: React.FocusEvent<HTMLTextAreaElement>,
-      value: string,
-      iniValue: string,
-      inputIdentifier: 'front' | 'back'
-    ) => {
-      if (type === 'prompt' && value === '') {
-        changeForm((draft) => {
-          draft.prompt = promptHolder;
-        });
-        return;
-      }
-      if (value === '') {
-        changeForm((draft) => {
-          draft.card[inputIdentifier] = {
-            value: iniValue,
-            valid: true,
-          };
-          draft.formIsValid =
-            inputIdentifier === 'front'
-              ? draft.card.back.valid
-              : draft.card.front.valid;
-        });
-      }
-    };
-
-  /**
-   * Common input data update
-   */
-  const inputChangedHandlerFromValue = (
-    // event: React.ChangeEvent<HTMLTextAreaElement>,
-    value: string,
-    inputIdentifier: 'front' | 'back'
-  ) => {
-    // const { value } = event.target;
-
-    const inputValid = checkValidity(value);
-
-    changeForm((draft) => {
-      draft.card[inputIdentifier] = {
-        value,
-        valid: inputValid,
-      };
-
-      draft.formIsValid =
-        inputIdentifier === 'front'
-          ? inputValid && draft.card.back.valid
-          : inputValid && draft.card.front.valid;
-    });
-  };
-
-  // Prompt input handler
-  const promptInputChangedHandler = (
-    // event: React.ChangeEvent<HTMLTextAreaElement>,
-    value: string
-  ) => {
-    // const { value } = event.target;
-
-    changeForm((draft) => {
-      draft.prompt = value;
-    });
-  };
-
   // Function when add button clicked
   const cardAddedHandler = () => {
     const newCard = {
       id: (+new Date()).toString(),
-      // id: Math.random().toString(36).substr(2),
-      title: showTitle(cardForm.card.front.value) || 'Card',
-      frontValue: cardForm.card.front.value,
-      backValue: cardForm.card.back.value,
+      title: showTitle(frontValue) || 'Card',
+      frontValue,
+      backValue,
+      prompt: promptValue,
     };
 
     if (onLocalAddCard && localDB)
       onLocalAddCard(newCard, activeListName || '');
     else if (onCloudAddCard) onCloudAddCard(newCard, activeListName || '');
-    changeForm((draft) => {
-      draft.card.front = {
-        value: myPlaceHolderF,
-        valid: true,
-      };
 
-      draft.card.back = {
-        value: myPlaceHolderB,
-        valid: true,
-      };
-
-      draft.formIsValid = true;
-    });
+    changeFrontValue('');
+    changeBackValue('');
+    changePromptValue('');
 
     flipPreview(false);
     flipSide(true);
@@ -305,25 +168,46 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
   const generateAnswerHandler = async (questionValue: string) => {
     if (questionValue) {
       setIsGettingAiFlag(true);
+
+      changeBackValue('');
       try {
-        const res = await fetch(googleGenerativeAiUrl, {
+        await fetchEventSource(googleGenerativeAiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
           },
           body: JSON.stringify({ prompt: questionValue }),
+          async onopen(response) {
+            if (
+              response.ok &&
+              response.headers.get('Content-Type') === 'text/event-stream'
+            ) {
+              return; // Everything's good
+            } else if (
+              response.status >= 400 &&
+              response.status < 500 &&
+              response.status !== 429
+            ) {
+              throw new Error(`Server error: ${response.status}`);
+            }
+          },
+          onmessage(event) {
+            const data = JSON.parse(event.data);
+            if (data.text) {
+              changeBackValue((prev) => prev + data.text);
+            }
+          },
+          onclose() {
+            setIsGettingAiFlag(false);
+            console.log('Connection closed');
+          },
+          onerror(err) {
+            console.error(err);
+            setIsGettingAiFlag(false);
+          },
         });
-
-        if (res.ok) {
-          const data = await res.json();
-          inputChangedHandlerFromValue(data, 'back');
-        } else {
-          console.log(res);
-        }
-        setIsGettingAiFlag(false);
-      } catch (error) {
-        console.log(error);
+      } catch (err) {
+        console.error('Failed to fetch:', err);
         setIsGettingAiFlag(false);
       }
     }
@@ -334,9 +218,10 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
     if (activeId) {
       const newCard = {
         id: activeId,
-        title: showTitle(cardForm.card.front.value) || 'Card',
-        frontValue: cardForm.card.front.value,
-        backValue: cardForm.card.back.value,
+        title: showTitle(frontValue) || 'Card',
+        frontValue,
+        backValue,
+        prompt: promptValue,
       };
 
       // Use reducer's function
@@ -351,12 +236,19 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
   /**
    * Function when delete button clicked
    */
-  const cardRemoveHandler = (cardId: string | null) => {
+  const cardRemoveHandler = ({
+    activeListName,
+    cardId,
+  }: {
+    activeListName: string | undefined;
+    cardId: string | null;
+  }) => {
     // Use reducer's function
     if (cardId && localDB) {
       onLocalDeleteCard(activeListName || '', cardId);
       return;
     }
+    console.log(activeListName);
     if (cardId) {
       onCloudDeleteCard(activeListName || '', cardId);
     }
@@ -373,19 +265,23 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
 
   // Reset pre holder
   const addToggled = () => {
-    changeForm((draft) => {
-      draft.card.front = {
-        value: myPlaceHolderF,
-        valid: true,
-      };
+    // changeForm((draft) => {
+    //   draft.card.front = {
+    //     value: myPlaceHolderF,
+    //     valid: true,
+    //   };
 
-      draft.card.back = {
-        value: myPlaceHolderB,
-        valid: true,
-      };
+    //   draft.card.back = {
+    //     value: myPlaceHolderB,
+    //     valid: true,
+    //   };
 
-      draft.formIsValid = true;
-    });
+    //   draft.formIsValid = true;
+    // });
+    changeFrontValue('');
+    changeBackValue('');
+    changePromptValue('');
+
     flipPreview(false);
     flipAddNew(true);
     flipSide(true);
@@ -395,11 +291,9 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
     <div className="flex flex-col">
       <Editor
         key="front"
-        textValue={cardForm.card.front.value}
+        textValue={frontValue}
         side="front"
-        inputChangedHandler={inputChangedHandlerFromValue}
-        focusedHandler={focusedHandler()}
-        bluredHandler={bluredHandler()}
+        inputChangedHandler={changeFrontValue}
         myPlaceHolder={myPlaceHolderF}
         stack={true}
         className="editor halfHeight"
@@ -407,11 +301,9 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
 
       <Editor
         key="prompt"
-        textValue={cardForm.prompt}
+        textValue={promptValue}
         side="front"
-        inputChangedHandler={promptInputChangedHandler}
-        focusedHandler={focusedHandler('prompt')}
-        bluredHandler={bluredHandler('prompt')}
+        inputChangedHandler={changePromptValue}
         myPlaceHolder={promptHolder}
         stack={true}
         className="editor halfHeight"
@@ -422,11 +314,10 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
   const backForm = (
     <Editor
       key="back"
-      textValue={cardForm.card.back.value}
+      // textValue={cardForm.card.back.value}
+      textValue={backValue}
       side="back"
-      inputChangedHandler={inputChangedHandlerFromValue}
-      focusedHandler={focusedHandler()}
-      bluredHandler={bluredHandler()}
+      inputChangedHandler={changeBackValue}
       myPlaceHolder={myPlaceHolderB}
       className="editor shadow fullHeight"
     />
@@ -441,7 +332,7 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
       }
     >
       <ReactMarkdown
-        children={cardForm.card[side].value}
+        children={side === 'front' ? frontValue : backValue}
         plugins={[math]}
         renderers={renderers}
       />
@@ -486,11 +377,7 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
         <AiGenButton
           disabled={false}
           isGettingAiResult={isGettingAiResult}
-          onClick={() =>
-            generateAnswerHandler(
-              `${cardForm.card.front.value}, ${cardForm.prompt}`
-            )
-          }
+          onClick={() => generateAnswerHandler(`${frontValue}, ${promptValue}`)}
         />
       )}
       {modeS && (
@@ -499,14 +386,10 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
           onClick={() => flipSide((prev) => !prev)}
         />
       )}
-      <PreviewButton
-        formIsValid={!cardForm.formIsValid}
-        onClick={preToggled}
-        preview={preview}
-      />
+      <PreviewButton onClick={preToggled} preview={preview} />
       <Button
         btnType="Success"
-        disabled={!cardForm.formIsValid}
+        disabled={!(checkValidity(frontValue) && checkValidity(backValue))}
         size="Medium"
         className="m-4 w-16 text-[0.75rem] inline-flex justify-center items-center"
         debounced
@@ -527,11 +410,7 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
             onClick={() => flipSide((prev) => !prev)}
           />
         )}
-        <PreviewButton
-          formIsValid={!cardForm.formIsValid}
-          onClick={preToggled}
-          preview={preview}
-        />
+        <PreviewButton onClick={preToggled} preview={preview} />
         <Button
           btnType="Success"
           size="Medium"
@@ -539,7 +418,7 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
           debounced
           className="m-4 w-16 text-[0.75rem] inline-flex justify-center items-center"
           clicked={() => {
-            cardRemoveHandler(activeId);
+            cardRemoveHandler({ activeListName, cardId: activeId });
             if (localDB) onLocalCancelled();
             else onCloudCancelled();
             addToggled();
@@ -551,7 +430,9 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
           btnType="Success"
           size="Medium"
           elementType="normal"
-          disabled={!cardForm.formIsValid || preview}
+          disabled={
+            !(checkValidity(frontValue) && checkValidity(backValue)) || preview
+          }
           debounced
           className="m-4 w-16 text-[0.75rem] inline-flex justify-center items-center"
           clicked={() => {

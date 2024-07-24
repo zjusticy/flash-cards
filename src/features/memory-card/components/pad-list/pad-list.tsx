@@ -1,13 +1,13 @@
-import { FunctionComponent } from "react";
-import Button from "@/features/ui/button/button";
-import { CardType } from "@/features/memory-card/types-memory-card";
-import Card from "@/features/memory-card/components/list-card/list-card";
-import { useCardStore } from "@/store/zustand";
-import { CardsDataType } from "@/types";
-import { WritableDraft } from "immer/dist/types/types-external";
+import { FunctionComponent } from 'react';
+import Button from '@/features/ui/button/button';
+import { CardType } from '@/features/memory-card/types-memory-card';
+import Card from '@/features/memory-card/components/list-card/list-card';
+import { useCardStore } from '@/store/zustand';
+import { CardsDataType } from '@/types';
+import { WritableDraft } from 'immer/dist/types/types-external';
 
 const PadList: FunctionComponent<{
-  setUpdate: (front: string, back: string) => void;
+  setUpdate: (front: string, back: string, prompt: string) => void;
   addToggled: () => void;
   cardsData: CardsDataType;
   setCardsData: (
@@ -25,7 +25,7 @@ const PadList: FunctionComponent<{
         draft.activeId = card.id;
       });
 
-    setUpdate(card.frontValue, card.backValue);
+    setUpdate(card.frontValue, card.backValue, card.prompt || '');
   };
 
   return (
