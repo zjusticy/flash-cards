@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import * as React from 'react';
 import ReactMarkdown from 'react-markdown';
 import Tex from '@matejmazur/react-katex';
 import math from 'remark-math';
 import { useParams } from 'react-router-dom';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-
+import useWindowSize from '@/utils/useWindowSize';
 import useCards from '@/features/memory-card/use-swr-memory-card';
 import useLocalCards from '@/features/memory-card/use-local-memory-card';
 import useCardsForPage from '@/features/memory-card/use-memory-card';
@@ -88,6 +88,10 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
 
   const [isGettingAiResult, setIsGettingAiFlag] = useState<boolean>(false);
 
+  const windowSize = useWindowSize();
+
+  const withinSize = windowSize?.width && windowSize?.width < 1120;
+
   const {
     onAddCard: onCloudAddCard,
     onUpdateCard: onCloudUpdateCard,
@@ -111,8 +115,6 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
   const { cards } = useCards(activeListName || '');
 
   const { modeS, drawerVisible, setDrawerVisibility } = useCardStore();
-
-  const [response, setResponse] = useState('');
 
   const { activeId } = cardsData;
 
@@ -326,8 +328,8 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
   const prevValue = (side: 'front' | 'back') => (
     <div
       className={
-        modeS
-          ? 'padStyles md:w-[682px] cardShow markdownStyle 2xl:h-[650px]'
+        withinSize
+          ? 'padStyles md:w-[682px] cardShow markdownStyle 2xl:h-[650px] h-[500px]'
           : 'padStyles w-[400px] cardShow markdownStyle'
       }
     >
@@ -341,31 +343,47 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
 
   let cardContentForm;
 
-  if (!preview && !modeS) {
+  if (!preview && !withinSize) {
     cardContentForm = (
-      <CardsShowWrapper mode={modeS} memBoard={false} preview={preview}>
+      <CardsShowWrapper
+        mode={withinSize || false}
+        memBoard={false}
+        preview={preview}
+      >
         <form>
           {frontForm}
           {backForm}
         </form>
       </CardsShowWrapper>
     );
-  } else if (!preview && modeS) {
+  } else if (!preview && withinSize) {
     cardContentForm = (
-      <CardsShowWrapper mode={modeS} memBoard={false} preview={preview}>
+      <CardsShowWrapper
+        mode={withinSize || false}
+        memBoard={false}
+        preview={preview}
+      >
         <form>{frontSide ? frontForm : backForm}</form>
       </CardsShowWrapper>
     );
-  } else if (preview && !modeS) {
+  } else if (preview && !withinSize) {
     cardContentForm = (
-      <CardsShowWrapper mode={modeS} memBoard={false} preview={preview}>
+      <CardsShowWrapper
+        mode={withinSize || false}
+        memBoard={false}
+        preview={preview}
+      >
         {prevValue('front')}
         {prevValue('back')}
       </CardsShowWrapper>
     );
   } else {
     cardContentForm = (
-      <CardsShowWrapper mode={modeS} memBoard={false} preview={preview}>
+      <CardsShowWrapper
+        mode={withinSize || false}
+        memBoard={false}
+        preview={preview}
+      >
         {frontSide ? prevValue('front') : prevValue('back')}
       </CardsShowWrapper>
     );
@@ -373,14 +391,14 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
 
   let buttons = (
     <>
-      {(!frontSide || !modeS) && (
+      {(!frontSide || !withinSize) && (
         <AiGenButton
           disabled={false}
           isGettingAiResult={isGettingAiResult}
           onClick={() => generateAnswerHandler(`${frontValue}, ${promptValue}`)}
         />
       )}
-      {modeS && (
+      {withinSize && (
         <SideToggleButton
           disabled={false}
           onClick={() => flipSide((prev) => !prev)}
@@ -404,7 +422,7 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
   if (!addNew) {
     buttons = (
       <>
-        {modeS && (
+        {withinSize && (
           <SideToggleButton
             disabled={false}
             onClick={() => flipSide((prev) => !prev)}
@@ -468,7 +486,7 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
         </div>
       </Drawer>
       <div className="flex items-center justify-center w-full h-full">
-        <div className={modeS ? 'padShowWrapperSingle' : 'padShowWrapper'}>
+        <div className={withinSize ? 'padShowWrapperSingle' : 'padShowWrapper'}>
           {cardContentForm}
           <div className="flex justify-end mr-2 flex-wrap">{buttons}</div>
         </div>

@@ -94,6 +94,13 @@
   height: 240px
 }
 
+.padShowWrapperSingle .halfHeight {
+  height: 240px
+}
+
+.padShowWrapperSingle .fullHeight {
+  height: 500px
+}
 
 
 
