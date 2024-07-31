@@ -13,6 +13,7 @@ import { CardsShowWrapper, CodeBlock } from '@/features/memory-card/components';
 import type { MemStateType } from '@/types';
 import { useCardStore } from '@/store/zustand';
 import { GoNext, GoPrev } from '@/assets/images';
+import useWindowSize from '@/utils/useWindowSize';
 
 type MemStore = {
   listName: string;
@@ -82,6 +83,10 @@ const MemoryBoard: React.FC<{
   const { cardsData, setCardsData } = useCardsForPage();
 
   const { cardsCache } = localDB ? cardsDataLocal : cardsData;
+
+  const windowSize = useWindowSize();
+
+  const withinSize = windowSize?.width && windowSize?.width < 1120;
 
   useEffect(() => {
     if (cards && !localDB) {
@@ -400,16 +405,16 @@ const MemoryBoard: React.FC<{
     </>
   );
 
-  if (modeS) {
+  if (withinSize) {
     if (memState.emptyList) {
       donePage = (
-        <div className="padStyles md:w-[682px] cardShow 2xl:h-[650px]">
+        <div className="padStyles md:w-[682px] cardShow 2xl:h-[650px] h-[520px]">
           <p className="text-[42px] font-bold text-right">EMPTY LIST !</p>
         </div>
       );
     } else if (memState.done) {
       donePage = (
-        <div className="padStyles md:w-[682px] cardShow 2xl:h-[650px]">
+        <div className="padStyles md:w-[682px] cardShow 2xl:h-[650px h-[520px]">
           <p className="text-[42px] font-bold text-right">CLEAR !</p>
           <p className="text-[42px] font-bold text-right">CLEAR !</p>
           <p className="text-[42px] font-bold text-right">CLEAR !</p>
@@ -417,7 +422,7 @@ const MemoryBoard: React.FC<{
       );
     } else {
       donePage = (
-        <div className="padStyles md:w-[682px] cardShow 2xl:h-[650px] markdownStyle">
+        <div className="padStyles md:w-[682px] cardShow 2xl:h-[650px] markdownStyle h-[520px]">
           <ReactMarkdown
             children={side ? frontPad : backPad}
             plugins={[math]}
@@ -485,7 +490,11 @@ const MemoryBoard: React.FC<{
             className="flex flex-col [&_form]:flex [&_form]:justify-between 
           [&_label]:hidden [&_textarea]:padStyle [&_textarea]:w-[400px] [&_textarea]:mr-3"
           >
-            <CardsShowWrapper memBoard mode={modeS} preview={false}>
+            <CardsShowWrapper
+              memBoard
+              mode={withinSize || false}
+              preview={false}
+            >
               {donePage}
             </CardsShowWrapper>
             <div className="flex justify-end md:mr-2">{buttons}</div>

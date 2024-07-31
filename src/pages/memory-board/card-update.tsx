@@ -114,7 +114,7 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
 
   const { cards } = useCards(activeListName || '');
 
-  const { modeS, drawerVisible, setDrawerVisibility } = useCardStore();
+  const { drawerVisible, setDrawerVisibility } = useCardStore();
 
   const { activeId } = cardsData;
 
