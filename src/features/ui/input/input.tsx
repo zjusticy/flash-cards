@@ -1,7 +1,7 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, KeyboardEvent, useEffect } from 'react';
 
 type Props = {
-  elementType: "input" | "textarea" | "select";
+  elementType: 'input' | 'textarea' | 'select';
   value: string;
   id: string;
   iChanged?: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -23,14 +23,14 @@ const Input: FunctionComponent<Props> = ({
   sChanged,
   focused,
   blured,
-  label = "",
+  label = '',
   elementConfig,
   ref,
 }) => {
   let inputElement = null;
 
   switch (elementType) {
-    case "input":
+    case 'input':
       inputElement = (
         <input
           className="outline-none bg-white font-inherit padding-[12px] 
@@ -41,11 +41,11 @@ const Input: FunctionComponent<Props> = ({
         />
       );
       break;
-    case "textarea":
+    case 'textarea':
       inputElement = (
         <textarea
-          className="outline-none bg-white font-inherit padding-[12px] 
-          box-border resize-none border-none"
+          className="outline-none bg-white font-inherit padding-[12px]
+            box-border resize-none border-none"
           value={value}
           id={id}
           onChange={tChanged}
@@ -55,7 +55,7 @@ const Input: FunctionComponent<Props> = ({
         />
       );
       break;
-    case "select":
+    case 'select':
       inputElement = (
         <select
           className="outline-none bg-white font-inherit padding-[12px] 

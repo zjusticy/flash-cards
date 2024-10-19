@@ -19,15 +19,10 @@ import sanitizeHtml from 'sanitize-html';
 //   { ssr: false }
 // );
 
-// if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
-//   require("codemirror/mode/markdown/markdown");
-// }
-
 type Props = {
   textValue: string;
   stack?: boolean;
   inputChangedHandler: (value: string) => void;
-  side: 'front' | 'back';
   myPlaceHolder: string;
   // label?: string;
   className: string;
@@ -37,7 +32,6 @@ const Editor: FunctionComponent<Props> = ({
   textValue,
   inputChangedHandler,
   stack = false,
-  side,
   myPlaceHolder,
   className,
 }) => {
@@ -55,7 +49,7 @@ const Editor: FunctionComponent<Props> = ({
 
   return (
     <div
-      className={`relative p-3 box-border md:p-7 md:pt-4 md:pr-4 ${
+      className={`relative p-3 box-border md:pt-4 ${
         stack ? 'md:pb-[10px]' : ''
       }`}
     >
@@ -68,7 +62,7 @@ const Editor: FunctionComponent<Props> = ({
         editorDidMount={(editor) => {
           editor.setSize('auto', '100%');
         }}
-        className={`${className} outline-none bg-white font-inherit p-[12px] box-border`}
+        className={`${className} outline-none bg-white font-inherit p-[6px] box-border`}
         // onBeforeChange={(editor, data, value) => {}}
         onBeforeChange={(editor, data, value) => {
           inputChangedHandler(value);
@@ -111,7 +105,7 @@ const Editor: FunctionComponent<Props> = ({
         onBlur={() => setIsFocused(false)}
       />
       {textValue === '' && !isFocused && (
-        <div className="absolute left-8 top-6 text-gray-400 pointer-events-none">
+        <div className="absolute left-4 top-4 text-gray-400 pointer-events-none">
           {formattedPlaceholder}
         </div>
       )}

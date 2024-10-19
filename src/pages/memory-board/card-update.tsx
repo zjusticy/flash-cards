@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, KeyboardEvent, useRef, ChangeEvent } from 'react';
 import * as React from 'react';
 import ReactMarkdown from 'react-markdown';
 import Tex from '@matejmazur/react-katex';
@@ -26,9 +26,9 @@ import {
 } from '@/features/ui';
 import { useCardStore } from '@/store/zustand';
 import { DeleteIcon, SaveIcon } from '@/assets/images';
+import CustomTextArea from '@/features/ui/input/text-area';
 
-const myPlaceHolderF =
-  'Front side/Questions \n\nYou can use "# YourTitleHere" to add a title';
+const myPlaceHolderF = 'You can use "# YourTitleHere" to add a title';
 const myPlaceHolderB = 'This is the back side';
 const promptHolder = 'Additional information for AI';
 
@@ -40,7 +40,6 @@ const googleGenerativeAiUrl =
 /**
  * Check the input valid or not
  */
-
 const checkValidity = (value: string): boolean => {
   let isValid = false;
 
@@ -88,9 +87,8 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
 
   const [isGettingAiResult, setIsGettingAiFlag] = useState<boolean>(false);
 
-  const windowSize = useWindowSize();
-
-  const withinSize = windowSize?.width && windowSize?.width < 1120;
+  // const windowSize = useWindowSize();
+  const withinSize = true;
 
   const {
     onAddCard: onCloudAddCard,
@@ -250,7 +248,6 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
       onLocalDeleteCard(activeListName || '', cardId);
       return;
     }
-    console.log(activeListName);
     if (cardId) {
       onCloudDeleteCard(activeListName || '', cardId);
     }
@@ -267,19 +264,6 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
 
   // Reset pre holder
   const addToggled = () => {
-    // changeForm((draft) => {
-    //   draft.card.front = {
-    //     value: myPlaceHolderF,
-    //     valid: true,
-    //   };
-
-    //   draft.card.back = {
-    //     value: myPlaceHolderB,
-    //     valid: true,
-    //   };
-
-    //   draft.formIsValid = true;
-    // });
     changeFrontValue('');
     changeBackValue('');
     changePromptValue('');
@@ -289,49 +273,11 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
     flipSide(true);
   };
 
-  const frontForm = (
-    <div className="flex flex-col">
-      <Editor
-        key="front"
-        textValue={frontValue}
-        side="front"
-        inputChangedHandler={changeFrontValue}
-        myPlaceHolder={myPlaceHolderF}
-        stack={true}
-        className="editor halfHeight"
-      />
-
-      <Editor
-        key="prompt"
-        textValue={promptValue}
-        side="front"
-        inputChangedHandler={changePromptValue}
-        myPlaceHolder={promptHolder}
-        stack={true}
-        className="editor halfHeight"
-      />
-    </div>
-  );
-
-  const backForm = (
-    <Editor
-      key="back"
-      // textValue={cardForm.card.back.value}
-      textValue={backValue}
-      side="back"
-      inputChangedHandler={changeBackValue}
-      myPlaceHolder={myPlaceHolderB}
-      className="editor shadow fullHeight"
-    />
-  );
-
   const prevValue = (side: 'front' | 'back') => (
     <div
-      className={
-        withinSize
-          ? 'padStyles md:w-[682px] cardShow markdownStyle 2xl:h-[650px] h-[500px]'
-          : 'padStyles w-[400px] cardShow markdownStyle'
-      }
+      className={`padStyles w-full md:w-[682px] cardShowEdit markdownStyle ${
+        side === 'front' ? 'h-[160px]' : 'h-[320px]'
+      }`}
     >
       <ReactMarkdown
         children={side === 'front' ? frontValue : backValue}
@@ -341,10 +287,47 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
     </div>
   );
 
-  let cardContentForm;
+  const frontForm = (
+    <div className="flex flex-col">
+      <div className="ml-3 mt-2">FRONT SIDE</div>
+      {preview ? (
+        prevValue('front')
+      ) : (
+        <Editor
+          key="front"
+          textValue={frontValue}
+          inputChangedHandler={changeFrontValue}
+          myPlaceHolder={myPlaceHolderF}
+          stack={true}
+          className="editor halfHeight"
+        />
+      )}
+      <div className="mx-3 mt-1">
+        <div>PROMPT</div>
+        <CustomTextArea
+          value={promptValue}
+          changeHandler={changePromptValue}
+          label={'PROMPT'}
+          id={'prompt'}
+        />
+      </div>
+    </div>
+  );
 
-  if (!preview && !withinSize) {
-    cardContentForm = (
+  const backForm = preview ? (
+    prevValue('back')
+  ) : (
+    <Editor
+      key="back"
+      textValue={backValue}
+      inputChangedHandler={changeBackValue}
+      myPlaceHolder={myPlaceHolderB}
+      className="editor shadow fullHeight"
+    />
+  );
+
+  const cardContentForm = (
+    <>
       <CardsShowWrapper
         mode={withinSize || false}
         memBoard={false}
@@ -352,58 +335,95 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
       >
         <form>
           {frontForm}
-          {backForm}
+          <div className="flex justify-center flex-wrap">
+            <AiGenButton
+              disabled={preview}
+              isGettingAiResult={isGettingAiResult}
+              onClick={() =>
+                generateAnswerHandler(`${frontValue}, ${promptValue}`)
+              }
+            />
+          </div>
         </form>
       </CardsShowWrapper>
-    );
-  } else if (!preview && withinSize) {
-    cardContentForm = (
       <CardsShowWrapper
         mode={withinSize || false}
         memBoard={false}
         preview={preview}
       >
-        <form>{frontSide ? frontForm : backForm}</form>
+        <form>{backForm}</form>
       </CardsShowWrapper>
-    );
-  } else if (preview && !withinSize) {
-    cardContentForm = (
-      <CardsShowWrapper
-        mode={withinSize || false}
-        memBoard={false}
-        preview={preview}
-      >
-        {prevValue('front')}
-        {prevValue('back')}
-      </CardsShowWrapper>
-    );
-  } else {
-    cardContentForm = (
-      <CardsShowWrapper
-        mode={withinSize || false}
-        memBoard={false}
-        preview={preview}
-      >
-        {frontSide ? prevValue('front') : prevValue('back')}
-      </CardsShowWrapper>
-    );
-  }
+    </>
+  );
+
+  // if (!preview && !withinSize) {
+  //   cardContentForm = (
+  //     <CardsShowWrapper
+  //       mode={withinSize || false}
+  //       memBoard={false}
+  //       preview={preview}
+  //     >
+  //       <form>
+  //         {frontForm}
+  //         {backForm}
+  //       </form>
+  //     </CardsShowWrapper>
+  //   );
+  // } else if (!preview && withinSize) {
+  //   cardContentForm = (
+  //     <>
+  //       <CardsShowWrapper
+  //         mode={withinSize || false}
+  //         memBoard={false}
+  //         preview={preview}
+  //       >
+  //         <form>
+  //           {frontForm}
+  //           <div className="flex justify-center flex-wrap">
+  //             <AiGenButton
+  //               disabled={preview}
+  //               isGettingAiResult={isGettingAiResult}
+  //               onClick={() =>
+  //                 generateAnswerHandler(`${frontValue}, ${promptValue}`)
+  //               }
+  //             />
+  //           </div>
+  //         </form>
+  //       </CardsShowWrapper>
+  //       <CardsShowWrapper
+  //         mode={withinSize || false}
+  //         memBoard={false}
+  //         preview={preview}
+  //       >
+  //         <form>{backForm}</form>
+  //       </CardsShowWrapper>
+  //     </>
+  //   );
+  // } else if (preview && !withinSize) {
+  //   cardContentForm = (
+  //     <CardsShowWrapper
+  //       mode={withinSize || false}
+  //       memBoard={false}
+  //       preview={preview}
+  //     >
+  //       {prevValue('front')}
+  //       {prevValue('back')}
+  //     </CardsShowWrapper>
+  //   );
+  // } else {
+  //   cardContentForm = (
+  //     <CardsShowWrapper
+  //       mode={withinSize || false}
+  //       memBoard={false}
+  //       preview={preview}
+  //     >
+  //       {frontSide ? prevValue('front') : prevValue('back')}
+  //     </CardsShowWrapper>
+  //   );
+  // }
 
   let buttons = (
     <>
-      {(!frontSide || !withinSize) && (
-        <AiGenButton
-          disabled={false}
-          isGettingAiResult={isGettingAiResult}
-          onClick={() => generateAnswerHandler(`${frontValue}, ${promptValue}`)}
-        />
-      )}
-      {withinSize && (
-        <SideToggleButton
-          disabled={false}
-          onClick={() => flipSide((prev) => !prev)}
-        />
-      )}
       <PreviewButton onClick={preToggled} preview={preview} />
       <Button
         btnType="Success"
@@ -419,52 +439,52 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
     </>
   );
 
-  if (!addNew) {
-    buttons = (
-      <>
-        {withinSize && (
-          <SideToggleButton
-            disabled={false}
-            onClick={() => flipSide((prev) => !prev)}
-          />
-        )}
-        <PreviewButton onClick={preToggled} preview={preview} />
-        <Button
-          btnType="Success"
-          size="Medium"
-          elementType="normal"
-          debounced
-          className="m-4 w-16 text-[0.75rem] inline-flex justify-center items-center"
-          clicked={() => {
-            cardRemoveHandler({ activeListName, cardId: activeId });
-            if (localDB) onLocalCancelled();
-            else onCloudCancelled();
-            addToggled();
-          }}
-        >
-          <DeleteIcon alt="delete card" fill="rgba(9, 132, 113, 0.9)" />
-        </Button>
-        <Button
-          btnType="Success"
-          size="Medium"
-          elementType="normal"
-          disabled={
-            !(checkValidity(frontValue) && checkValidity(backValue)) || preview
-          }
-          debounced
-          className="m-4 w-16 text-[0.75rem] inline-flex justify-center items-center"
-          clicked={() => {
-            if (localDB) onLocalCancelled();
-            else onCloudCancelled();
-            cardUpdatedHandler();
-            addToggled();
-          }}
-        >
-          <SaveIcon alt="save the change" fill="rgba(9, 132, 113, 0.9)" />
-        </Button>
-      </>
-    );
-  }
+  // if (!addNew) {
+  //   buttons = (
+  //     <>
+  //       {withinSize && (
+  //         <SideToggleButton
+  //           disabled={false}
+  //           onClick={() => flipSide((prev) => !prev)}
+  //         />
+  //       )}
+  //       <PreviewButton onClick={preToggled} preview={preview} />
+  //       <Button
+  //         btnType="Success"
+  //         size="Medium"
+  //         elementType="normal"
+  //         debounced
+  //         className="m-4 w-16 text-[0.75rem] inline-flex justify-center items-center"
+  //         clicked={() => {
+  //           cardRemoveHandler({ activeListName, cardId: activeId });
+  //           if (localDB) onLocalCancelled();
+  //           else onCloudCancelled();
+  //           addToggled();
+  //         }}
+  //       >
+  //         <DeleteIcon alt="delete card" fill="rgba(9, 132, 113, 0.9)" />
+  //       </Button>
+  //       <Button
+  //         btnType="Success"
+  //         size="Medium"
+  //         elementType="normal"
+  //         disabled={
+  //           !(checkValidity(frontValue) && checkValidity(backValue)) || preview
+  //         }
+  //         debounced
+  //         className="m-4 w-16 text-[0.75rem] inline-flex justify-center items-center"
+  //         clicked={() => {
+  //           if (localDB) onLocalCancelled();
+  //           else onCloudCancelled();
+  //           cardUpdatedHandler();
+  //           addToggled();
+  //         }}
+  //       >
+  //         <SaveIcon alt="save the change" fill="rgba(9, 132, 113, 0.9)" />
+  //       </Button>
+  //     </>
+  //   );
+  // }
 
   return (
     <div className="flex h-full">
@@ -485,10 +505,12 @@ const CardUpdate: React.FC<{ localDB?: boolean }> = ({ localDB = false }) => {
           />
         </div>
       </Drawer>
-      <div className="flex items-center justify-center w-full h-full">
-        <div className={withinSize ? 'padShowWrapperSingle' : 'padShowWrapper'}>
+      <div className="flex items-center justify-center w-full h-full mt-4">
+        <div
+          className={withinSize ? 'padShowWrapperSingle ' : 'padShowWrapper'}
+        >
           {cardContentForm}
-          <div className="flex justify-end mr-2 flex-wrap">{buttons}</div>
+          <div className="flex justify-center flex-wrap">{buttons}</div>
         </div>
       </div>
     </div>

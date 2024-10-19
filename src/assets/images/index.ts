@@ -12,3 +12,4 @@ export { default as GoPrev } from './goPrev';
 export { default as FileIcon } from './file-icon';
 export { default as RouterBack } from './router-back';
 export { default as Home } from './home';
+export { default as Bulb } from './bulb';

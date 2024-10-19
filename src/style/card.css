@@ -55,7 +55,7 @@
   width: 100%;
 
   @media (min-width: 682px) {
-    margin-right: 0.75rem;
+    /* margin-right: 0.75rem; */
     width: 682px;
   }
 }
@@ -91,15 +91,15 @@
 }
 
 .padShowWrapper .halfHeight {
-  height: 240px
+  height: 160px
 }
 
 .padShowWrapperSingle .halfHeight {
-  height: 240px
+  height: 160px
 }
 
 .padShowWrapperSingle .fullHeight {
-  height: 500px
+  height: 320px
 }
 
 
@@ -121,4 +121,16 @@
 
 .cardShow > p {
   padding: 12px;
+}
+
+.cardShowEdit {
+  background-color: white;
+  margin: 0.75rem;
+
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.cardShowEdit > p {
+  padding: 6px;
 }
